@@ -46,6 +46,7 @@ export class PacientesComponent implements OnInit {
     procedencia: '',
     cpf: ''
   };
+  pacienteEditando: Paciente | null = null;
   colunas = [
     'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia', 'acoes'
@@ -69,15 +70,34 @@ export class PacientesComponent implements OnInit {
   }
 
   adicionarPaciente() {
-    this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe(() => {
-      this.novoPaciente = {
-        nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: ''
-      };
-      this.listarPacientes();
-    });
+    if (this.pacienteEditando && this.pacienteEditando.id) {
+      // Atualizar paciente existente
+      this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe(() => {
+        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+        this.pacienteEditando = null;
+        this.listarPacientes();
+      });
+    } else {
+      // Adicionar novo paciente
+      this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe(() => {
+        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+        this.listarPacientes();
+      });
+    }
+  }
+
+  editarPaciente(paciente: Paciente) {
+    this.pacienteEditando = paciente;
+    this.novoPaciente = { ...paciente };
   }
 
   removerPaciente(id: number) {
-    this.http.delete(`${this.apiUrl}/${id}`).subscribe(() => this.listarPacientes());
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe(() => {
+      this.listarPacientes();
+      if (this.pacienteEditando && this.pacienteEditando.id === id) {
+        this.pacienteEditando = null;
+        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+      }
+    });
   }
 }

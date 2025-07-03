@@ -79,7 +79,9 @@
       <mat-label>Procedência</mat-label>
       <input matInput name="procedencia" [(ngModel)]="novoPaciente.procedencia" />
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" [disabled]="pacienteForm.invalid">Salvar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="pacienteForm.invalid">
+      {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
+    </button>
   </form>
 </div>
 
@@ -151,6 +153,9 @@
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef>Ações</th>
       <td mat-cell *matCellDef="let paciente">
+        <button mat-icon-button color="primary" (click)="editarPaciente(paciente)" aria-label="Editar paciente">
+          <mat-icon>edit</mat-icon>
+        </button>
         <button mat-icon-button color="warn" (click)="paciente.id !== undefined && removerPaciente(paciente.id)" [disabled]="paciente.id === undefined" aria-label="Remover paciente">
           <mat-icon>delete</mat-icon>
         </button>
