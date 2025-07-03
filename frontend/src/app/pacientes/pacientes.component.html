@@ -1,4 +1,4 @@
-<div class="ficha-container">
+<div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
   <h1>Prontuário Eletrônico</h1>
 
   <form #pacienteForm="ngForm" (ngSubmit)="adicionarPaciente()" class="paciente-form" autocomplete="off">
@@ -81,6 +81,9 @@
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit" [disabled]="pacienteForm.invalid">
       {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
+    </button>
+    <button *ngIf="pacienteEditando" mat-raised-button type="button" class="cancelar-btn" (click)="cancelarEdicao()">
+      Cancelar edição
     </button>
   </form>
 </div>

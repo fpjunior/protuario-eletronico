@@ -18,6 +18,12 @@
   margin: 32px 0 24px 0;
 }
 
+.ficha-container.edicao {
+  border-color: #ffa000;
+  box-shadow: 0 4px 24px rgba(255, 160, 0, 0.12);
+  position: relative;
+}
+
 h1 {
   color: #1976d2;
   font-weight: 700;
@@ -54,6 +60,16 @@ button[type="submit"] {
   color: #fff;
   font-weight: 600;
   letter-spacing: 1px;
+}
+
+.cancelar-btn {
+  margin-left: 8px;
+  background: #fff3e0;
+  color: #ffa000;
+  border: 1.5px solid #ffa000;
+  font-weight: 600;
+  letter-spacing: 1px;
+  height: 56px;
 }
 
 mat-list-item {
