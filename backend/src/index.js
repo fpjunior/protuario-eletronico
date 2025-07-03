@@ -65,6 +65,39 @@ app.delete('/pacientes/:id', async (req, res) => {
   res.status(204).send();
 });
 
+app.put('/pacientes/:id', async (req, res) => {
+  const { id } = req.params;
+  const {
+    nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf
+  } = req.body;
+  const { rows } = await pool.query(
+    `UPDATE pacientes SET
+      nome = $1,
+      mae = $2,
+      nascimento = $3,
+      sexo = $4,
+      estado_civil = $5,
+      profissao = $6,
+      escolaridade = $7,
+      raca = $8,
+      endereco = $9,
+      bairro = $10,
+      municipio = $11,
+      uf = $12,
+      cep = $13,
+      acompanhante = $14,
+      procedencia = $15,
+      cpf = $16
+    WHERE id = $17
+    RETURNING *`,
+    [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf, id]
+  );
+  if (rows.length === 0) {
+    return res.status(404).json({ error: 'Paciente não encontrado' });
+  }
+  res.json(mapPacienteDbToApi(rows[0]));
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);

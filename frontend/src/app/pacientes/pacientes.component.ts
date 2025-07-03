@@ -71,12 +71,14 @@ export class PacientesComponent implements OnInit {
 
   adicionarPaciente() {
     if (this.pacienteEditando && this.pacienteEditando.id) {
-      // Atualizar paciente existente
-      this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe(() => {
-        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
-        this.pacienteEditando = null;
-        this.listarPacientes();
-      });
+      // Confirmação antes de atualizar
+      if (confirm('Tem certeza que deseja atualizar este registro?')) {
+        this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe(() => {
+          this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+          this.pacienteEditando = null;
+          this.listarPacientes();
+        });
+      }
     } else {
       // Adicionar novo paciente
       this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe(() => {
@@ -99,5 +101,10 @@ export class PacientesComponent implements OnInit {
         this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
       }
     });
+  }
+
+  cancelarEdicao() {
+    this.pacienteEditando = null;
+    this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
   }
 }
