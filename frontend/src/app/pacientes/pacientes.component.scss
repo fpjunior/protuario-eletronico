@@ -1,0 +1,46 @@
+h1 {
+  margin-bottom: 24px;
+}
+
+.paciente-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+mat-form-field {
+  min-width: 220px;
+  flex: 1 1 220px;
+}
+
+button[type="submit"] {
+  height: 56px;
+  margin-left: 8px;
+}
+
+mat-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+
+mat-list {
+  max-width: 600px;
+  margin: 0 auto 24px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+mat-divider {
+  margin: 24px 0;
+}
+
+h2 {
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
