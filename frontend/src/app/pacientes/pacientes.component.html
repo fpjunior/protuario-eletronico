@@ -1,4 +1,4 @@
-<div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
+<div class="ficha-container" *ngIf="exibirFormulario" [ngClass]="{edicao: pacienteEditando}">
   <h1>Prontuário Eletrônico</h1>
 
   <form #pacienteForm="ngForm" (ngSubmit)="adicionarPaciente()" class="paciente-form" autocomplete="off">
@@ -82,13 +82,13 @@
     <button mat-raised-button color="primary" type="submit" [disabled]="pacienteForm.invalid">
       {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
     </button>
-    <button *ngIf="pacienteEditando" mat-raised-button type="button" class="cancelar-btn" (click)="cancelarEdicao()">
-      Cancelar edição
+    <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelarEdicao()">
+      Cancelar
     </button>
   </form>
 </div>
 
-<mat-divider></mat-divider>
+<mat-divider *ngIf="exibirFormulario"></mat-divider>
 
 <div class="pesquisa-container">
   <mat-form-field appearance="outline" class="pesquisa-nome">
@@ -98,6 +98,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
+  <button mat-raised-button color="primary" (click)="mostrarFormularioCadastro()" *ngIf="!exibirFormulario">Cadastrar</button>
 </div>
 
 <div class="table-container">

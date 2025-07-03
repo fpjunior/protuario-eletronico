@@ -48,6 +48,7 @@ export class PacientesComponent implements OnInit {
   };
   pacienteEditando: Paciente | null = null;
   filtroNome: string = '';
+  exibirFormulario = false;
   colunas = [
     'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia', 'acoes'
@@ -70,6 +71,12 @@ export class PacientesComponent implements OnInit {
       );
   }
 
+  mostrarFormularioCadastro() {
+    this.exibirFormulario = true;
+    this.pacienteEditando = null;
+    this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+  }
+
   adicionarPaciente() {
     if (this.pacienteEditando && this.pacienteEditando.id) {
       // Confirmação antes de atualizar
@@ -77,6 +84,7 @@ export class PacientesComponent implements OnInit {
         this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe(() => {
           this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
           this.pacienteEditando = null;
+          this.exibirFormulario = false;
           this.listarPacientes();
         });
       }
@@ -84,6 +92,7 @@ export class PacientesComponent implements OnInit {
       // Adicionar novo paciente
       this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe(() => {
         this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+        this.exibirFormulario = false;
         this.listarPacientes();
       });
     }
@@ -92,6 +101,7 @@ export class PacientesComponent implements OnInit {
   editarPaciente(paciente: Paciente) {
     this.pacienteEditando = paciente;
     this.novoPaciente = { ...paciente };
+    this.exibirFormulario = true;
   }
 
   removerPaciente(id: number) {
@@ -107,6 +117,7 @@ export class PacientesComponent implements OnInit {
   cancelarEdicao() {
     this.pacienteEditando = null;
     this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+    this.exibirFormulario = false;
   }
 
   get pacientesFiltrados(): Paciente[] {
