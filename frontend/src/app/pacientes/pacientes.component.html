@@ -84,78 +84,80 @@
 <mat-divider></mat-divider>
 
 <h2>Pacientes cadastrados</h2>
-<table mat-table [dataSource]="pacientes" class="mat-elevation-z2 pacientes-table" *ngIf="pacientes.length; else vazio">
-  <ng-container matColumnDef="nome">
-    <th mat-header-cell *matHeaderCellDef>Nome</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.nome }}</td>
-  </ng-container>
-  <ng-container matColumnDef="mae">
-    <th mat-header-cell *matHeaderCellDef>Mãe</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.mae }}</td>
-  </ng-container>
-  <ng-container matColumnDef="nascimento">
-    <th mat-header-cell *matHeaderCellDef>Nascimento</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.nascimento | date:'dd/MM/yyyy' }}</td>
-  </ng-container>
-  <ng-container matColumnDef="sexo">
-    <th mat-header-cell *matHeaderCellDef>Sexo</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.sexo }}</td>
-  </ng-container>
-  <ng-container matColumnDef="estadoCivil">
-    <th mat-header-cell *matHeaderCellDef>Estado Civil</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.estadoCivil }}</td>
-  </ng-container>
-  <ng-container matColumnDef="profissao">
-    <th mat-header-cell *matHeaderCellDef>Profissão</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.profissao }}</td>
-  </ng-container>
-  <ng-container matColumnDef="escolaridade">
-    <th mat-header-cell *matHeaderCellDef>Escolaridade</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.escolaridade }}</td>
-  </ng-container>
-  <ng-container matColumnDef="raca">
-    <th mat-header-cell *matHeaderCellDef>Raça/Cor</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.raca }}</td>
-  </ng-container>
-  <ng-container matColumnDef="endereco">
-    <th mat-header-cell *matHeaderCellDef>Endereço</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.endereco }}</td>
-  </ng-container>
-  <ng-container matColumnDef="bairro">
-    <th mat-header-cell *matHeaderCellDef>Bairro</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.bairro }}</td>
-  </ng-container>
-  <ng-container matColumnDef="municipio">
-    <th mat-header-cell *matHeaderCellDef>Município</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.municipio }}</td>
-  </ng-container>
-  <ng-container matColumnDef="uf">
-    <th mat-header-cell *matHeaderCellDef>UF</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.uf }}</td>
-  </ng-container>
-  <ng-container matColumnDef="cep">
-    <th mat-header-cell *matHeaderCellDef>CEP</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.cep }}</td>
-  </ng-container>
-  <ng-container matColumnDef="acompanhante">
-    <th mat-header-cell *matHeaderCellDef>Acompanhante</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.acompanhante }}</td>
-  </ng-container>
-  <ng-container matColumnDef="procedencia">
-    <th mat-header-cell *matHeaderCellDef>Procedência</th>
-    <td mat-cell *matCellDef="let paciente">{{ paciente.procedencia }}</td>
-  </ng-container>
-  <ng-container matColumnDef="acoes">
-    <th mat-header-cell *matHeaderCellDef>Ações</th>
-    <td mat-cell *matCellDef="let paciente">
-      <button mat-icon-button color="warn" (click)="paciente.id !== undefined && removerPaciente(paciente.id)" [disabled]="paciente.id === undefined" aria-label="Remover paciente">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-  <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-</table>
+<div class="table-container">
+  <table mat-table [dataSource]="pacientes" class="mat-elevation-z2 pacientes-table" *ngIf="pacientes.length; else vazio">
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.nome }}</td>
+    </ng-container>
+    <ng-container matColumnDef="mae">
+      <th mat-header-cell *matHeaderCellDef>Mãe</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.mae }}</td>
+    </ng-container>
+    <ng-container matColumnDef="nascimento">
+      <th mat-header-cell *matHeaderCellDef>Nascimento</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.nascimento | date:'dd/MM/yyyy' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="sexo">
+      <th mat-header-cell *matHeaderCellDef>Sexo</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.sexo }}</td>
+    </ng-container>
+    <ng-container matColumnDef="estadoCivil">
+      <th mat-header-cell *matHeaderCellDef>Estado Civil</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.estadoCivil }}</td>
+    </ng-container>
+    <ng-container matColumnDef="profissao">
+      <th mat-header-cell *matHeaderCellDef>Profissão</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.profissao }}</td>
+    </ng-container>
+    <ng-container matColumnDef="escolaridade">
+      <th mat-header-cell *matHeaderCellDef>Escolaridade</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.escolaridade }}</td>
+    </ng-container>
+    <ng-container matColumnDef="raca">
+      <th mat-header-cell *matHeaderCellDef>Raça/Cor</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.raca }}</td>
+    </ng-container>
+    <ng-container matColumnDef="endereco">
+      <th mat-header-cell *matHeaderCellDef>Endereço</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.endereco }}</td>
+    </ng-container>
+    <ng-container matColumnDef="bairro">
+      <th mat-header-cell *matHeaderCellDef>Bairro</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.bairro }}</td>
+    </ng-container>
+    <ng-container matColumnDef="municipio">
+      <th mat-header-cell *matHeaderCellDef>Município</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.municipio }}</td>
+    </ng-container>
+    <ng-container matColumnDef="uf">
+      <th mat-header-cell *matHeaderCellDef>UF</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.uf }}</td>
+    </ng-container>
+    <ng-container matColumnDef="cep">
+      <th mat-header-cell *matHeaderCellDef>CEP</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.cep }}</td>
+    </ng-container>
+    <ng-container matColumnDef="acompanhante">
+      <th mat-header-cell *matHeaderCellDef>Acompanhante</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.acompanhante }}</td>
+    </ng-container>
+    <ng-container matColumnDef="procedencia">
+      <th mat-header-cell *matHeaderCellDef>Procedência</th>
+      <td mat-cell *matCellDef="let paciente">{{ paciente.procedencia }}</td>
+    </ng-container>
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let paciente">
+        <button mat-icon-button color="warn" (click)="paciente.id !== undefined && removerPaciente(paciente.id)" [disabled]="paciente.id === undefined" aria-label="Remover paciente">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+</div>
 <ng-template #vazio>
   <p>Nenhum paciente cadastrado.</p>
 </ng-template>

@@ -48,12 +48,23 @@ mat-divider {
   margin: 24px 0;
 }
 
-.pacientes-table {
-  margin: 20px 0;
+.table-container {
+  width: 100%;
+  overflow-x: auto;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin: 20px 0;
+  padding-bottom: 8px;
+}
+
+.pacientes-table {
+  min-width: 900px;
   width: 100%;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
   box-sizing: border-box;
 }
 
@@ -70,11 +81,11 @@ th, td {
     flex-direction: column;
     gap: 8px;
   }
-  .pacientes-table {
+  .table-container {
     margin: 8px 0;
+    padding-bottom: 4px;
   }
-  mat-form-field {
-    min-width: 100%;
-    flex: 1 1 100%;
+  .pacientes-table {
+    min-width: 600px;
   }
 }
