@@ -90,9 +90,19 @@
 
 <mat-divider></mat-divider>
 
+<div class="pesquisa-container">
+  <mat-form-field appearance="outline" class="pesquisa-nome">
+    <mat-label>Pesquisar por nome</mat-label>
+    <input matInput [(ngModel)]="filtroNome" placeholder="Digite o nome do paciente" />
+    <button *ngIf="filtroNome" matSuffix mat-icon-button aria-label="Limpar" (click)="filtroNome = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
 <div class="table-container">
   <h2>Pacientes cadastrados</h2>
-  <table mat-table [dataSource]="pacientes" class="mat-elevation-z2 pacientes-table" *ngIf="pacientes.length; else vazio">
+  <table mat-table [dataSource]="pacientesFiltrados" class="mat-elevation-z2 pacientes-table" *ngIf="pacientesFiltrados.length; else vazio">
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef>Nome</th>
       <td mat-cell *matCellDef="let paciente">{{ paciente.nome }}</td>

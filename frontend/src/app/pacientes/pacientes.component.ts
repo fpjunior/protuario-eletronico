@@ -47,6 +47,7 @@ export class PacientesComponent implements OnInit {
     cpf: ''
   };
   pacienteEditando: Paciente | null = null;
+  filtroNome: string = '';
   colunas = [
     'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia', 'acoes'
@@ -106,5 +107,12 @@ export class PacientesComponent implements OnInit {
   cancelarEdicao() {
     this.pacienteEditando = null;
     this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+  }
+
+  get pacientesFiltrados(): Paciente[] {
+    if (!this.filtroNome.trim()) return this.pacientes;
+    return this.pacientes.filter(p =>
+      p.nome.toLowerCase().includes(this.filtroNome.trim().toLowerCase())
+    );
   }
 }
