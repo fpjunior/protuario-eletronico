@@ -1,95 +1,3 @@
-<div class="ficha-container" *ngIf="exibirFormulario" [ngClass]="{edicao: pacienteEditando}">
-  <h1>Prontuário Eletrônico</h1>
-
-  <form #pacienteForm="ngForm" (ngSubmit)="adicionarPaciente()" class="paciente-form" autocomplete="off">
-    <mat-form-field appearance="fill">
-      <mat-label>Nome</mat-label>
-      <input matInput name="nome" [(ngModel)]="novoPaciente.nome" required />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Nome da mãe</mat-label>
-      <input matInput name="mae" [(ngModel)]="novoPaciente.mae" required />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Data de Nascimento</mat-label>
-      <input matInput name="nascimento" [(ngModel)]="novoPaciente.nascimento" type="date" required />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Sexo</mat-label>
-      <mat-select name="sexo" [(ngModel)]="novoPaciente.sexo" required>
-        <mat-option value="M">Masculino</mat-option>
-        <mat-option value="F">Feminino</mat-option>
-        <mat-option value="I">Ignorad0o</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Estado Civil</mat-label>
-      <mat-select name="estadoCivil" [(ngModel)]="novoPaciente.estadoCivil">
-        <mat-option value="Solteiro(a)">Solteiro(a)</mat-option>
-        <mat-option value="Casado(a)">Casado(a)</mat-option>
-        <mat-option value="Viúvo(a)">Viúvo(a)</mat-option>
-        <mat-option value="Divorciado(a)">Divorciado(a)</mat-option>
-        <mat-option value="Ignorado">Ignorado</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Profissão</mat-label>
-      <input matInput name="profissao" [(ngModel)]="novoPaciente.profissao" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Escolaridade</mat-label>
-      <input matInput name="escolaridade" [(ngModel)]="novoPaciente.escolaridade" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Raça/Cor</mat-label>
-      <mat-select name="raca" [(ngModel)]="novoPaciente.raca">
-        <mat-option value="Branca">Branca</mat-option>
-        <mat-option value="Preta">Preta</mat-option>
-        <mat-option value="Parda">Parda</mat-option>
-        <mat-option value="Amarela">Amarela</mat-option>
-        <mat-option value="Indígena">Indígena</mat-option>
-        <mat-option value="Ignorado">Ignorado</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Endereço</mat-label>
-      <input matInput name="endereco" [(ngModel)]="novoPaciente.endereco" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Bairro</mat-label>
-      <input matInput name="bairro" [(ngModel)]="novoPaciente.bairro" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Município</mat-label>
-      <input matInput name="municipio" [(ngModel)]="novoPaciente.municipio" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>UF</mat-label>
-      <input matInput name="uf" [(ngModel)]="novoPaciente.uf" maxlength="2" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>CEP</mat-label>
-      <input matInput name="cep" [(ngModel)]="novoPaciente.cep" maxlength="9" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Acompanhante</mat-label>
-      <input matInput name="acompanhante" [(ngModel)]="novoPaciente.acompanhante" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Procedência</mat-label>
-      <input matInput name="procedencia" [(ngModel)]="novoPaciente.procedencia" />
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" [disabled]="pacienteForm.invalid">
-      {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
-    </button>
-    <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelarEdicao()">
-      Cancelar
-    </button>
-  </form>
-</div>
-
-<mat-divider *ngIf="exibirFormulario"></mat-divider>
-
 <div class="pesquisa-container">
   <mat-form-field appearance="outline" class="pesquisa-nome">
     <mat-label>Pesquisar por nome</mat-label>
@@ -98,7 +6,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  <button mat-raised-button color="primary" (click)="mostrarFormularioCadastro()" *ngIf="!exibirFormulario">Cadastrar</button>
+  <button mat-raised-button color="primary" [routerLink]="['/pacientes/novo']">Cadastrar</button>
 </div>
 
 <div class="table-container">

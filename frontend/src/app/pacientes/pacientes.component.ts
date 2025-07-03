@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 export interface Paciente {
   id?: number;
@@ -55,7 +56,7 @@ export class PacientesComponent implements OnInit {
   ];
   apiUrl = 'http://localhost:3001/pacientes';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.listarPacientes();
@@ -99,9 +100,7 @@ export class PacientesComponent implements OnInit {
   }
 
   editarPaciente(paciente: Paciente) {
-    this.pacienteEditando = paciente;
-    this.novoPaciente = { ...paciente };
-    this.exibirFormulario = true;
+    this.router.navigate(['/pacientes/novo'], { state: { paciente } });
   }
 
   removerPaciente(id: number) {
