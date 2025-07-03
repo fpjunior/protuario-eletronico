@@ -122,12 +122,13 @@ mat-divider {
   max-width: 900px;
   margin: 0 auto 8px auto;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .pesquisa-nome {
-  min-width: 260px;
-  max-width: 350px;
+  width: 100%;
+  min-width: 220px;
+  max-width: 100%;
 }
 
 @media (max-width: 900px) {
