@@ -1,3 +1,11 @@
+:host {
+  display: block;
+  padding: 14px 5px 14px 5px;
+  max-width: 1200px;
+  margin: 14px auto 14px auto;
+  box-sizing: border-box;
+}
+
 h1 {
   margin-bottom: 24px;
 }
@@ -7,7 +15,7 @@ h1 {
   gap: 16px;
   align-items: flex-end;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 mat-form-field {
@@ -40,7 +48,33 @@ mat-divider {
   margin: 24px 0;
 }
 
-h2 {
-  margin-top: 32px;
-  margin-bottom: 16px;
+.pacientes-table {
+  margin: 20px 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+th, td {
+  padding: 12px 16px;
+}
+
+@media (max-width: 600px) {
+  :host {
+    padding: 8px 4px 8px 4px;
+    margin: 8px auto 8px auto;
+  }
+  .paciente-form {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pacientes-table {
+    margin: 8px 0;
+  }
+  mat-form-field {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
 }
