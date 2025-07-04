@@ -12,6 +12,17 @@
 <div class="table-container">
   <h2>Pacientes cadastrados</h2>
   <table mat-table [dataSource]="pacientesFiltrados" class="mat-elevation-z2 pacientes-table" *ngIf="pacientesFiltrados.length; else vazio">
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let paciente">
+        <button mat-icon-button color="primary" (click)="editarPaciente(paciente)" aria-label="Editar paciente">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="paciente.id !== undefined && removerPaciente(paciente.id)" [disabled]="paciente.id === undefined" aria-label="Remover paciente">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef>Nome</th>
       <td mat-cell *matCellDef="let paciente">{{ paciente.nome }}</td>
@@ -71,17 +82,6 @@
     <ng-container matColumnDef="procedencia">
       <th mat-header-cell *matHeaderCellDef>Procedência</th>
       <td mat-cell *matCellDef="let paciente">{{ paciente.procedencia }}</td>
-    </ng-container>
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let paciente">
-        <button mat-icon-button color="primary" (click)="editarPaciente(paciente)" aria-label="Editar paciente">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="paciente.id !== undefined && removerPaciente(paciente.id)" [disabled]="paciente.id === undefined" aria-label="Remover paciente">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="colunas"></tr>
     <tr mat-row *matRowDef="let row; columns: colunas;"></tr>

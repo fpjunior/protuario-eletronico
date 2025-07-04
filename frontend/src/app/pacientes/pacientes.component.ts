@@ -51,8 +51,8 @@ export class PacientesComponent implements OnInit {
   filtroNome: string = '';
   exibirFormulario = false;
   colunas = [
-    'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
-    'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia', 'acoes'
+    'acoes', 'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
+    'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia'
   ];
   apiUrl = 'http://localhost:3001/pacientes';
 
