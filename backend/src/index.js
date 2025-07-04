@@ -7,7 +7,9 @@ import fs from 'fs';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://protuario-eletronico-t3wu.vercel.app'
+}));
 app.use(express.json());
 
 const pool = new Pool({
