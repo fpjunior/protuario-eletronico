@@ -13,7 +13,8 @@ export class PacientesFormComponent implements OnInit {
   novoPaciente: Paciente = {
     nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: ''
   };
-  apiUrl = 'http://localhost:3001/pacientes';
+  // apiUrl = 'http://localhost:3001/pacientes';
+  apiUrl = 'https://protuario-eletronico-1.onrender.com/pacientes';
 
   constructor(private router: Router, private http: HttpClient) {
     const nav = this.router.getCurrentNavigation();
