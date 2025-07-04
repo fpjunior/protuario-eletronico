@@ -58,7 +58,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   ];
   // apiUrl = 'http://localhost:3001/pacientes';
 
- apiUrl = 'https://protuario-eletronico-1.onrender.com/pacientes';
+ apiUrl = 'https://protuario-eletronico-1.onrender.com';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<Paciente>([]);
