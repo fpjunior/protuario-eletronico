@@ -21,7 +21,6 @@ export interface Paciente {
   cep: string;
   acompanhante: string;
   procedencia: string;
-  cpf: string;
 }
 
 @Component({
@@ -46,8 +45,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     uf: '',
     cep: '',
     acompanhante: '',
-    procedencia: '',
-    cpf: ''
+    procedencia: ''
   };
   pacienteEditando: Paciente | null = null;
   filtroNome: string = '';
@@ -87,7 +85,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   mostrarFormularioCadastro() {
     this.exibirFormulario = true;
     this.pacienteEditando = null;
-    this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+    this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
   }
 
   adicionarPaciente() {
@@ -95,7 +93,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
       // Confirmação antes de atualizar
       if (confirm('Tem certeza que deseja atualizar este registro?')) {
         this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe(() => {
-          this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+          this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
           this.pacienteEditando = null;
           this.exibirFormulario = false;
           this.listarPacientes();
@@ -104,7 +102,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     } else {
       // Adicionar novo paciente
       this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe(() => {
-        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
         this.exibirFormulario = false;
         this.listarPacientes();
       });
@@ -120,14 +118,14 @@ export class PacientesComponent implements OnInit, AfterViewInit {
       this.listarPacientes();
       if (this.pacienteEditando && this.pacienteEditando.id === id) {
         this.pacienteEditando = null;
-        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
       }
     });
   }
 
   cancelarEdicao() {
     this.pacienteEditando = null;
-    this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: '' };
+    this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
     this.exibirFormulario = false;
   }
 

@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 export class PacientesFormComponent implements OnInit {
   pacienteEditando: Paciente | null = null;
   novoPaciente: Paciente = {
-    nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '', cpf: ''
+    nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: ''
   };
   apiUrl = 'http://localhost:3001/pacientes';
 
@@ -35,8 +35,7 @@ export class PacientesFormComponent implements OnInit {
         uf: this.pacienteEditando?.uf || '',
         cep: this.pacienteEditando?.cep || '',
         acompanhante: this.pacienteEditando?.acompanhante || '',
-        procedencia: this.pacienteEditando?.procedencia || '',
-        cpf: this.pacienteEditando?.cpf || ''
+        procedencia: this.pacienteEditando?.procedencia || ''
       };
     }
   }
