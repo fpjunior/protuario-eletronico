@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS pacientes;
+
 CREATE TABLE IF NOT EXISTS pacientes (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
@@ -19,6 +21,6 @@ CREATE TABLE IF NOT EXISTS pacientes (
 
 INSERT INTO pacientes (nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia)
 VALUES
-  ('Joao Silva', 'Maria Silva', '1980-05-10', 'M', 'Solteiro', 'Professor', 'Superior', 'Branca', 'Rua das Flores, 123', 'Centro', 'Sao Paulo', 'SP', '01001-000', 'Carlos Silva', 'Residencia'),
+  ('Joao Silva', 'Maria Silva45', '1980-05-10', 'M', 'Solteiro', 'Professor', 'Superior', 'Branca', 'Rua das Flores, 123', 'Centro', 'Sao Paulo', 'SP', '01001-000', 'Carlos Silva', 'Residencia'),
   ('Ana Souza', 'Clara Souza', '1992-11-23', 'F', 'Casada', 'Enfermeira', 'Medio', 'Parda', 'Av. Brasil, 456', 'Jardim', 'Rio de Janeiro', 'RJ', '20000-000', 'Paulo Souza', 'Hospital'),
   ('Marcos Lima', 'Helena Lima', '1975-03-15', 'M', 'Divorciado', 'Engenheiro', 'Superior', 'Preta', 'Rua Verde, 789', 'Industrial', 'Belo Horizonte', 'MG', '30000-000', 'Lucas Lima', 'Clinica');
