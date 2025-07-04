@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface Paciente {
   id?: number;
@@ -27,7 +29,7 @@ export interface Paciente {
   templateUrl: './pacientes.component.html',
   styleUrls: ['./pacientes.component.scss']
 })
-export class PacientesComponent implements OnInit {
+export class PacientesComponent implements OnInit, AfterViewInit {
   pacientes: Paciente[] = [];
   novoPaciente: Paciente = {
     nome: '',
@@ -56,10 +58,17 @@ export class PacientesComponent implements OnInit {
   ];
   apiUrl = 'http://localhost:3001/pacientes';
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource<Paciente>([]);
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.listarPacientes();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   listarPacientes() {
@@ -67,6 +76,7 @@ export class PacientesComponent implements OnInit {
       this.apiUrl).subscribe(
         pacientes => {
           this.pacientes = pacientes;
+          this.dataSource.data = pacientes;
           console.log('Pacientes carregados:', this.pacientes);
         }
       );
