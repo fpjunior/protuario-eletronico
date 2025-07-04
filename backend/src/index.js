@@ -8,7 +8,9 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: 'https://protuario-eletronico-t3wu.vercel.app'
+  origin: 'https://protuario-eletronico-t3wu.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
@@ -104,6 +106,8 @@ app.put('/pacientes/:id', async (req, res) => {
   }
   res.json(mapPacienteDbToApi(rows[0]));
 });
+
+app.options('*', cors());
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
