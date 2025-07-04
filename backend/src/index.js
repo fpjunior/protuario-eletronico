@@ -42,8 +42,7 @@ function mapPacienteDbToApi(p) {
     uf: p.uf,
     cep: p.cep,
     acompanhante: p.acompanhante,
-    procedencia: p.procedencia,
-    cpf: p.cpf
+    procedencia: p.procedencia
   };
 }
 
@@ -54,14 +53,14 @@ app.get('/pacientes', async (req, res) => {
 
 app.post('/pacientes', async (req, res) => {
   const {
-    nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf
+    nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
   } = req.body;
   const { rows } = await pool.query(
     `INSERT INTO pacientes (
-      nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf
+      nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
     RETURNING *`,
-    [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf]
+    [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia]
   );
   res.status(201).json(mapPacienteDbToApi(rows[0]));
 });
@@ -75,7 +74,7 @@ app.delete('/pacientes/:id', async (req, res) => {
 app.put('/pacientes/:id', async (req, res) => {
   const { id } = req.params;
   const {
-    nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf
+    nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
   } = req.body;
   const { rows } = await pool.query(
     `UPDATE pacientes SET
@@ -93,11 +92,10 @@ app.put('/pacientes/:id', async (req, res) => {
       uf = $12,
       cep = $13,
       acompanhante = $14,
-      procedencia = $15,
-      cpf = $16
-    WHERE id = $17
+      procedencia = $15
+    WHERE id = $16
     RETURNING *`,
-    [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf, id]
+    [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, id]
   );
   if (rows.length === 0) {
     return res.status(404).json({ error: 'Paciente não encontrado' });
