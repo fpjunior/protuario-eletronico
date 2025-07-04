@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -16,6 +17,12 @@ const pool = new Pool({
 app.get('/', (req, res) => {
   res.send('API do Prontuário Eletrônico');
 });
+
+// Executa o script de criação da tabela ao iniciar o backend
+const initSql = fs.readFileSync(new URL('../init.sql', import.meta.url), 'utf8');
+pool.query(initSql)
+  .then(() => console.log('Script de inicialização executado com sucesso.'))
+  .catch(err => console.error('Erro ao executar script de inicialização:', err));
 
 // CRUD Pacientes
 function mapPacienteDbToApi(p) {
