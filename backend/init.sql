@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS pacientes;
 CREATE TABLE IF NOT EXISTS pacientes (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
@@ -18,3 +17,15 @@ CREATE TABLE IF NOT EXISTS pacientes (
   procedencia VARCHAR(100),
   cpf VARCHAR(14) NOT NULL UNIQUE
 );
+
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pacientes) THEN
+    INSERT INTO pacientes (nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf) VALUES
+    ('Joao Silva', 'Maria Silva', TO_DATE('1980-05-10', 'YYYY-MM-DD'), 'M', 'Solteiro', 'Professor', 'Superior', 'Branca', 'Rua das Flores, 123', 'Centro', 'Sao Paulo', 'SP', '01001-000', 'Carlos Silva', 'Residencia', '123.456.789-00');
+    INSERT INTO pacientes (nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf) VALUES
+    ('Ana Souza', 'Clara Souza', TO_DATE('1992-11-23', 'YYYY-MM-DD'), 'F', 'Casada', 'Enfermeira', 'Medio', 'Parda', 'Av. Brasil, 456', 'Jardim', 'Rio de Janeiro', 'RJ', '20000-000', 'Paulo Souza', 'Hospital', '987.654.321-00');
+    INSERT INTO pacientes (nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia, cpf) VALUES
+    ('Marcos Lima', 'Helena Lima', TO_DATE('1975-03-15', 'YYYY-MM-DD'), 'M', 'Divorciado', 'Engenheiro', 'Superior', 'Preta', 'Rua Verde, 789', 'Industrial', 'Belo Horizonte', 'MG', '30000-000', 'Lucas Lima', 'Clinica', '111.222.333-44');
+  END IF;
+END;
+/
