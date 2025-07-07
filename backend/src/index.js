@@ -8,7 +8,9 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: 'https://protuario-eletronico-t3wu.vercel.app'
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
@@ -49,22 +51,46 @@ function mapPacienteDbToApi(p) {
 }
 
 app.get('/pacientes', async (req, res) => {
-  const { rows } = await pool.query('SELECT * FROM pacientes ORDER BY id DESC');
-  res.json(rows.map(mapPacienteDbToApi));
+  const { nome, nascimento } = req.query;
+  let query = 'SELECT * FROM pacientes';
+  let params = [];
+  if (nome && nascimento) {
+    query += ' WHERE nome = $1 AND nascimento = $2';
+    params = [nome, nascimento];
+  } else if (nome) {
+    query += ' WHERE nome = $1';
+    params = [nome];
+  } else if (nascimento) {
+    query += ' WHERE nascimento = $1';
+    params = [nascimento];
+  }
+  query += ' ORDER BY id DESC';
+  try {
+    const { rows } = await pool.query(query, params);
+    res.json(rows.map(mapPacienteDbToApi));
+  } catch (err) {
+    console.error('Erro ao buscar pacientes:', err);
+    res.status(500).json({ error: 'Erro ao buscar pacientes' });
+  }
 });
 
 app.post('/pacientes', async (req, res) => {
   const {
     nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
   } = req.body;
-  const { rows } = await pool.query(
-    `INSERT INTO pacientes (
-      nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-    RETURNING *`,
-    [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia]
-  );
-  res.status(201).json(mapPacienteDbToApi(rows[0]));
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO pacientes (
+        nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      RETURNING *`,
+      [nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia]
+    );
+    res.status(201).json(mapPacienteDbToApi(rows[0]));
+  } catch (err) {
+    console.error('Erro ao cadastrar paciente:', err);
+    res.status(400).json({ error: 'Erro ao cadastrar paciente', details: err.message });
+  }
 });
 
 app.delete('/pacientes/:id', async (req, res) => {
