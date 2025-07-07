@@ -1,29 +1,33 @@
 <div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
   <h1>Prontuário Eletrônico</h1>
-  <form #pacienteForm="ngForm" (ngSubmit)="salvar()" class="paciente-form" autocomplete="off">
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="paciente-form" autocomplete="off">
     <mat-form-field appearance="fill">
       <mat-label>Nome</mat-label>
-      <input matInput name="nome" [(ngModel)]="novoPaciente.nome" required />
+      <input matInput formControlName="nome" />
+      <mat-error *ngIf="form.get('nome')?.invalid && (form.get('nome')?.dirty || form.get('nome')?.touched)">Nome é obrigatório.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Nome da mãe</mat-label>
-      <input matInput name="mae" [(ngModel)]="novoPaciente.mae" required />
+      <input matInput formControlName="mae" />
+      <mat-error *ngIf="form.get('mae')?.invalid && (form.get('mae')?.dirty || form.get('mae')?.touched)">Nome da mãe é obrigatório.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Data de Nascimento</mat-label>
-      <input matInput name="nascimento" [(ngModel)]="novoPaciente.nascimento" type="date" required />
+      <input matInput formControlName="nascimento" type="date" />
+      <mat-error *ngIf="form.get('nascimento')?.invalid && (form.get('nascimento')?.dirty || form.get('nascimento')?.touched)">Data de nascimento é obrigatória.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Sexo</mat-label>
-      <mat-select name="sexo" [(ngModel)]="novoPaciente.sexo" required>
+      <mat-select formControlName="sexo">
         <mat-option value="M">Masculino</mat-option>
         <mat-option value="F">Feminino</mat-option>
         <mat-option value="I">Ignorado</mat-option>
       </mat-select>
+      <mat-error *ngIf="form.get('sexo')?.invalid && (form.get('sexo')?.dirty || form.get('sexo')?.touched)">Sexo é obrigatório.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Estado Civil</mat-label>
-      <mat-select name="estadoCivil" [(ngModel)]="novoPaciente.estadoCivil">
+      <mat-select formControlName="estadoCivil">
         <mat-option value="Solteiro(a)">Solteiro(a)</mat-option>
         <mat-option value="Casado(a)">Casado(a)</mat-option>
         <mat-option value="Viúvo(a)">Viúvo(a)</mat-option>
@@ -33,15 +37,15 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Profissão</mat-label>
-      <input matInput name="profissao" [(ngModel)]="novoPaciente.profissao" />
+      <input matInput formControlName="profissao" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Escolaridade</mat-label>
-      <input matInput name="escolaridade" [(ngModel)]="novoPaciente.escolaridade" />
+      <input matInput formControlName="escolaridade" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Raça/Cor</mat-label>
-      <mat-select name="raca" [(ngModel)]="novoPaciente.raca">
+      <mat-select formControlName="raca">
         <mat-option value="Branca">Branca</mat-option>
         <mat-option value="Preta">Preta</mat-option>
         <mat-option value="Parda">Parda</mat-option>
@@ -52,33 +56,39 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Endereço</mat-label>
-      <input matInput name="endereco" [(ngModel)]="novoPaciente.endereco" />
+      <input matInput formControlName="endereco" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Bairro</mat-label>
-      <input matInput name="bairro" [(ngModel)]="novoPaciente.bairro" />
+      <input matInput formControlName="bairro" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Município</mat-label>
-      <input matInput name="municipio" [(ngModel)]="novoPaciente.municipio" />
+      <input matInput formControlName="municipio" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>UF</mat-label>
-      <input matInput name="uf" [(ngModel)]="novoPaciente.uf" maxlength="2" />
+      <input matInput formControlName="uf" maxlength="2" />
+      <mat-error *ngIf="form.get('uf')?.invalid && (form.get('uf')?.dirty || form.get('uf')?.touched)">UF deve ter 2 letras.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>CEP</mat-label>
-      <input matInput name="cep" [(ngModel)]="novoPaciente.cep" maxlength="9" />
+      <input matInput formControlName="cep" maxlength="9" />
+      <mat-error *ngIf="form.get('cep')?.invalid && (form.get('cep')?.dirty || form.get('cep')?.touched)">CEP inválido. Ex: 12345-678</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Acompanhante</mat-label>
-      <input matInput name="acompanhante" [(ngModel)]="novoPaciente.acompanhante" />
+      <input matInput formControlName="acompanhante" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Procedência</mat-label>
-      <input matInput name="procedencia" [(ngModel)]="novoPaciente.procedencia" />
+      <input matInput formControlName="procedencia" />
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" [disabled]="pacienteForm.invalid">
+    <mat-error *ngIf="form.errors?.['duplicado']">Já existe paciente com este nome, nome da mãe e data de nascimento.</mat-error>
+    <button mat-raised-button color="primary" type="submit"
+      [disabled]="form.invalid || form.pending || form.errors?.['duplicado']"
+      [ngClass]="{'botao-desabilitado': form.invalid || form.pending || form.errors?.['duplicado']}"
+    >
       {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
     </button>
     <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelar()">
