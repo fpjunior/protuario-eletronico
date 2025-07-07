@@ -88,6 +88,9 @@ app.post('/pacientes', async (req, res) => {
     );
     res.status(201).json(mapPacienteDbToApi(rows[0]));
   } catch (err) {
+    if (err.code === '23505') { // unique_violation
+      return res.status(409).json({ error: 'Já existe paciente com este nome e data de nascimento.' });
+    }
     console.error('Erro ao cadastrar paciente:', err);
     res.status(400).json({ error: 'Erro ao cadastrar paciente', details: err.message });
   }

@@ -84,8 +84,8 @@
       <mat-label>Procedência</mat-label>
       <input matInput formControlName="procedencia" />
     </mat-form-field>
-    <mat-error *ngIf="form.errors?.['nomeNascimentoDuplicado']">Já existe paciente com este nome e data de nascimento.</mat-error>
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || form.pending">
+    <mat-error *ngIf="form.errors?.['duplicado']">Já existe paciente com este nome, nome da mãe e data de nascimento.</mat-error>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || form.pending || form.errors?.['duplicado']">
       {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
     </button>
     <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelar()">

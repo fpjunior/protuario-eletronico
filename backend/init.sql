@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS pacientes (
   uf VARCHAR(2),
   cep VARCHAR(9),
   acompanhante VARCHAR(100),
-  procedencia VARCHAR(100)
+  procedencia VARCHAR(100),
+  CONSTRAINT unique_nome_nascimento UNIQUE (nome, nascimento)
 );
 
 INSERT INTO pacientes (nome, mae, nascimento, sexo, estado_civil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia)

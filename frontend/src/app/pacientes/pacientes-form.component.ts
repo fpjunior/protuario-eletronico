@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Paciente } from './pacientes.component';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AsyncValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { map, debounceTime, switchMap, first } from 'rxjs/operators';
+import { debounceTime, switchMap, map, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pacientes-form',
@@ -36,71 +36,57 @@ export class PacientesFormComponent implements OnInit {
       cep: ['', [Validators.pattern(/^[0-9]{5}-?[0-9]{3}$/)]],
       acompanhante: [''],
       procedencia: ['']
-    });
+    }, { asyncValidators: [this.duplicidadeValidator()] });
 
     if (this.pacienteEditando) {
       this.form.patchValue(this.pacienteEditando);
     }
-
-    // Validação assíncrona só quando nome ou nascimento mudam
-    this.form.get('nome')?.valueChanges.subscribe(() => this.checkNomeNascimentoUnico());
-    this.form.get('nascimento')?.valueChanges.subscribe(() => this.checkNomeNascimentoUnico());
   }
-  novoPaciente: any = {
-    nome: '',
-    mae: '',
-    nascimento: '',
-    sexo: '',
-    estadoCivil: '',
-    profissao: '',
-    escolaridade: '',
-    raca: '',
-    endereco: '',
-    bairro: '',
-    municipio: '',
-    uf: '',
-    cep: '',
-    acompanhante: '',
-    procedencia: ''
-  };
 
   ngOnInit() { }
 
-  checkNomeNascimentoUnico() {
-    const nome = this.form.get('nome')?.value;
-    const nascimento = this.form.get('nascimento')?.value;
-    if (!nome || !nascimento) {
-      this.form.setErrors(null);
-      return;
-    }
-    this.http.get<Paciente[]>(`${this.apiUrl}?nome=${encodeURIComponent(nome)}&nascimento=${encodeURIComponent(nascimento)}`)
-      .pipe(first())
-      .subscribe(pacientes => {
-        if (this.pacienteEditando && pacientes.length === 1 && pacientes[0].id === this.pacienteEditando.id) {
-          this.form.setErrors(null);
-        } else {
-          this.form.setErrors(pacientes.length > 0 ? { nomeNascimentoDuplicado: true } : null);
-        }
-      }, () => {
-        this.form.setErrors(null);
-      });
+  duplicidadeValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const nome = control.get('nome')?.value;
+      const mae = control.get('mae')?.value;
+      const nascimento = control.get('nascimento')?.value;
+      if (!nome || !mae || !nascimento) return of(null);
+      const params = `?nome=${encodeURIComponent(nome)}&mae=${encodeURIComponent(mae)}&nascimento=${encodeURIComponent(nascimento)}`;
+      return this.http.get<Paciente[]>(`${this.apiUrl}${params}`)
+        .pipe(
+          debounceTime(300),
+          map(pacientes => {
+            if (this.pacienteEditando && pacientes.length === 1 && pacientes[0].id === this.pacienteEditando.id) {
+              return null;
+            }
+            return pacientes.length > 0 ? { duplicado: true } : null;
+          }),
+          first()
+        );
+    };
   }
 
   salvar() {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.form.pending) {
       this.form.markAllAsTouched();
       return;
     }
     const paciente = this.form.value;
     if (this.pacienteEditando && this.pacienteEditando.id) {
       if (confirm('Tem certeza que deseja atualizar este registro?')) {
-        this.http.put(`${this.apiUrl}/${this.pacienteEditando.id}`, paciente).subscribe(() => {
-          this.router.navigate(['/']);
+        this.http.put(`${this.apiUrl}/${this.pacienteEditando.id}`, paciente).subscribe({
+          next: () => this.router.navigate(['/']),
+          error: (err) => {
+            alert(err?.error?.error || 'Erro ao atualizar paciente.');
+          }
         });
       }
     } else {
-      this.http.post(this.apiUrl, paciente).subscribe(() => {
-        this.router.navigate(['/']);
+      this.http.post(this.apiUrl, paciente).subscribe({
+        next: () => this.router.navigate(['/']),
+        error: (err) => {
+          alert(err?.error?.error || 'Erro ao cadastrar paciente.');
+        }
       });
     }
   }
