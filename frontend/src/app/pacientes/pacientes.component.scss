@@ -186,6 +186,15 @@ mat-divider {
   max-width: 180px;
 }
 
+.botao-desabilitado {
+  background-color: #e3e7ed !important; // azul bem claro
+  color: #888 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  border: none !important;
+  opacity: 1 !important;
+}
+
 @media (max-width: 900px) {
   .ficha-container {
     padding: 16px 4px 16px 4px;
