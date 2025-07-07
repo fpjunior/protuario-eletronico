@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, AsyncValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { debounceTime, switchMap, map, first } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-pacientes-form',
@@ -14,8 +15,7 @@ import { debounceTime, switchMap, map, first } from 'rxjs/operators';
 export class PacientesFormComponent implements OnInit {
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
-  apiUrl = 'http://localhost:3001/pacientes';
-  // apiUrl = 'https://protuario-eletronico-1.onrender.com/pacientes';
+  apiUrl = environment.apiUrl;
 
   constructor(private router: Router, private http: HttpClient, private fb: FormBuilder) {
     const nav = this.router.getCurrentNavigation();

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { environment } from '../../environments/environment';
 
 export interface Paciente {
   id?: number;
@@ -54,9 +55,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     'acoes', 'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia'
   ];
-  apiUrl = 'http://localhost:3001/pacientes';
-
-//  apiUrl = 'https://protuario-eletronico-1.onrender.com/pacientes';
+  apiUrl = environment.apiUrl;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<Paciente>([]);
