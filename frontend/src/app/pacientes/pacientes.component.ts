@@ -84,19 +84,23 @@ export class PacientesComponent implements OnInit, AfterViewInit {
 
   listarPacientes() {
     this.loading = true;
-    this.http.get<Paciente[]>(
-      this.apiUrl).subscribe({
-        next: (pacientes) => {
-          this.pacientes = pacientes;
-          this.dataSource.data = pacientes;
-          console.log('Pacientes carregados:', this.pacientes);
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Erro ao carregar pacientes:', error);
-          this.loading = false;
-        }
-      });
+    this.http.get<Paciente[]>(this.apiUrl).subscribe({
+      next: (pacientes) => {
+        this.pacientes = pacientes;
+        this.dataSource.data = pacientes;
+        // Garante que o paginator é associado após atualizar os dados
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+        });
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar pacientes:', error);
+        this.loading = false;
+      }
+    });
   }
 
   mostrarFormularioCadastro() {
@@ -179,6 +183,9 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   // Método para aplicar filtro na tabela
   aplicarFiltro() {
     this.dataSource.filter = this.filtroNome.trim();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   logout() {
