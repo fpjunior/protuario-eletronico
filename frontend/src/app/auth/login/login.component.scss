@@ -1,0 +1,312 @@
+/* Estilos principais da página de login */
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header do sistema - reutilizando estilos das outras telas */
+.header-sistema {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-alianca {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.sistema-info {
+  text-align: left;
+}
+
+.logo-principal {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.sistema-descricao {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Container principal de login */
+.login-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Header do card de login */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Formulário de login */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  width: 100%;
+}
+
+/* Customização dos campos Material */
+.form-field .mat-mdc-form-field-outline {
+  border-radius: 8px;
+}
+
+.form-field .mat-mdc-text-field-wrapper {
+  border-radius: 8px;
+}
+
+.form-field .mat-mdc-form-field-focus-overlay {
+  border-radius: 8px;
+}
+
+/* Mensagem de erro */
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #c62828;
+  font-size: 0.9rem;
+}
+
+.error-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.error-text {
+  flex: 1;
+}
+
+/* Botão de login */
+.login-button {
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-transform: none;
+  box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.login-button:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-spinner {
+  margin-right: 0.5rem;
+}
+
+.login-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.login-text {
+  font-weight: 600;
+}
+
+/* Link "Esqueci minha senha" */
+.forgot-password {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.forgot-link {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* Footer */
+.login-footer {
+  text-align: center;
+  padding: 1rem;
+  color: #7f8c8d;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.login-footer p {
+  margin: 0;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+  
+  .logo-alianca {
+    height: 40px;
+  }
+  
+  .logo-principal {
+    font-size: 1.5rem;
+  }
+  
+  .sistema-descricao {
+    font-size: 0.8rem;
+  }
+  
+  .login-container {
+    padding: 1rem;
+  }
+  
+  .login-card {
+    padding: 2rem 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .login-title {
+    font-size: 1.3rem;
+  }
+  
+  .login-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .sistema-info {
+    text-align: center;
+  }
+  
+  .login-card {
+    padding: 1.5rem 1rem;
+    margin: 0 0.5rem;
+  }
+  
+  .login-button {
+    height: 44px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Animações suaves */
+.login-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Customização adicional do Material Design */
+.mat-mdc-form-field-error {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* Estados de focus e hover para acessibilidade */
+.form-field:focus-within {
+  transform: translateY(-1px);
+  transition: transform 0.2s ease;
+}
+
+.login-button:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.forgot-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

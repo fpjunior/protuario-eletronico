@@ -80,4 +80,9 @@ export class LoginComponent implements OnInit {
     }
     return '';
   }
+
+  showForgotPassword(): void {
+    // TODO: Implementar funcionalidade de recuperação de senha
+    alert('Funcionalidade de recuperação de senha será implementada em breve.\n\nPor enquanto, entre em contato com o administrador do sistema.');
+  }
 }
