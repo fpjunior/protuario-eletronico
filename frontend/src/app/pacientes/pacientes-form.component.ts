@@ -16,7 +16,8 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
   loading = false;
-  apiUrl = environment.apiUrl + '/pacientes';
+  verificandoDuplicidade = false;
+  apiUrl = environment.apiUrl + '/api/pacientes';
   private destroy$ = new Subject<void>();
   private validationSubject = new Subject<{nome: string, mae: string}>();
 
@@ -82,27 +83,40 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     this.validationSubject.pipe(
       debounceTime(500),
       switchMap(({nome, mae}) => {
+        this.verificandoDuplicidade = true;
         const params = `?nome=${encodeURIComponent(nome.trim())}&mae=${encodeURIComponent(mae.trim())}`;
         return this.http.get<Paciente[]>(`${this.apiUrl}${params}`);
       }),
       takeUntil(this.destroy$)
-    ).subscribe(pacientes => {
-      const nomeControl = this.form.get('nome');
-      if (nomeControl) {
-        // Se está editando, ignora o próprio paciente
-        const isDuplicate = this.pacienteEditando && pacientes.length === 1 && pacientes[0].id === this.pacienteEditando.id
-          ? false
-          : pacientes.length > 0;
-        
-        if (isDuplicate) {
-          nomeControl.setErrors({ duplicado: true });
-        } else {
-          const errors = nomeControl.errors;
-          if (errors) {
-            delete errors['duplicado'];
-            nomeControl.setErrors(Object.keys(errors).length > 0 ? errors : null);
+    ).subscribe({
+      next: (pacientes) => {
+        this.verificandoDuplicidade = false;
+        const nomeControl = this.form.get('nome');
+        if (nomeControl) {
+          // Se está editando, ignora o próprio paciente
+          const isDuplicate = this.pacienteEditando && pacientes.length === 1 && pacientes[0].id === this.pacienteEditando.id
+            ? false
+            : pacientes.length > 0;
+
+          if (isDuplicate) {
+            nomeControl.setErrors({
+              ...nomeControl.errors,
+              duplicado: {
+                message: `Paciente já cadastrado: ${pacientes[0].nome}`,
+                paciente: pacientes[0]
+              }
+            });
+          } else {
+            const errors = nomeControl.errors;
+            if (errors && errors['duplicado']) {
+              delete errors['duplicado'];
+              nomeControl.setErrors(Object.keys(errors).length > 0 ? errors : null);
+            }
           }
         }
+      },
+      error: () => {
+        this.verificandoDuplicidade = false;
       }
     });
 
@@ -128,17 +142,32 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   private checkDuplicidade() {
     const nome = this.form.get('nome')?.value;
     const mae = this.form.get('mae')?.value;
-    
+
     if (nome && mae && nome.trim() !== '' && mae.trim() !== '') {
+      // Limpar erro anterior antes de verificar
+      const nomeControl = this.form.get('nome');
+      if (nomeControl?.errors?.['duplicado']) {
+        const errors = { ...nomeControl.errors };
+        delete errors['duplicado'];
+        nomeControl.setErrors(Object.keys(errors).length > 0 ? errors : null);
+      }
+
       this.validationSubject.next({nome: nome.trim(), mae: mae.trim()});
+    } else {
+      this.verificandoDuplicidade = false;
     }
   }
 
   salvar() {
-    if (this.form.invalid || this.form.pending) {
+    if (this.form.invalid || this.form.pending || this.verificandoDuplicidade) {
+      if (this.verificandoDuplicidade) {
+        alert('Aguarde a verificação de duplicidade.');
+        return;
+      }
       this.form.markAllAsTouched();
       return;
     }
+
     const paciente = this.form.value;
     this.loading = true;
 

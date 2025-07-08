@@ -16,7 +16,11 @@
     <mat-form-field appearance="fill">
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" />
-      <mat-error *ngIf="form.get('nome')?.invalid && (form.get('nome')?.dirty || form.get('nome')?.touched)">Nome é obrigatório.</mat-error>
+      <mat-hint *ngIf="verificandoDuplicidade">Verificando se paciente já existe...</mat-hint>
+      <mat-error *ngIf="form.get('nome')?.hasError('required') && (form.get('nome')?.dirty || form.get('nome')?.touched)">Nome é obrigatório.</mat-error>
+      <mat-error *ngIf="form.get('nome')?.hasError('duplicado')">
+        Paciente já cadastrado com este nome e nome da mãe.
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Nome da mãe</mat-label>
