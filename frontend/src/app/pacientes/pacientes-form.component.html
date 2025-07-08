@@ -80,8 +80,13 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>UF</mat-label>
-      <input matInput formControlName="uf" maxlength="2" />
-      <mat-error *ngIf="form.get('uf')?.invalid && (form.get('uf')?.dirty || form.get('uf')?.touched)">UF deve ter 2 letras.</mat-error>
+      <mat-select formControlName="uf">
+        <mat-option value="">Selecione o estado</mat-option>
+        <mat-option *ngFor="let estado of estadosBrasileiros" [value]="estado.sigla">
+          {{ estado.sigla }} - {{ estado.nome }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('uf')?.invalid && (form.get('uf')?.dirty || form.get('uf')?.touched)">UF é obrigatória.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>CEP</mat-label>
