@@ -37,6 +37,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem(this.tokenKey, response.token);
+          localStorage.setItem('auth_user', JSON.stringify(response.usuario));
           this.userSubject.next(response.usuario);
         })
       );
@@ -44,6 +45,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('auth_user');
     this.userSubject.next(null);
     this.router.navigate(['/login']);
   }
@@ -67,10 +69,11 @@ export class AuthService {
 
   private loadStoredUser(): void {
     const token = this.getToken();
-    if (token && this.isAuthenticated()) {
+    const userStr = localStorage.getItem('auth_user');
+    if (token && this.isAuthenticated() && userStr) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        this.userSubject.next(payload.usuario);
+        const user = JSON.parse(userStr);
+        this.userSubject.next(user);
       } catch {
         this.logout();
       }
