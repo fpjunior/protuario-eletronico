@@ -128,20 +128,29 @@ function mapPacienteDbToApi(p) {
   };
 }
 
-app.get('/pacientes', authenticateToken, async (req, res) => {
-  const { nome, nascimento } = req.query;
+app.get('/api/pacientes', authenticateToken, async (req, res) => {
+  const { nome, mae, nascimento } = req.query;
   let query = 'SELECT * FROM pacientes';
   let params = [];
-  if (nome && nascimento) {
+  
+  if (nome && mae) {
+    // Busca por nome e mãe (para validação de duplicidade)
+    query += ' WHERE LOWER(nome) = LOWER($1) AND LOWER(mae) = LOWER($2)';
+    params = [nome, mae];
+  } else if (nome && nascimento) {
+    // Busca por nome e nascimento
     query += ' WHERE nome = $1 AND nascimento = $2';
     params = [nome, nascimento];
   } else if (nome) {
+    // Busca apenas por nome
     query += ' WHERE nome = $1';
     params = [nome];
   } else if (nascimento) {
+    // Busca apenas por nascimento
     query += ' WHERE nascimento = $1';
     params = [nascimento];
   }
+  
   query += ' ORDER BY id DESC';
   try {
     const { rows } = await pool.query(query, params);
@@ -152,7 +161,7 @@ app.get('/pacientes', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/pacientes', authenticateToken, async (req, res) => {
+app.post('/api/pacientes', authenticateToken, async (req, res) => {
   const {
     nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
   } = req.body;
@@ -174,13 +183,13 @@ app.post('/pacientes', authenticateToken, async (req, res) => {
   }
 });
 
-app.delete('/pacientes/:id', authenticateToken, async (req, res) => {
+app.delete('/api/pacientes/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   await pool.query('DELETE FROM pacientes WHERE id = $1', [id]);
   res.status(204).send();
 });
 
-app.put('/pacientes/:id', authenticateToken, async (req, res) => {
+app.put('/api/pacientes/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const {
     nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
