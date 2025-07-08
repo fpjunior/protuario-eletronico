@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Test files
+test-*.js
+*-test.js
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Docker
+.docker/
+
+# Temporary files
+tmp/
+temp/
