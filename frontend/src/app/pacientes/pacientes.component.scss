@@ -318,15 +318,44 @@ mat-divider {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   position: relative;
   z-index: 1;
   padding: 0 40px;
 }
 
-.header-icon {
-  font-size: 3rem;
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-right: 8px;
+}
+
+.logo-alianca {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+  transition: all 0.3s ease;
+}
+
+.logo-alianca:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.logo-principal {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -1px;
+  line-height: 1;
+  background: linear-gradient(45deg, #fff 0%, #e0f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-left: 8px;
 }
 
 .header-text h1 {
@@ -346,4 +375,54 @@ mat-divider {
   font-size: 1.1rem;
   opacity: 0.9;
   font-weight: 400;
+}
+
+// Responsividade da logo
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 20px 20px;
+  }
+
+  .logo-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .logo-alianca {
+    height: 40px;
+  }
+
+  .logo-principal {
+    font-size: 2rem;
+    margin-left: 0;
+  }
+
+  .header-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .header-text p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-alianca {
+    height: 35px;
+  }
+
+  .logo-principal {
+    font-size: 1.6rem;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-text p {
+    font-size: 0.9rem;
+  }
 }
