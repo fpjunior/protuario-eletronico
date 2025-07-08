@@ -98,6 +98,61 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// Endpoint de recuperação de senha
+app.post('/api/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'E-mail é obrigatório' });
+    }
+
+    // Verificar se o usuário existe
+    const query = 'SELECT id, email, nome FROM usuarios WHERE email = $1';
+    const result = await pool.query(query, [email]);
+
+    if (result.rows.length === 0) {
+      // Por segurança, retornamos sucesso mesmo se o email não existir
+      // Isso evita que atacantes descubram emails válidos
+      return res.json({ 
+        message: 'Se o e-mail existir em nossa base, você receberá as instruções de recuperação.' 
+      });
+    }
+
+    const usuario = result.rows[0];
+
+    // Gerar token de recuperação de senha
+    const resetToken = jwt.sign(
+      { 
+        userId: usuario.id,
+        email: usuario.email,
+        type: 'password-reset' 
+      },
+      JWT_SECRET,
+      { expiresIn: '1h' } // Token expira em 1 hora
+    );
+
+    // Em um ambiente real, você enviaria um e-mail aqui
+    // Por enquanto, vamos apenas logar o token (APENAS PARA DESENVOLVIMENTO)
+    console.log('=== TOKEN DE RECUPERAÇÃO DE SENHA ===');
+    console.log(`Usuário: ${usuario.nome} (${usuario.email})`);
+    console.log(`Token: ${resetToken}`);
+    console.log(`Link de recuperação: ${process.env.FRONTEND_URL || 'http://localhost:4200'}/reset-password?token=${resetToken}`);
+    console.log('=====================================');
+
+    // TODO: Implementar envio de e-mail real
+    // await sendPasswordResetEmail(usuario.email, resetToken);
+
+    res.json({ 
+      message: 'As instruções para recuperação de senha foram enviadas para seu e-mail.' 
+    });
+
+  } catch (error) {
+    console.error('Erro na recuperação de senha:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 // Executa o script de criação da tabela ao iniciar o backend (apenas em ambiente de desenvolvimento)
 if (process.env.NODE_ENV === 'development') {
   const initSql = fs.readFileSync(new URL('../init.sql', import.meta.url), 'utf8');

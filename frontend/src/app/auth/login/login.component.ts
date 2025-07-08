@@ -10,9 +10,17 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  forgotPasswordForm: FormGroup;
   loading = false;
   errorMessage = '';
   hidePassword = true;
+  
+  // Forgot password properties
+  showForgotPasswordForm = false;
+  forgotPasswordLoading = false;
+  forgotPasswordError = '';
+  forgotPasswordSuccess = false;
+  forgotPasswordSuccessMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -22,6 +30,10 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
@@ -81,8 +93,66 @@ export class LoginComponent implements OnInit {
     return '';
   }
 
+  getForgotEmailErrorMessage(): string {
+    const emailControl = this.forgotPasswordForm.get('email');
+    if (emailControl?.hasError('required')) {
+      return 'E-mail é obrigatório';
+    }
+    if (emailControl?.hasError('email')) {
+      return 'Digite um e-mail válido';
+    }
+    return '';
+  }
+
+  toggleForgotPassword(): void {
+    this.showForgotPasswordForm = !this.showForgotPasswordForm;
+    this.forgotPasswordError = '';
+    this.forgotPasswordSuccess = false;
+    this.errorMessage = '';
+    
+    if (this.showForgotPasswordForm) {
+      // Pré-preencher o email se já foi digitado no login
+      const loginEmail = this.loginForm.get('email')?.value;
+      if (loginEmail && this.loginForm.get('email')?.valid) {
+        this.forgotPasswordForm.patchValue({ email: loginEmail });
+      }
+    }
+  }
+
+  onForgotPasswordSubmit(): void {
+    if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
+      return;
+    }
+
+    this.forgotPasswordLoading = true;
+    this.forgotPasswordError = '';
+    this.forgotPasswordSuccess = false;
+
+    const email = this.forgotPasswordForm.get('email')?.value;
+
+    this.authService.forgotPassword(email).subscribe({
+      next: (response) => {
+        this.forgotPasswordLoading = false;
+        this.forgotPasswordSuccess = true;
+        this.forgotPasswordSuccessMessage = response.message || 
+          'As instruções para recuperação de senha foram enviadas para seu e-mail.';
+        
+        // Após 5 segundos, voltar para o login
+        setTimeout(() => {
+          this.toggleForgotPassword();
+        }, 5000);
+      },
+      error: (error) => {
+        this.forgotPasswordLoading = false;
+        this.forgotPasswordError = error.error?.message || 
+          'Erro ao enviar e-mail de recuperação. Tente novamente.';
+      }
+    });
+  }
+
   showForgotPassword(): void {
-    // TODO: Implementar funcionalidade de recuperação de senha
-    alert('Funcionalidade de recuperação de senha será implementada em breve.\n\nPor enquanto, entre em contato com o administrador do sistema.');
+    // Método mantido para compatibilidade com testes existentes
+    this.toggleForgotPassword();
   }
 }

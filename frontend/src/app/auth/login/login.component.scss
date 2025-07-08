@@ -219,32 +219,32 @@
   .header-content {
     padding: 0 1rem;
   }
-  
+
   .logo-alianca {
     height: 40px;
   }
-  
+
   .logo-principal {
     font-size: 1.5rem;
   }
-  
+
   .sistema-descricao {
     font-size: 0.8rem;
   }
-  
+
   .login-container {
     padding: 1rem;
   }
-  
+
   .login-card {
     padding: 2rem 1.5rem;
     border-radius: 8px;
   }
-  
+
   .login-title {
     font-size: 1.3rem;
   }
-  
+
   .login-subtitle {
     font-size: 0.85rem;
   }
@@ -256,16 +256,16 @@
     gap: 0.5rem;
     text-align: center;
   }
-  
+
   .sistema-info {
     text-align: center;
   }
-  
+
   .login-card {
     padding: 1.5rem 1rem;
     margin: 0 0.5rem;
   }
-  
+
   .login-button {
     height: 44px;
     font-size: 0.95rem;
@@ -309,4 +309,182 @@
   outline: 2px solid #667eea;
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* === ESTILOS PARA RECUPERAÇÃO DE SENHA === */
+
+/* Container da tela de recuperação */
+.forgot-content {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.login-content {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+/* Header da recuperação de senha */
+.forgot-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  color: #667eea;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateX(-2px);
+}
+
+.forgot-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.forgot-subtitle {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin: 0;
+  font-weight: 400;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Formulário de recuperação */
+.forgot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Botão de recuperação */
+.forgot-button {
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-transform: none;
+  box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.forgot-button:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.forgot-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.forgot-button.mat-mdc-button-disabled {
+  background-color: #e0e0e0 !important;
+  color: #9e9e9e !important;
+}
+
+/* Estados especiais do botão de recuperação */
+.forgot-button:has(.success-icon) {
+  background-color: #4caf50 !important;
+  box-shadow: 0 3px 12px rgba(76, 175, 80, 0.3);
+}
+
+.forgot-spinner {
+  margin-right: 0.5rem;
+}
+
+.forgot-icon, .success-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.forgot-text {
+  font-weight: 600;
+}
+
+/* Mensagem de sucesso */
+.success-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e8f5e8;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #2e7d32;
+  font-size: 0.9rem;
+}
+
+.success-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #4caf50;
+}
+
+.success-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* Animações de transição */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsividade para recuperação de senha */
+@media (max-width: 480px) {
+  .forgot-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .forgot-title {
+    font-size: 1.3rem;
+  }
+  
+  .forgot-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .back-button {
+    left: -4px;
+    top: -4px;
+  }
+  
+  .forgot-button {
+    height: 44px;
+    font-size: 0.95rem;
+  }
 }

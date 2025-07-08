@@ -15,66 +15,123 @@
   <!-- Container principal de login -->
   <div class="login-container">
     <div class="login-card">
-      <div class="login-header">
-        <h2 class="login-title">Acesso ao Sistema</h2>
-        <p class="login-subtitle">Entre com suas credenciais para continuar</p>
+      <!-- Tela de Login -->
+      <div *ngIf="!showForgotPasswordForm" class="login-content">
+        <div class="login-header">
+          <h2 class="login-title">Acesso ao Sistema</h2>
+          <p class="login-subtitle">Entre com suas credenciais para continuar</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <!-- Campo Email -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>E-mail</mat-label>
+            <input matInput
+                   type="email"
+                   formControlName="email"
+                   placeholder="Digite seu e-mail"
+                   autocomplete="email">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+              {{ getEmailErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Campo Senha -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Senha</mat-label>
+            <input matInput
+                   [type]="hidePassword ? 'password' : 'text'"
+                   formControlName="senha"
+                   placeholder="Digite sua senha"
+                   autocomplete="current-password">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" tabindex="-1">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('senha')?.invalid && (loginForm.get('senha')?.dirty || loginForm.get('senha')?.touched)">
+              {{ getSenhaErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Mensagem de Erro Geral -->
+          <div *ngIf="errorMessage" class="error-alert">
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            <span class="error-text">{{ errorMessage }}</span>
+          </div>
+
+          <!-- Botão de Login -->
+          <button mat-raised-button
+                  color="primary"
+                  type="submit"
+                  class="login-button"
+                  [disabled]="loading || loginForm.invalid">
+            <mat-spinner *ngIf="loading" diameter="18" class="login-spinner"></mat-spinner>
+            <mat-icon *ngIf="!loading" class="login-icon">login</mat-icon>
+            <span class="login-text">{{ loading ? 'Entrando...' : 'Entrar' }}</span>
+          </button>
+
+          <!-- Link Esqueci Senha -->
+          <div class="forgot-password">
+            <a href="#" class="forgot-link" (click)="$event.preventDefault(); toggleForgotPassword()">
+              Esqueci minha senha
+            </a>
+          </div>
+        </form>
       </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <!-- Campo Email -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>E-mail</mat-label>
-          <input matInput 
-                 type="email" 
-                 formControlName="email" 
-                 placeholder="Digite seu e-mail"
-                 autocomplete="email">
-          <mat-icon matSuffix>email</mat-icon>
-          <mat-error *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
-            {{ getEmailErrorMessage() }}
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Campo Senha -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Senha</mat-label>
-          <input matInput 
-                 [type]="hidePassword ? 'password' : 'text'" 
-                 formControlName="senha" 
-                 placeholder="Digite sua senha"
-                 autocomplete="current-password">
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" tabindex="-1">
-            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      <!-- Tela de Recuperação de Senha -->
+      <div *ngIf="showForgotPasswordForm" class="forgot-content">
+        <div class="forgot-header">
+          <button mat-icon-button class="back-button" (click)="toggleForgotPassword()">
+            <mat-icon>arrow_back</mat-icon>
           </button>
-          <mat-error *ngIf="loginForm.get('senha')?.invalid && (loginForm.get('senha')?.dirty || loginForm.get('senha')?.touched)">
-            {{ getSenhaErrorMessage() }}
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Mensagem de Erro Geral -->
-        <div *ngIf="errorMessage" class="error-alert">
-          <mat-icon class="error-icon">error_outline</mat-icon>
-          <span class="error-text">{{ errorMessage }}</span>
+          <h2 class="forgot-title">Recuperar Senha</h2>
+          <p class="forgot-subtitle">Digite seu e-mail para receber as instruções de recuperação</p>
         </div>
 
-        <!-- Botão de Login -->
-        <button mat-raised-button 
-                color="primary" 
-                type="submit" 
-                class="login-button"
-                [disabled]="loading || loginForm.invalid">
-          <mat-spinner *ngIf="loading" diameter="18" class="login-spinner"></mat-spinner>
-          <mat-icon *ngIf="!loading" class="login-icon">login</mat-icon>
-          <span class="login-text">{{ loading ? 'Entrando...' : 'Entrar' }}</span>
-        </button>
+        <form [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPasswordSubmit()" class="forgot-form">
+          <!-- Campo Email para recuperação -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>E-mail</mat-label>
+            <input matInput
+                   type="email"
+                   formControlName="email"
+                   placeholder="Digite seu e-mail cadastrado"
+                   autocomplete="email">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="forgotPasswordForm.get('email')?.invalid && (forgotPasswordForm.get('email')?.dirty || forgotPasswordForm.get('email')?.touched)">
+              {{ getForgotEmailErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
 
-        <!-- Link Esqueci Senha -->
-        <div class="forgot-password">
-          <a href="#" class="forgot-link" (click)="$event.preventDefault(); showForgotPassword()">
-            Esqueci minha senha
-          </a>
-        </div>
-      </form>
+          <!-- Mensagem de Sucesso -->
+          <div *ngIf="forgotPasswordSuccess" class="success-alert">
+            <mat-icon class="success-icon">check_circle_outline</mat-icon>
+            <span class="success-text">{{ forgotPasswordSuccessMessage }}</span>
+          </div>
+
+          <!-- Mensagem de Erro -->
+          <div *ngIf="forgotPasswordError" class="error-alert">
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            <span class="error-text">{{ forgotPasswordError }}</span>
+          </div>
+
+          <!-- Botão de Enviar -->
+          <button mat-raised-button
+                  color="primary"
+                  type="submit"
+                  class="forgot-button"
+                  [disabled]="forgotPasswordLoading || forgotPasswordForm.invalid || forgotPasswordSuccess">
+            <mat-spinner *ngIf="forgotPasswordLoading" diameter="18" class="forgot-spinner"></mat-spinner>
+            <mat-icon *ngIf="!forgotPasswordLoading && !forgotPasswordSuccess" class="forgot-icon">send</mat-icon>
+            <mat-icon *ngIf="forgotPasswordSuccess" class="success-icon">check</mat-icon>
+            <span class="forgot-text">
+              {{ forgotPasswordLoading ? 'Enviando...' : 
+                 forgotPasswordSuccess ? 'E-mail enviado!' : 'Enviar instruções' }}
+            </span>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 
