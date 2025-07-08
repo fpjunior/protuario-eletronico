@@ -18,7 +18,17 @@
     };
     ```
 - O código usa `environment.apiUrl` para todas as requisições.
-- O build de produção (`ng build --prod`) usa automaticamente o arquivo `.prod`.
+- O build de produção (`ng build --configuration=production`) usa automaticamente o arquivo `.prod`.
+
+## Design Profissional
+
+O sistema possui layout moderno e profissional para ambiente hospitalar:
+- Gradientes e sombras suaves
+- Cores institucionais (azul, verde, cinza)
+- Ícones representativos (🏥, 📋)
+- Transições e efeitos hover
+- Tipografia clara e hierárquica
+- Layout responsivo para diferentes dispositivos
 
 ## Backend (Node.js/Express)
 

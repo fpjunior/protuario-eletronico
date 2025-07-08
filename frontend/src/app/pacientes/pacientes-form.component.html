@@ -1,3 +1,13 @@
+<div class="header-sistema">
+  <div class="header-content">
+    <div class="header-icon">🏥</div>
+    <div class="header-text">
+      <h1>Sistema Hospitalar</h1>
+      <p>Gerenciamento de Prontuários Eletrônicos</p>
+    </div>
+  </div>
+</div>
+
 <div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
   <h1>Prontuário Eletrônico</h1>
   <form [formGroup]="form" (ngSubmit)="salvar()" class="paciente-form" autocomplete="off">
