@@ -71,6 +71,11 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     this.authService.user$.subscribe(user => {
       this.currentUser = user;
     });
+
+    // Configurar filtro personalizado para a tabela
+    this.dataSource.filterPredicate = (paciente: Paciente, filter: string) => {
+      return paciente.nome.toLowerCase().includes(filter.toLowerCase());
+    };
   }
 
   ngAfterViewInit() {
@@ -169,6 +174,11 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     return this.pacientes.filter(p =>
       p.nome.toLowerCase().includes(this.filtroNome.trim().toLowerCase())
     );
+  }
+
+  // Método para aplicar filtro na tabela
+  aplicarFiltro() {
+    this.dataSource.filter = this.filtroNome.trim();
   }
 
   logout() {
