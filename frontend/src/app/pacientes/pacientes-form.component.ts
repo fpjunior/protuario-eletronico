@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-pacientes-form',
@@ -20,6 +21,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   apiUrl = environment.apiUrl + '/api/pacientes';
   private destroy$ = new Subject<void>();
   private validationSubject = new Subject<{nome: string, mae: string}>();
+  currentUser: any = null;
 
   // Lista de estados brasileiros
   estadosBrasileiros = [
@@ -52,7 +54,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     { sigla: 'TO', nome: 'Tocantins' }
   ];
 
-  constructor(private router: Router, private http: HttpClient, private fb: FormBuilder) {
+  constructor(private router: Router, private http: HttpClient, private fb: FormBuilder, private authService: AuthService) {
     const nav = this.router.getCurrentNavigation();
     this.pacienteEditando = nav?.extras.state?.['paciente'] || null;
     this.form = this.fb.group({
@@ -79,6 +81,11 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Carregar informações do usuário atual
+    this.authService.user$.subscribe(user => {
+      this.currentUser = user;
+    });
+
     // Configura o Subject para validação com debounce
     this.validationSubject.pipe(
       debounceTime(500),
@@ -132,6 +139,14 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.checkDuplicidade();
     });
+  }
+
+  cancelar() {
+    this.router.navigate(['/']);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   ngOnDestroy() {
@@ -198,9 +213,5 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
         }
       });
     }
-  }
-
-  cancelar() {
-    this.router.navigate(['/']);
   }
 }
