@@ -1,0 +1,64 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-section">
+      <img src="assets/logo-alianca.svg" alt="Aliança-PE" class="logo">
+      <h1>e-Prontuário</h1>
+      <p>Sistema de Gerenciamento Hospitalar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <h2>Fazer Login</h2>
+
+      <!-- Campo Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput 
+               type="email" 
+               formControlName="email" 
+               placeholder="Digite seu email"
+               [class.is-invalid]="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+          {{ getEmailErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo Senha -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Senha</mat-label>
+        <input matInput 
+               [type]="hidePassword ? 'password' : 'text'" 
+               formControlName="senha" 
+               placeholder="Digite sua senha"
+               [class.is-invalid]="loginForm.get('senha')?.invalid && (loginForm.get('senha')?.dirty || loginForm.get('senha')?.touched)">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('senha')?.invalid && (loginForm.get('senha')?.dirty || loginForm.get('senha')?.touched)">
+          {{ getSenhaErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Mensagem de Erro Geral -->
+      <div *ngIf="errorMessage" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Botão de Login -->
+      <button mat-raised-button 
+              color="primary" 
+              type="submit" 
+              class="login-button"
+              [disabled]="loading || loginForm.invalid">
+        <mat-spinner *ngIf="loading" diameter="20" color="accent"></mat-spinner>
+        <span *ngIf="!loading">Entrar</span>
+        <span *ngIf="loading">Entrando...</span>
+      </button>
+    </form>
+
+    <div class="footer">
+      <p>&copy; 2025 Aliança-PE. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</div>

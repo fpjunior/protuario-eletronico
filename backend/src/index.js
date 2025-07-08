@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 dotenv.config();
 
@@ -19,8 +21,81 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
 
+// JWT Secret (em produção deve vir de variável de ambiente)
+const JWT_SECRET = process.env.JWT_SECRET || 'seu_jwt_secret_super_secreto_aqui';
+
+// Middleware de autenticação
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token de acesso requerido' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token inválido' });
+    }
+    req.user = user;
+    next();
+  });
+};
+
 app.get('/', (req, res) => {
   res.send('API do Prontuário Eletrônico');
+});
+
+// Endpoint de login
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+    // Validar campos obrigatórios
+    if (!email || !senha) {
+      return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+    }
+
+    // Buscar usuário no banco
+    const { rows } = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Credenciais inválidas' });
+    }
+
+    const usuario = rows[0];
+
+    // Verificar senha
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaValida) {
+      return res.status(401).json({ error: 'Credenciais inválidas' });
+    }
+
+    // Gerar JWT
+    const token = jwt.sign(
+      { 
+        id: usuario.id, 
+        email: usuario.email, 
+        nome: usuario.nome 
+      },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      token,
+      usuario: {
+        id: usuario.id,
+        email: usuario.email,
+        nome: usuario.nome
+      }
+    });
+
+  } catch (error) {
+    console.error('Erro no login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
 });
 
 // Executa o script de criação da tabela ao iniciar o backend (apenas em ambiente de desenvolvimento)
@@ -53,7 +128,7 @@ function mapPacienteDbToApi(p) {
   };
 }
 
-app.get('/pacientes', async (req, res) => {
+app.get('/pacientes', authenticateToken, async (req, res) => {
   const { nome, nascimento } = req.query;
   let query = 'SELECT * FROM pacientes';
   let params = [];
@@ -77,7 +152,7 @@ app.get('/pacientes', async (req, res) => {
   }
 });
 
-app.post('/pacientes', async (req, res) => {
+app.post('/pacientes', authenticateToken, async (req, res) => {
   const {
     nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia
   } = req.body;
@@ -99,13 +174,13 @@ app.post('/pacientes', async (req, res) => {
   }
 });
 
-app.delete('/pacientes/:id', async (req, res) => {
+app.delete('/pacientes/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   await pool.query('DELETE FROM pacientes WHERE id = $1', [id]);
   res.status(204).send();
 });
 
-app.put('/pacientes/:id', async (req, res) => {
+app.put('/pacientes/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const {
     nome, mae, nascimento, sexo, estadoCivil, profissao, escolaridade, raca, endereco, bairro, municipio, uf, cep, acompanhante, procedencia

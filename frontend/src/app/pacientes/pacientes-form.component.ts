@@ -16,7 +16,7 @@ export class PacientesFormComponent implements OnInit {
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
   loading = false;
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.apiUrl + '/pacientes';
 
   constructor(private router: Router, private http: HttpClient, private fb: FormBuilder) {
     const nav = this.router.getCurrentNavigation();

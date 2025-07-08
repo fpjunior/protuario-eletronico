@@ -322,6 +322,7 @@ mat-divider {
   position: relative;
   z-index: 1;
   padding: 0 40px;
+  justify-content: space-between;
 }
 
 .logo-container {
@@ -390,6 +391,19 @@ mat-divider {
   font-size: 1.1rem;
   opacity: 0.9;
   font-weight: 400;
+}
+
+// Adicionar estilos para o menu do usuário
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 // Responsividade da logo

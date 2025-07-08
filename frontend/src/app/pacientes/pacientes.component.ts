@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { environment } from '../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 
 export interface Paciente {
   id?: number;
@@ -56,15 +57,20 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     'acoes', 'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia'
   ];
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.apiUrl + '/pacientes';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<Paciente>([]);
+  currentUser: any = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.listarPacientes();
+    // Carregar informações do usuário atual
+    this.authService.user$.subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
   ngAfterViewInit() {
@@ -163,5 +169,9 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     return this.pacientes.filter(p =>
       p.nome.toLowerCase().includes(this.filtroNome.trim().toLowerCase())
     );
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
