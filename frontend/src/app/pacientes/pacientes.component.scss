@@ -159,7 +159,7 @@ mat-list {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
   border-radius: 12px 12px 0 0;
 }
 
@@ -227,17 +227,17 @@ mat-divider {
   margin-left: 12px;
   height: 56px;
   white-space: nowrap;
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: #fff;
   border-radius: 8px;
   font-weight: 600;
-  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
   transition: all 0.3s ease;
 }
 
 .pesquisa-container button[mat-raised-button]:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
 }
 
 .mat-column-acoes {
@@ -331,8 +331,15 @@ mat-divider {
   margin-right: 8px;
 }
 
+.sistema-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
 .logo-alianca {
-  height: 50px;
+  height: 70px;
   width: auto;
   filter: brightness(0) invert(1);
   opacity: 0.95;
@@ -355,7 +362,15 @@ mat-divider {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-left: 8px;
+  margin: 0;
+}
+
+.sistema-descricao {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .header-text h1 {
@@ -388,41 +403,37 @@ mat-divider {
 
   .logo-container {
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+  }
+
+  .sistema-info {
+    align-items: center;
+    text-align: center;
   }
 
   .logo-alianca {
-    height: 40px;
+    height: 55px;
   }
 
   .logo-principal {
     font-size: 2rem;
-    margin-left: 0;
   }
 
-  .header-text h1 {
-    font-size: 1.8rem;
-  }
-
-  .header-text p {
-    font-size: 1rem;
+  .sistema-descricao {
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .logo-alianca {
-    height: 35px;
+    height: 45px;
   }
 
   .logo-principal {
     font-size: 1.6rem;
   }
 
-  .header-text h1 {
-    font-size: 1.5rem;
-  }
-
-  .header-text p {
-    font-size: 0.9rem;
+  .sistema-descricao {
+    font-size: 0.85rem;
   }
 }
