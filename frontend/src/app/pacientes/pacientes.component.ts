@@ -51,6 +51,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   pacienteEditando: Paciente | null = null;
   filtroNome: string = '';
   exibirFormulario = false;
+  loading = false;
   colunas = [
     'acoes', 'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia'
@@ -71,14 +72,20 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   }
 
   listarPacientes() {
+    this.loading = true;
     this.http.get<Paciente[]>(
-      this.apiUrl).subscribe(
-        pacientes => {
+      this.apiUrl).subscribe({
+        next: (pacientes) => {
           this.pacientes = pacientes;
           this.dataSource.data = pacientes;
           console.log('Pacientes carregados:', this.pacientes);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar pacientes:', error);
+          this.loading = false;
         }
-      );
+      });
   }
 
   mostrarFormularioCadastro() {
@@ -91,19 +98,33 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     if (this.pacienteEditando && this.pacienteEditando.id) {
       // Confirmação antes de atualizar
       if (confirm('Tem certeza que deseja atualizar este registro?')) {
-        this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe(() => {
-          this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
-          this.pacienteEditando = null;
-          this.exibirFormulario = false;
-          this.listarPacientes();
+        this.loading = true;
+        this.http.put<Paciente>(`${this.apiUrl}/${this.pacienteEditando.id}`, this.novoPaciente).subscribe({
+          next: () => {
+            this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
+            this.pacienteEditando = null;
+            this.exibirFormulario = false;
+            this.listarPacientes();
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar paciente:', error);
+            this.loading = false;
+          }
         });
       }
     } else {
       // Adicionar novo paciente
-      this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe(() => {
-        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
-        this.exibirFormulario = false;
-        this.listarPacientes();
+      this.loading = true;
+      this.http.post<Paciente>(this.apiUrl, this.novoPaciente).subscribe({
+        next: () => {
+          this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
+          this.exibirFormulario = false;
+          this.listarPacientes();
+        },
+        error: (error) => {
+          console.error('Erro ao adicionar paciente:', error);
+          this.loading = false;
+        }
       });
     }
   }
@@ -113,13 +134,22 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   }
 
   removerPaciente(id: number) {
-    this.http.delete(`${this.apiUrl}/${id}`).subscribe(() => {
-      this.listarPacientes();
-      if (this.pacienteEditando && this.pacienteEditando.id === id) {
-        this.pacienteEditando = null;
-        this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
-      }
-    });
+    if (confirm('Tem certeza que deseja remover este paciente?')) {
+      this.loading = true;
+      this.http.delete(`${this.apiUrl}/${id}`).subscribe({
+        next: () => {
+          this.listarPacientes();
+          if (this.pacienteEditando && this.pacienteEditando.id === id) {
+            this.pacienteEditando = null;
+            this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao remover paciente:', error);
+          this.loading = false;
+        }
+      });
+    }
   }
 
   cancelarEdicao() {

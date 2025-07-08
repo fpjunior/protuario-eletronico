@@ -98,12 +98,14 @@
     </mat-form-field>
     <mat-error *ngIf="form.errors?.['duplicado']">Já existe paciente com este nome, nome da mãe e data de nascimento.</mat-error>
     <button mat-raised-button color="primary" type="submit"
-      [disabled]="form.invalid || form.pending || form.errors?.['duplicado']"
-      [ngClass]="{'botao-desabilitado': form.invalid || form.pending || form.errors?.['duplicado']}"
+      [disabled]="form.invalid || form.pending || form.errors?.['duplicado'] || loading"
+      [ngClass]="{'botao-desabilitado': form.invalid || form.pending || form.errors?.['duplicado'] || loading}"
     >
-      {{ pacienteEditando ? 'Atualizar' : 'Salvar' }}
+      <mat-spinner *ngIf="loading" diameter="20" color="accent"></mat-spinner>
+      <span *ngIf="!loading">{{ pacienteEditando ? 'Atualizar' : 'Salvar' }}</span>
+      <span *ngIf="loading">{{ pacienteEditando ? 'Atualizando...' : 'Salvando...' }}</span>
     </button>
-    <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelar()">
+    <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelar()" [disabled]="loading">
       Cancelar
     </button>
   </form>

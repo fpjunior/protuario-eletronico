@@ -15,6 +15,7 @@ import { environment } from '../../environments/environment';
 export class PacientesFormComponent implements OnInit {
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
+  loading = false;
   apiUrl = environment.apiUrl;
 
   constructor(private router: Router, private http: HttpClient, private fb: FormBuilder) {
@@ -72,19 +73,31 @@ export class PacientesFormComponent implements OnInit {
       return;
     }
     const paciente = this.form.value;
+    this.loading = true;
+
     if (this.pacienteEditando && this.pacienteEditando.id) {
       if (confirm('Tem certeza que deseja atualizar este registro?')) {
         this.http.put(`${this.apiUrl}/${this.pacienteEditando.id}`, paciente).subscribe({
-          next: () => this.router.navigate(['/']),
+          next: () => {
+            this.loading = false;
+            this.router.navigate(['/']);
+          },
           error: (err) => {
+            this.loading = false;
             alert(err?.error?.error || 'Erro ao atualizar paciente.');
           }
         });
+      } else {
+        this.loading = false;
       }
     } else {
       this.http.post(this.apiUrl, paciente).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/']);
+        },
         error: (err) => {
+          this.loading = false;
           alert(err?.error?.error || 'Erro ao cadastrar paciente.');
         }
       });

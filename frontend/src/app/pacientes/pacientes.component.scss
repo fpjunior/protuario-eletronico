@@ -437,3 +437,53 @@ mat-divider {
     font-size: 0.85rem;
   }
 }
+
+// Estilos para loading spinner
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #374151;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+}
+
+.empty-state mat-icon {
+  font-size: 3rem;
+  height: 3rem;
+  width: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+// Ajustes nos botões com spinner
+button mat-spinner {
+  margin-right: 8px;
+  display: inline-block;
+}
+
+button[disabled] mat-spinner {
+  margin-right: 8px;
+}
