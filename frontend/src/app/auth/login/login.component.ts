@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   errorMessage = '';
   hidePassword = true;
-  
+
   // Forgot password properties
   showForgotPasswordForm = false;
   forgotPasswordLoading = false;
@@ -109,7 +109,7 @@ export class LoginComponent implements OnInit {
     this.forgotPasswordError = '';
     this.forgotPasswordSuccess = false;
     this.errorMessage = '';
-    
+
     if (this.showForgotPasswordForm) {
       // Pré-preencher o email se já foi digitado no login
       const loginEmail = this.loginForm.get('email')?.value;
@@ -135,9 +135,9 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         this.forgotPasswordLoading = false;
         this.forgotPasswordSuccess = true;
-        this.forgotPasswordSuccessMessage = response.message || 
+        this.forgotPasswordSuccessMessage = response.message ||
           'As instruções para recuperação de senha foram enviadas para seu e-mail.';
-        
+
         // Após 5 segundos, voltar para o login
         setTimeout(() => {
           this.toggleForgotPassword();
@@ -145,7 +145,7 @@ export class LoginComponent implements OnInit {
       },
       error: (error) => {
         this.forgotPasswordLoading = false;
-        this.forgotPasswordError = error.error?.message || 
+        this.forgotPasswordError = error.error?.message ||
           'Erro ao enviar e-mail de recuperação. Tente novamente.';
       }
     });
