@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
+import * as jsPDF from 'jspdf';
 
 export interface Paciente {
   id?: number;
@@ -185,6 +186,139 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = this.filtroNome.trim();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  // Método para gerar PDF do cadastro do paciente
+  imprimirPacientePDF(paciente: Paciente) {
+    const doc = new jsPDF.jsPDF();
+
+    // Configuração das fontes e cores
+    doc.setFontSize(20);
+    doc.setTextColor(40);
+
+    // Cabeçalho
+    doc.text('e-Prontuário Aliança-PE', 20, 20);
+    doc.setFontSize(14);
+    doc.text('Ficha de Cadastro do Paciente', 20, 30);
+
+    // Linha separadora
+    doc.setLineWidth(0.5);
+    doc.line(20, 35, 190, 35);
+
+    // Dados do paciente
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+
+    let yPosition = 50;
+    const lineHeight = 8;
+
+    // Dados pessoais
+    doc.setFont('helvetica', 'bold');
+    doc.text('DADOS PESSOAIS', 20, yPosition);
+    yPosition += lineHeight + 2;
+
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Nome: ${paciente.nome}`, 20, yPosition);
+    yPosition += lineHeight;
+
+    doc.text(`Nome da Mãe: ${paciente.mae}`, 20, yPosition);
+    yPosition += lineHeight;
+
+    doc.text(`Data de Nascimento: ${new Date(paciente.nascimento).toLocaleDateString('pt-BR')}`, 20, yPosition);
+    yPosition += lineHeight;
+
+    doc.text(`Sexo: ${this.formatarSexo(paciente.sexo)}`, 20, yPosition);
+    yPosition += lineHeight;
+
+    if (paciente.estadoCivil) {
+      doc.text(`Estado Civil: ${paciente.estadoCivil}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.profissao) {
+      doc.text(`Profissão: ${paciente.profissao}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.escolaridade) {
+      doc.text(`Escolaridade: ${paciente.escolaridade}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.raca) {
+      doc.text(`Raça/Cor: ${paciente.raca}`, 20, yPosition);
+      yPosition += lineHeight + 5;
+    }
+
+    // Endereço
+    doc.setFont('helvetica', 'bold');
+    doc.text('ENDEREÇO', 20, yPosition);
+    yPosition += lineHeight + 2;
+
+    doc.setFont('helvetica', 'normal');
+    if (paciente.endereco) {
+      doc.text(`Endereço: ${paciente.endereco}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.bairro) {
+      doc.text(`Bairro: ${paciente.bairro}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.municipio) {
+      doc.text(`Município: ${paciente.municipio}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.uf) {
+      doc.text(`UF: ${paciente.uf}`, 20, yPosition);
+      yPosition += lineHeight;
+    }
+
+    if (paciente.cep) {
+      doc.text(`CEP: ${paciente.cep}`, 20, yPosition);
+      yPosition += lineHeight + 5;
+    }
+
+    // Informações adicionais
+    if (paciente.acompanhante || paciente.procedencia) {
+      doc.setFont('helvetica', 'bold');
+      doc.text('INFORMAÇÕES ADICIONAIS', 20, yPosition);
+      yPosition += lineHeight + 2;
+
+      doc.setFont('helvetica', 'normal');
+      if (paciente.acompanhante) {
+        doc.text(`Acompanhante: ${paciente.acompanhante}`, 20, yPosition);
+        yPosition += lineHeight;
+      }
+
+      if (paciente.procedencia) {
+        doc.text(`Procedência: ${paciente.procedencia}`, 20, yPosition);
+        yPosition += lineHeight;
+      }
+    }
+
+    // Rodapé
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`, 20, pageHeight - 20);
+    doc.text('Sistema e-Prontuário Aliança-PE', 20, pageHeight - 10);
+
+    // Salvar o PDF
+    const nomeArquivo = `paciente_${paciente.nome.replace(/\s+/g, '_').toLowerCase()}_${new Date().getTime()}.pdf`;
+    doc.save(nomeArquivo);
+  }
+
+  // Método auxiliar para formatar sexo
+  private formatarSexo(sexo: string): string {
+    switch (sexo) {
+      case 'M': return 'Masculino';
+      case 'F': return 'Feminino';
+      case 'I': return 'Ignorado';
+      default: return sexo;
     }
   }
 

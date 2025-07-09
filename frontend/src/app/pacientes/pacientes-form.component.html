@@ -118,16 +118,27 @@
       <input matInput formControlName="procedencia" />
     </mat-form-field>
     <mat-error *ngIf="form.errors?.['duplicado']">Já existe paciente com este nome, nome da mãe e data de nascimento.</mat-error>
-    <button mat-raised-button color="primary" type="submit"
-      [disabled]="form.invalid || form.pending || form.errors?.['duplicado'] || loading"
-      [ngClass]="{'botao-desabilitado': form.invalid || form.pending || form.errors?.['duplicado'] || loading}"
-    >
-      <mat-spinner *ngIf="loading" diameter="20" color="accent"></mat-spinner>
-      <span *ngIf="!loading">{{ pacienteEditando ? 'Atualizar' : 'Salvar' }}</span>
-      <span *ngIf="loading">{{ pacienteEditando ? 'Atualizando...' : 'Salvando...' }}</span>
-    </button>
-    <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelar()" [disabled]="loading">
-      Cancelar
-    </button>
+
+    <div class="botoes-acao">
+      <button mat-raised-button color="primary" type="submit"
+        [disabled]="form.invalid || form.pending || form.errors?.['duplicado'] || loading"
+        [ngClass]="{'botao-desabilitado': form.invalid || form.pending || form.errors?.['duplicado'] || loading}"
+      >
+        <mat-icon *ngIf="!loading">{{ pacienteEditando ? 'update' : 'save' }}</mat-icon>
+        <mat-spinner *ngIf="loading" diameter="20" color="accent"></mat-spinner>
+        <span *ngIf="!loading">{{ pacienteEditando ? 'Atualizar' : 'Salvar' }}</span>
+        <span *ngIf="loading">{{ pacienteEditando ? 'Atualizando...' : 'Salvando...' }}</span>
+      </button>
+
+      <button mat-raised-button color="accent" type="button" (click)="imprimirPacientePDF()" [disabled]="loading">
+        <mat-icon>print</mat-icon>
+        Gerar PDF
+      </button>
+
+      <button mat-raised-button type="button" class="cancelar-btn" (click)="cancelar()" [disabled]="loading">
+        <mat-icon>close</mat-icon>
+        Cancelar
+      </button>
+    </div>
   </form>
 </div>

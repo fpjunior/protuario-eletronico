@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste jsPDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Teste de PDF</h1>
+    <button onclick="gerarPDF()">Gerar PDF de Teste</button>
+
+    <script>
+        function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(20);
+            doc.text('Teste de PDF', 20, 20);
+            doc.setFontSize(12);
+            doc.text('Este é um teste de geração de PDF', 20, 40);
+            
+            doc.save('teste.pdf');
+        }
+    </script>
+</body>
+</html>

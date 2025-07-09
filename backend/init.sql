@@ -43,5 +43,5 @@ INSERT INTO usuarios (email, senha, nome) VALUES
   ('medico@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Dr. João Silva'),
   ('medico1@teste.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Dr. Teste'),
   ('enfermeiro@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Enfermeiro Paulo'),
-  ('fpsjunior87@gmail.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Fernando Junior')
+  ('fpsjunior87@gmail.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Fernando Junior');
 ON CONFLICT (email) DO NOTHING;

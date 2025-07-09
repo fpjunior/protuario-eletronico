@@ -1,0 +1,126 @@
+/* Estilos simples para formulário de pacientes */
+
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+h3 {
+  margin: 24px 0 16px 0;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.message-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f44336;
+  background: #ffebee;
+  padding: 12px;
+  border-radius: 4px;
+  margin: 16px 0;
+}
+
+/* Botões de ação */
+.botoes-acao {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.botoes-acao button {
+  min-width: 120px;
+}
+
+.botoes-acao button mat-icon {
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-row mat-form-field {
+    min-width: auto;
+  }
+}
+
+/* Customização dos campos Material */
+.form-field .mat-mdc-form-field {
+  width: 100%;
+}
+
+.form-field .mat-mdc-form-field-outline {
+  border-radius: var(--border-radius-small);
+}
+
+.form-field .mat-mdc-text-field-wrapper {
+  border-radius: var(--border-radius-small);
+}
+
+/* Estados especiais */
+.editing .section-title::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--warning-color);
+  border-radius: 2px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-field {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .paciente-form {
+    gap: 1rem;
+  }
+
+  .card-title {
+    margin: 1.5rem 0 0.75rem 0;
+    font-size: 1rem;
+  }
+
+  .form-actions {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+}

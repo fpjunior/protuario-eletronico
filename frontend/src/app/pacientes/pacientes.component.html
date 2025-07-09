@@ -53,6 +53,9 @@
         <button mat-icon-button color="primary" (click)="editarPaciente(paciente)" [disabled]="loading" aria-label="Editar paciente">
           <mat-icon>edit</mat-icon>
         </button>
+        <button mat-icon-button color="accent" (click)="imprimirPacientePDF(paciente)" [disabled]="loading" aria-label="Imprimir PDF">
+          <mat-icon>print</mat-icon>
+        </button>
         <button mat-icon-button color="warn" (click)="paciente.id !== undefined && removerPaciente(paciente.id)" [disabled]="paciente.id === undefined || loading" aria-label="Remover paciente">
           <mat-icon>delete</mat-icon>
         </button>
