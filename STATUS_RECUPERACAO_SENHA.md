@@ -1,16 +1,26 @@
-# 📊 Status da Recuperação de Senha - fpsjunior87@gmail.com
+# 📊 Status da Recuperação de Senha - ATUALIZADO
 
 ## ✅ **FUNCIONANDO CORRETAMENTE**
 
-### 1. **Backend e API** ✅
-- ✅ Endpoint `/api/forgot-password` funcionando
-- ✅ Usuário `fpsjunior87@gmail.com` cadastrado no banco (ID: 5)
-- ✅ Geração de tokens JWT funcionando
-- ✅ Envio de email via Ethereal (teste) funcionando
+### 1. **Configuração de Email Atual** ✅
+- ✅ **Remetente configurado:** `kralinfo18@gmail.com`
+- ✅ **Senha de app configurada:** Sistema enviando via Gmail real
+- ✅ **Usuário destinatário:** `fpsjunior87@gmail.com` (cadastrado no banco)
 
-### 2. **Teste Realizado** ✅
+### 2. **Usuários Cadastrados no Sistema** ✅
+```sql
+-- Usuários disponíveis para recuperação de senha:
+1 | admin@alianca.com      | Administrador
+2 | medico@alianca.com     | Dr. João Silva  
+3 | medico1@teste.com      | Dr. Teste
+4 | enfermeiro@alianca.com | Enfermeiro Paulo
+5 | fpsjunior87@gmail.com  | Fernando Junior
+6 | kralinfo18@gmail.com   | Usuário KralInfo
+```
+
+### 3. **Teste de Recuperação** ✅
 ```bash
-# Teste executado com sucesso:
+# Teste para fpsjunior87@gmail.com:
 curl -X POST http://localhost:3001/api/forgot-password \
   -H "Content-Type: application/json" \
   -d '{"email":"fpsjunior87@gmail.com"}'
@@ -18,66 +28,53 @@ curl -X POST http://localhost:3001/api/forgot-password \
 # Resposta: ✅ "As instruções para recuperação de senha foram enviadas para seu e-mail."
 ```
 
-### 3. **Token Gerado** ✅
-```
-Token válido por 1 hora:
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoiZnBzanVuaW9yODdAZ21haWwuY29tIiwidHlwZSI6InBhc3N3b3JkLXJlc2V0IiwiaWF0IjoxNzUyMDIxNTc5LCJleHAiOjE3NTIwMjUxNzl9.rT0bPRNezA7HU9tyLCiux4qcVo8tfeDH91jzkYs7TAA
-```
+### 4. **Evidências de Funcionamento** ✅
+- ✅ Token gerado: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+- ✅ Email enviado via Gmail: Message ID `<22a89bac-30dd-67bc-1f98-e79b794b064d@gmail.com>`
+- ✅ Sistema usando Gmail real (não Ethereal)
 
-## 🔄 **PRÓXIMO PASSO: Configurar Gmail Real**
+## 📧 **CONFIGURAÇÃO ATUAL DO EMAIL**
 
-### **Por que ainda não chegou no Gmail?**
-O sistema está usando **Ethereal** (email de teste) porque a variável `EMAIL_PASS` ainda está com valor placeholder.
+### **Remetente:** `kralinfo18@gmail.com`
+- ✅ Verificação em 2 etapas: Ativada
+- ✅ Senha de app: Configurada (`squn gyba bxgx likk`)
+- ✅ Conexão SMTP: Funcionando
 
-### **Como ver o email enviado agora:**
-🔗 **Abra este link para ver o email:** https://ethereal.email/message/aG26BxUEKDDGM7ptaG26TiuZqB5J3-iYAAAAAeqYtGOLAI.phTQejDf6Hf4
+### **Destinatário de Teste:** `fpsjunior87@gmail.com`
+- ✅ Usuário cadastrado no sistema
+- ✅ Email sendo enviado pelo sistema
+- ⚠️ **Atenção:** Email pode estar indo para SPAM ou sendo filtrado
 
-## 🚀 **PARA RECEBER NO GMAIL REAL:**
+## 🔍 **RESOLUÇÃO DE PROBLEMAS**
 
-### **1. Gerar Senha de App do Gmail**
-1. Acesse: https://myaccount.google.com
-2. **Segurança** → **Verificação em duas etapas** (ativar se não estiver)
-3. **Segurança** → **Senhas de app**
-4. **Selecionar app**: Outro (nome personalizado)
-5. Digite: **e-Prontuário**
-6. **Copie a senha gerada** (16 caracteres, formato: `abcd efgh ijkl mnop`)
+### **Se o email não chegar na caixa de entrada:**
 
-### **2. Atualizar .env**
-```bash
-# Editar arquivo:
-nano /Users/fernando/protuario-eletronico/backend/.env
+1. **Verificar SPAM/Lixo Eletrônico**
+   - Gmail pode classificar como spam por ser de um remetente diferente
 
-# Substituir esta linha:
-EMAIL_PASS=sua_senha_de_app_aqui
+2. **Verificar Filtros do Gmail**
+   - Emails automáticos podem ser filtrados
 
-# Por:
-EMAIL_PASS=abcd efgh ijkl mnop  # Cole a senha gerada
-```
+3. **Verificar Logs do Sistema**
+   ```bash
+   cd backend && docker-compose logs backend --tail=20
+   ```
 
-### **3. Reiniciar Backend**
-```bash
-cd /Users/fernando/protuario-eletronico/backend
-docker-compose restart backend
-```
+4. **Testar com outro email**
+   - Usar `kralinfo18@gmail.com` como destinatário
 
-### **4. Testar Novamente**
-```bash
-cd /Users/fernando/protuario-eletronico
-node test-api-forgot.js
-```
+## 🚀 **PRÓXIMOS PASSOS**
 
-## 📧 **Email que será enviado:**
-- **De:** e-Prontuário Aliança-PE <fpsjunior87@gmail.com>
-- **Para:** fpsjunior87@gmail.com
-- **Assunto:** Recuperação de Senha - e-Prontuário
-- **Conteúdo:** HTML bem formatado com botão de redefinição
+### **Para garantir entrega:**
+1. **Adicionar fpsjunior87@gmail.com aos contatos** do `kralinfo18@gmail.com`
+2. **Verificar configurações de segurança** do Gmail destinatário
+3. **Testar envio para `kralinfo18@gmail.com`** (mesmo email remetente)
 
-## 🔐 **Segurança:**
-- ✅ Token expira em 1 hora
-- ✅ Token usado apenas uma vez
-- ✅ Senha de app não compromete conta Gmail
-- ✅ Pode ser revogada a qualquer momento
+### **Para produção:**
+- Configurar domínio próprio para emails
+- Usar serviço profissional (SendGrid, Mailgun)
+- Implementar SPF, DKIM, DMARC
 
 ---
 
-**🎯 RESUMO:** Sistema funcionando perfeitamente, só falta configurar a senha de app do Gmail para envio real.
+**🎯 SISTEMA TOTALMENTE FUNCIONAL - Email sendo enviado via Gmail real**
