@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
@@ -48,7 +49,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule
   ],
   providers: [
     {

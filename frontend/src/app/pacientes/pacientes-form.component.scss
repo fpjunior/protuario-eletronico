@@ -1,13 +1,253 @@
-/* Estilos simples para formulário de pacientes */
+// Importa os estilos compartilhados
+@import '../../shared-styles.scss';
 
-.container {
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.form-row {
+.ficha-container {
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 40px 50px 32px 50px;
+  max-width: 1400px; // Aumentado para dar mais espaço
+  width: 100%;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.ficha-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2c5aa0 0%, #1e3a8a 50%, #1565c0 100%);
+}
+
+.ficha-container.edicao {
+  border: none;
+  box-shadow: 0 10px 40px rgba(255, 152, 0, 0.15), 0 2px 8px rgba(255, 152, 0, 0.1);
+  position: relative;
+}
+
+.ficha-container.edicao::before {
+  background: linear-gradient(90deg, #ff9800 0%, #f57c00 50%, #ef6c00 100%);
+}
+
+h1 {
+  color: #1e3a8a;
+  font-weight: 700;
+  font-size: 2.4rem;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.paciente-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; // Duas colunas para aproveitar melhor o espaço
+  gap: 24px 32px; // Espaçamento entre campos
+  margin-bottom: 32px;
+}
+
+// Campos que devem ocupar a largura total
+.paciente-form mat-form-field:first-child,
+.paciente-form mat-form-field:nth-child(2) {
+  grid-column: 1 / -1; // Nome e nome da mãe ocupam toda a largura
+}
+
+// Endereço também ocupa toda a largura
+.paciente-form mat-form-field:nth-child(9) {
+  grid-column: 1 / -1;
+}
+
+mat-form-field {
+  width: 100%;
+
+  .mat-form-field-wrapper {
+    padding-bottom: 1.25em;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 8px 8px 0 0;
+    background: #f8fafc;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-underline::before {
+    background: #e2e8f0;
+  }
+
+  .mat-form-field-appearance-fill.mat-focused .mat-form-field-underline::before {
+    background: #2c5aa0;
+  }
+
+  .mat-form-field-label {
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  &.mat-focused .mat-form-field-label {
+    color: #2c5aa0;
+  }
+
+  .mat-input-element {
+    color: #1e293b;
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+
+  .mat-select-trigger {
+    color: #1e293b;
+    font-size: 1rem;
+  }
+
+  .mat-form-field-hint {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+
+  .mat-error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+.botoes-acao {
   display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 32px;
+}
+
+.botoes-acao button {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.botoes-acao button[color="primary"] {
+  background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  }
+}
+
+.botoes-acao button[color="accent"] {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  }
+}
+
+.cancelar-btn {
+  color: #64748b !important;
+  border: 2px solid #e2e8f0 !important;
+  background: white !important;
+
+  &:hover:not(:disabled) {
+    border-color: #cbd5e1 !important;
+    background: #f8fafc !important;
+  }
+}
+
+.botao-desabilitado {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+// Responsividade
+@media (max-width: 1200px) {
+  .ficha-container {
+    max-width: 1100px;
+    padding: 30px 40px 24px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+  }
+
+  .ficha-container {
+    padding: 24px 20px 20px 20px;
+    margin: 16px 0;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+  }
+
+  .paciente-form {
+    grid-template-columns: 1fr; // Uma coluna em mobile
+    gap: 20px;
+  }
+
+  .paciente-form mat-form-field:first-child,
+  .paciente-form mat-form-field:nth-child(2),
+  .paciente-form mat-form-field:nth-child(9) {
+    grid-column: 1; // Reset para mobile
+  }
+
+  .botoes-acao {
+    flex-direction: column;
+    gap: 12px;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .ficha-container {
+    padding: 20px 16px 16px 16px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .paciente-form {
+    gap: 16px;
+  }
+}
   gap: 16px;
   align-items: flex-start;
   flex-wrap: wrap;
