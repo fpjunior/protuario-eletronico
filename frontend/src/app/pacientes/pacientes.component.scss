@@ -101,6 +101,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
+  flex-wrap: wrap;
 
   .search-field {
     flex: 1;
@@ -112,6 +113,25 @@
 
     .mat-form-field-prefix {
       color: #64748b;
+    }
+  }
+
+  .add-btn {
+    height: 48px;
+    padding: 0 24px;
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(44, 90, 160, 0.3);
+    }
+
+    mat-icon {
+      margin-right: 8px;
     }
   }
 
@@ -430,6 +450,12 @@
 
     .search-field {
       max-width: none;
+      width: 100%;
+    }
+
+    .add-btn {
+      width: 100%;
+      order: -1; // Coloca o botão antes do campo de pesquisa em mobile
     }
 
     .results-info {

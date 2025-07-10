@@ -24,22 +24,6 @@
 
 <div class="main-container">
   <div class="content-wrapper">
-    <!-- Cabeçalho da página -->
-    <div class="page-header">
-      <div class="header-content">
-        <div class="page-title">
-          <mat-icon class="title-icon">people</mat-icon>
-          <h1>Gerenciamento de Pacientes</h1>
-        </div>
-        <div class="page-actions">
-          <button mat-raised-button color="primary" [routerLink]="['/pacientes/novo']" [disabled]="loading" class="add-btn">
-            <mat-icon>add</mat-icon>
-            <span>Novo Paciente</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Filtros e Pesquisa -->
     <mat-card class="filters-section">
       <mat-card-content>
@@ -55,7 +39,12 @@
             </button>
           </mat-form-field>
 
-          <div class="results-info" *ngIf="!loading">
+          <button mat-raised-button color="primary" [routerLink]="['/pacientes/novo']" [disabled]="loading" class="add-btn">
+            <mat-icon>add</mat-icon>
+            <span>Novo Paciente</span>
+          </button>
+
+          <div class="results-info" *ngIf="!loading && filtroNome && filtroNome.trim().length > 0">
             <span class="results-count">
               {{ dataSource.filteredData.length }}
               {{ dataSource.filteredData.length === 1 ? 'paciente encontrado' : 'pacientes encontrados' }}
