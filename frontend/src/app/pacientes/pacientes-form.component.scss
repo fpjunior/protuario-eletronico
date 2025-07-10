@@ -222,11 +222,11 @@ mat-form-field {
     max-width: 1000px;
     padding: 30px 50px 24px 50px;
   }
-  
+
   .paciente-form {
     grid-template-columns: 1fr 1fr; // Volta para 2 colunas
   }
-  
+
   .paciente-form mat-form-field:first-child,
   .paciente-form mat-form-field:nth-child(2) {
     grid-column: 1 / -1; // Nome e nome da mãe ocupam toda a largura
