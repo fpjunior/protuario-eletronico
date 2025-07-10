@@ -11,17 +11,28 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.form-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  width: 100%;
+}
+
 .ficha-container {
-  background: #fff;
+  background: white;
   border: none;
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 40px 80px 32px 80px; // Aumentado margem lateral: 50px → 80px
-  max-width: 1400px; // Aumentado para dar mais espaço
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 40px 60px 32px 60px; // Margem lateral interna
+  max-width: 1200px; // Reduzido para melhor proporção
   width: 100%;
-  margin: 20px 40px; // Adicionado margem lateral externa
+  margin: 0; // Removido margin externo
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .ficha-container::before {
@@ -55,20 +66,23 @@ h1 {
 
 .paciente-form {
   display: grid;
-  grid-template-columns: 1fr 1fr; // Duas colunas para aproveitar melhor o espaço
+  grid-template-columns: 2fr 1fr 1fr; // Três colunas: primeira maior para nome/mãe
   gap: 24px 32px; // Espaçamento entre campos
   margin-bottom: 32px;
 }
 
-// Campos que devem ocupar a largura total
-.paciente-form mat-form-field:first-child,
-.paciente-form mat-form-field:nth-child(2) {
-  grid-column: 1 / -1; // Nome e nome da mãe ocupam toda a largura
+// Campos que devem ocupar mais espaço
+.paciente-form mat-form-field:first-child { // Nome
+  grid-column: 1 / 3; // Ocupa 2 colunas
+}
+
+.paciente-form mat-form-field:nth-child(2) { // Nome da mãe
+  grid-column: 1 / 3; // Ocupa 2 colunas
 }
 
 // Endereço também ocupa toda a largura
-.paciente-form mat-form-field:nth-child(9) {
-  grid-column: 1 / -1;
+.paciente-form mat-form-field:nth-child(9) { // Endereço
+  grid-column: 1 / -1; // Ocupa todas as colunas
 }
 
 mat-form-field {
@@ -205,9 +219,17 @@ mat-form-field {
 // Responsividade
 @media (max-width: 1200px) {
   .ficha-container {
-    max-width: 1100px;
-    padding: 30px 60px 24px 60px; // Ajustado para manter proporção
-    margin: 20px 30px;
+    max-width: 1000px;
+    padding: 30px 50px 24px 50px;
+  }
+  
+  .paciente-form {
+    grid-template-columns: 1fr 1fr; // Volta para 2 colunas
+  }
+  
+  .paciente-form mat-form-field:first-child,
+  .paciente-form mat-form-field:nth-child(2) {
+    grid-column: 1 / -1; // Nome e nome da mãe ocupam toda a largura
   }
 }
 
@@ -216,9 +238,12 @@ mat-form-field {
     padding: 16px;
   }
 
+  .form-container {
+    padding: 1rem;
+  }
+
   .ficha-container {
-    padding: 24px 30px 20px 30px; // Mantendo margem menor mas consistente
-    margin: 16px 20px;
+    padding: 24px 30px 20px 30px;
   }
 
   h1 {
@@ -254,9 +279,12 @@ mat-form-field {
 }
 
 @media (max-width: 480px) {
+  .form-container {
+    padding: 0.5rem;
+  }
+
   .ficha-container {
-    padding: 20px 24px 16px 24px; // Mantendo margem mínima
-    margin: 16px 12px;
+    padding: 20px 24px 16px 24px;
   }
 
   h1 {
@@ -265,116 +293,5 @@ mat-form-field {
 
   .paciente-form {
     gap: 16px;
-  }
-}
-
-.form-row mat-form-field {
-  flex: 1;
-  min-width: 200px;
-}
-
-h3 {
-  margin: 24px 0 16px 0;
-  color: #333;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 8px;
-}
-
-.message-error {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #f44336;
-  background: #ffebee;
-  padding: 12px;
-  border-radius: 4px;
-  margin: 16px 0;
-}
-
-/* Botões de ação */
-.botoes-acao {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.botoes-acao button {
-  min-width: 120px;
-}
-
-.botoes-acao button mat-icon {
-  margin-right: 8px;
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-  }
-
-  .form-row mat-form-field {
-    min-width: auto;
-  }
-}
-
-/* Customização dos campos Material */
-.form-field .mat-mdc-form-field {
-  width: 100%;
-}
-
-.form-field .mat-mdc-form-field-outline {
-  border-radius: var(--border-radius-small);
-}
-
-.form-field .mat-mdc-text-field-wrapper {
-  border-radius: var(--border-radius-small);
-}
-
-/* Estados especiais */
-.editing .section-title::before {
-  content: '';
-  position: absolute;
-  left: -2rem;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--warning-color);
-  border-radius: 2px;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-  }
-
-  .form-field {
-    min-width: auto;
-    width: 100%;
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-  }
-
-  .card-title {
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .paciente-form {
-    gap: 1rem;
-  }
-
-  .card-title {
-    margin: 1.5rem 0 0.75rem 0;
-    font-size: 1rem;
-  }
-
-  .form-actions {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
   }
 }

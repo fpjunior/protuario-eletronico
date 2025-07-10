@@ -22,9 +22,10 @@
   </div>
 </div>
 
-<div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
-  <h1>{{ pacienteEditando ? 'Editar Paciente' : 'Novo Paciente' }}</h1>
-  <form [formGroup]="form" (ngSubmit)="salvar()" class="paciente-form" autocomplete="off">
+<div class="form-container">
+  <div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
+    <h1>{{ pacienteEditando ? 'Editar Paciente' : 'Novo Paciente' }}</h1>
+    <form [formGroup]="form" (ngSubmit)="salvar()" class="paciente-form" autocomplete="off">
     <mat-form-field appearance="fill">
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" />
@@ -145,4 +146,5 @@
       </div>
     </div>
   </form>
+  </div>
 </div>
