@@ -16,10 +16,10 @@
   border: none;
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 40px 50px 32px 50px;
+  padding: 40px 80px 32px 80px; // Aumentado margem lateral: 50px → 80px
   max-width: 1400px; // Aumentado para dar mais espaço
   width: 100%;
-  margin: 20px 0;
+  margin: 20px 40px; // Adicionado margem lateral externa
   position: relative;
   overflow: hidden;
 }
@@ -126,11 +126,22 @@ mat-form-field {
 .botoes-acao {
   display: flex;
   gap: 16px;
-  justify-content: center;
+  justify-content: space-between; // Mudado de center para space-between
   align-items: center;
   padding-top: 24px;
   border-top: 1px solid #e2e8f0;
   margin-top: 32px;
+}
+
+.botoes-acao .grupo-esquerda {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.botoes-acao .grupo-direita {
+  display: flex;
+  align-items: center;
 }
 
 .botoes-acao button {
@@ -195,7 +206,8 @@ mat-form-field {
 @media (max-width: 1200px) {
   .ficha-container {
     max-width: 1100px;
-    padding: 30px 40px 24px 40px;
+    padding: 30px 60px 24px 60px; // Ajustado para manter proporção
+    margin: 20px 30px;
   }
 }
 
@@ -205,8 +217,8 @@ mat-form-field {
   }
 
   .ficha-container {
-    padding: 24px 20px 20px 20px;
-    margin: 16px 0;
+    padding: 24px 30px 20px 30px; // Mantendo margem menor mas consistente
+    margin: 16px 20px;
   }
 
   h1 {
@@ -229,6 +241,12 @@ mat-form-field {
     flex-direction: column;
     gap: 12px;
 
+    .grupo-esquerda,
+    .grupo-direita {
+      width: 100%;
+      justify-content: center;
+    }
+
     button {
       width: 100%;
     }
@@ -237,7 +255,8 @@ mat-form-field {
 
 @media (max-width: 480px) {
   .ficha-container {
-    padding: 20px 16px 16px 16px;
+    padding: 20px 24px 16px 24px; // Mantendo margem mínima
+    margin: 16px 12px;
   }
 
   h1 {
@@ -247,11 +266,6 @@ mat-form-field {
   .paciente-form {
     gap: 16px;
   }
-}
-  gap: 16px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
 }
 
 .form-row mat-form-field {
