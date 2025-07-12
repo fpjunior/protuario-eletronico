@@ -49,10 +49,13 @@ app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: process.env.NODE_ENV === 'production' ? {
+    rejectUnauthorized: false,
+    sslmode: 'require'
+  } : false,
   max: 20, // máximo de conexões no pool
   idleTimeoutMillis: 30000, // tempo limite para conexões inativas
-  connectionTimeoutMillis: 2000, // tempo limite para conectar
+  connectionTimeoutMillis: 10000, // tempo limite para conectar (aumentado)
   keepAlive: true,
   keepAliveInitialDelayMillis: 0
 });
@@ -756,3 +759,38 @@ async function startServer() {
 
 // Iniciar aplicação
 startServer();
+
+// ENDPOINT DE EMERGÊNCIA: Login sem banco (apenas para teste)
+app.post('/api/emergency-login', async (req, res) => {
+  try {
+    console.log('🆘 Login de emergência (SEM banco)');
+    const { email, senha } = req.body;
+
+    // Login hardcoded para teste
+    if (email === 'admin@teste.com' && senha === '123456') {
+      const token = jwt.sign(
+        { 
+          id: 1, 
+          email: 'admin@teste.com', 
+          nome: 'Admin Teste' 
+        },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      res.json({
+        token,
+        usuario: {
+          id: 1,
+          email: 'admin@teste.com',
+          nome: 'Admin Teste'
+        }
+      });
+    } else {
+      res.status(401).json({ error: 'Use admin@teste.com / 123456' });
+    }
+  } catch (error) {
+    console.error('❌ Erro no login de emergência:', error);
+    res.status(500).json({ error: 'Erro interno', details: error.message });
+  }
+});
