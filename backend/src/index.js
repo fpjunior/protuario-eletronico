@@ -931,6 +931,62 @@ app.get('/api/test-db-no-ssl', async (req, res) => {
   }
 });
 
+// TESTE COM SSL ESPECÍFICO PARA RENDER
+app.get('/api/test-db-render-ssl', async (req, res) => {
+  let testPool = null;
+  try {
+    console.log('🔍 Testando com SSL específico do Render...');
+    
+    // URL com parâmetros SSL explícitos
+    const sslUrl = process.env.DATABASE_URL + '?sslmode=require&sslcert=&sslkey=&sslrootcert=';
+    
+    testPool = new Pool({
+      connectionString: sslUrl,
+      ssl: {
+        rejectUnauthorized: false,
+        ca: undefined,
+        cert: undefined,
+        key: undefined
+      },
+      max: 1,
+      connectionTimeoutMillis: 15000
+    });
+
+    console.log('🔄 Tentando conectar com SSL do Render...');
+    const client = await testPool.connect();
+    console.log('✅ Conectado com SSL do Render!');
+    
+    const result = await client.query('SELECT NOW() as now, current_user as user');
+    client.release();
+
+    res.json({
+      status: 'SUCCESS',
+      message: 'Conectado com SSL do Render',
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('❌ Erro com SSL do Render:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro com SSL do Render',
+      error: {
+        message: error.message,
+        code: error.code,
+        detail: error.detail
+      }
+    });
+  } finally {
+    if (testPool) {
+      try {
+        await testPool.end();
+      } catch (err) {
+        console.error('❌ Erro ao encerrar pool:', err);
+      }
+    }
+  }
+});
+
 // TESTE VARIÁVEIS: Mostrar todas as variáveis (TEMPORÁRIO)
 app.get('/api/debug-env', (req, res) => {
   const env = process.env;
