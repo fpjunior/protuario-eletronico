@@ -51,13 +51,19 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? {
     rejectUnauthorized: false,
-    sslmode: 'require'
+    require: true
   } : false,
-  max: 20, // máximo de conexões no pool
-  idleTimeoutMillis: 30000, // tempo limite para conexões inativas
-  connectionTimeoutMillis: 10000, // tempo limite para conectar (aumentado)
+  max: 10, // reduzir número de conexões
+  min: 2, // mínimo de conexões
+  idleTimeoutMillis: 10000, // reduzir timeout
+  connectionTimeoutMillis: 15000, // aumentar timeout de conexão
+  acquireTimeoutMillis: 10000, // timeout para adquirir conexão
   keepAlive: true,
-  keepAliveInitialDelayMillis: 0
+  keepAliveInitialDelayMillis: 0,
+  // Configurações específicas para Render
+  application_name: 'protuario-backend',
+  statement_timeout: 30000,
+  query_timeout: 30000
 });
 
 // JWT Secret (em produção deve vir de variável de ambiente)
@@ -811,37 +817,48 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// TESTE BANCO: Conexão isolada
+// TESTE BANCO: Conexão isolada com retry
 app.get('/api/test-db', async (req, res) => {
+  let testPool = null;
   try {
     console.log('🔍 Testando banco isoladamente...');
     console.log('DATABASE_URL existe:', !!process.env.DATABASE_URL);
     console.log('DATABASE_URL length:', process.env.DATABASE_URL?.length || 0);
     
-    // Criar nova conexão só para este teste
-    const testPool = new Pool({
+    // Criar nova conexão só para este teste com configurações mais robustas
+    testPool = new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: process.env.NODE_ENV === 'production' ? {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        require: true
       } : false,
       max: 1, // apenas uma conexão para teste
-      connectionTimeoutMillis: 5000
+      min: 0,
+      connectionTimeoutMillis: 10000,
+      idleTimeoutMillis: 5000,
+      acquireTimeoutMillis: 5000,
+      application_name: 'test-connection'
     });
 
+    console.log('🔄 Tentando conectar...');
     const client = await testPool.connect();
     console.log('✅ Cliente conectado com sucesso');
     
-    const result = await client.query('SELECT NOW() as now, version() as version');
+    console.log('🔄 Executando query simples...');
+    const result = await client.query('SELECT NOW() as now, current_database() as db');
     console.log('✅ Query executada:', result.rows[0]);
     
     client.release();
-    await testPool.end();
-    console.log('✅ Pool encerrado');
+    console.log('✅ Cliente liberado');
 
     res.json({
       status: 'SUCCESS',
       message: 'Banco conectado com sucesso',
-      data: result.rows[0]
+      data: result.rows[0],
+      connection_info: {
+        database: result.rows[0].db,
+        timestamp: result.rows[0].now
+      }
     });
 
   } catch (error) {
@@ -853,9 +870,19 @@ app.get('/api/test-db', async (req, res) => {
         message: error.message,
         code: error.code,
         name: error.name,
-        stack: error.stack?.substring(0, 500)
+        detail: error.detail,
+        hint: error.hint
       }
     });
+  } finally {
+    if (testPool) {
+      try {
+        await testPool.end();
+        console.log('✅ Pool de teste encerrado');
+      } catch (err) {
+        console.error('❌ Erro ao encerrar pool de teste:', err);
+      }
+    }
   }
 });
 
