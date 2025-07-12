@@ -1082,3 +1082,216 @@ app.post('/api/login-temp', async (req, res) => {
     res.status(500).json({ error: 'Erro interno', details: error.message });
   }
 });
+
+// ENDPOINT DE DIAGNÓSTICO: Verificar tabelas do banco
+app.get('/api/check-tables', async (req, res) => {
+  try {
+    console.log('🔍 Verificando estrutura das tabelas...');
+    
+    // Verificar se existem tabelas
+    const tablesQuery = `
+      SELECT table_name, table_type 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      ORDER BY table_name;
+    `;
+    
+    const tablesResult = await pool.query(tablesQuery);
+    
+    // Verificar especificamente as tabelas importantes
+    const checkTablesQueries = {
+      usuarios: `
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'usuarios'
+        );
+      `,
+      pacientes: `
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'pacientes'
+        );
+      `
+    };
+    
+    const tableExists = {};
+    for (const [tableName, query] of Object.entries(checkTablesQueries)) {
+      const result = await pool.query(query);
+      tableExists[tableName] = result.rows[0].exists;
+    }
+    
+    // Se a tabela pacientes não existir, mostrar como criar
+    let pacientesStructure = null;
+    if (tableExists.pacientes) {
+      const structureQuery = `
+        SELECT column_name, data_type, is_nullable, column_default
+        FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'pacientes'
+        ORDER BY ordinal_position;
+      `;
+      const structureResult = await pool.query(structureQuery);
+      pacientesStructure = structureResult.rows;
+    }
+    
+    // Contar registros se a tabela existir
+    let counts = {};
+    if (tableExists.usuarios) {
+      const userCountResult = await pool.query('SELECT COUNT(*) as count FROM usuarios');
+      counts.usuarios = parseInt(userCountResult.rows[0].count);
+    }
+    if (tableExists.pacientes) {
+      const pacienteCountResult = await pool.query('SELECT COUNT(*) as count FROM pacientes');
+      counts.pacientes = parseInt(pacienteCountResult.rows[0].count);
+    }
+
+    res.json({
+      status: 'SUCCESS',
+      message: 'Verificação de tabelas concluída',
+      database: {
+        allTables: tablesResult.rows,
+        tableCount: tablesResult.rows.length,
+        requiredTables: tableExists,
+        recordCounts: counts,
+        pacientesStructure: pacientesStructure
+      },
+      recommendations: {
+        needsUsuarios: !tableExists.usuarios,
+        needsPacientes: !tableExists.pacientes,
+        createUsuariosSQL: !tableExists.usuarios ? `
+          CREATE TABLE usuarios (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            senha VARCHAR(255) NOT NULL,
+            nome VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+        ` : null,
+        createPacientesSQL: !tableExists.pacientes ? `
+          CREATE TABLE pacientes (
+            id SERIAL PRIMARY KEY,
+            nome VARCHAR(255) NOT NULL,
+            mae VARCHAR(255),
+            nascimento DATE,
+            sexo VARCHAR(1),
+            estado_civil VARCHAR(50),
+            profissao VARCHAR(100),
+            escolaridade VARCHAR(100),
+            raca VARCHAR(50),
+            endereco TEXT,
+            bairro VARCHAR(100),
+            municipio VARCHAR(100),
+            uf VARCHAR(2),
+            cep VARCHAR(10),
+            acompanhante VARCHAR(255),
+            procedencia VARCHAR(100),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(nome, nascimento)
+          );
+        ` : null
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao verificar tabelas:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro ao verificar tabelas',
+      error: {
+        message: error.message,
+        code: error.code,
+        detail: error.detail
+      }
+    });
+  }
+});
+
+// ENDPOINT DE SETUP: Criar tabelas automaticamente
+app.post('/api/setup-database', async (req, res) => {
+  try {
+    console.log('🏗️ Configurando banco de dados...');
+    
+    // Criar tabela usuarios
+    const createUsuariosSQL = `
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        senha VARCHAR(255) NOT NULL,
+        nome VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+    
+    // Criar tabela pacientes
+    const createPacientesSQL = `
+      CREATE TABLE IF NOT EXISTS pacientes (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(255) NOT NULL,
+        mae VARCHAR(255),
+        nascimento DATE,
+        sexo VARCHAR(1),
+        estado_civil VARCHAR(50),
+        profissao VARCHAR(100),
+        escolaridade VARCHAR(100),
+        raca VARCHAR(50),
+        endereco TEXT,
+        bairro VARCHAR(100),
+        municipio VARCHAR(100),
+        uf VARCHAR(2),
+        cep VARCHAR(10),
+        acompanhante VARCHAR(255),
+        procedencia VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(nome, nascimento)
+      );
+    `;
+    
+    // Executar queries
+    await pool.query(createUsuariosSQL);
+    console.log('✅ Tabela usuarios criada/verificada');
+    
+    await pool.query(createPacientesSQL);
+    console.log('✅ Tabela pacientes criada/verificada');
+    
+    // Criar usuário admin se não existir
+    const adminExists = await pool.query('SELECT id FROM usuarios WHERE email = $1', ['admin@teste.com']);
+    
+    if (adminExists.rows.length === 0) {
+      const bcrypt = await import('bcryptjs');
+      const senhaHash = await bcrypt.hash('123456', 10);
+      
+      await pool.query(
+        'INSERT INTO usuarios (email, senha, nome) VALUES ($1, $2, $3)',
+        ['admin@teste.com', senhaHash, 'Administrador Teste']
+      );
+      console.log('✅ Usuário admin criado');
+    }
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Banco de dados configurado com sucesso',
+      tables: {
+        usuarios: 'Criada/Verificada',
+        pacientes: 'Criada/Verificada'
+      },
+      adminUser: {
+        email: 'admin@teste.com',
+        senha: '123456'
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro ao configurar banco:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro ao configurar banco de dados',
+      error: {
+        message: error.message,
+        code: error.code,
+        detail: error.detail
+      }
+    });
+  }
+});
