@@ -51,19 +51,16 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? {
     rejectUnauthorized: false,
-    require: true
+    ca: false,
+    checkServerIdentity: false
   } : false,
-  max: 10, // reduzir número de conexões
-  min: 2, // mínimo de conexões
-  idleTimeoutMillis: 10000, // reduzir timeout
-  connectionTimeoutMillis: 15000, // aumentar timeout de conexão
-  acquireTimeoutMillis: 10000, // timeout para adquirir conexão
-  keepAlive: true,
-  keepAliveInitialDelayMillis: 0,
-  // Configurações específicas para Render
-  application_name: 'protuario-backend',
-  statement_timeout: 30000,
-  query_timeout: 30000
+  max: 5, // reduzir ainda mais
+  min: 1,
+  idleTimeoutMillis: 5000,
+  connectionTimeoutMillis: 20000, // aumentar timeout
+  acquireTimeoutMillis: 15000,
+  keepAlive: false, // desabilitar keepAlive
+  application_name: 'protuario-backend'
 });
 
 // JWT Secret (em produção deve vir de variável de ambiente)
@@ -881,6 +878,54 @@ app.get('/api/test-db', async (req, res) => {
         console.log('✅ Pool de teste encerrado');
       } catch (err) {
         console.error('❌ Erro ao encerrar pool de teste:', err);
+      }
+    }
+  }
+});
+
+// TESTE SEM SSL (apenas para diagnóstico)
+app.get('/api/test-db-no-ssl', async (req, res) => {
+  let testPool = null;
+  try {
+    console.log('🔍 Testando banco SEM SSL...');
+    
+    // Teste sem SSL
+    testPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: false, // SEM SSL
+      max: 1,
+      connectionTimeoutMillis: 10000
+    });
+
+    console.log('🔄 Tentando conectar sem SSL...');
+    const client = await testPool.connect();
+    console.log('✅ Conectado sem SSL!');
+    
+    const result = await client.query('SELECT NOW() as now');
+    client.release();
+
+    res.json({
+      status: 'SUCCESS',
+      message: 'Conectado SEM SSL',
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('❌ Erro sem SSL:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro mesmo sem SSL',
+      error: {
+        message: error.message,
+        code: error.code
+      }
+    });
+  } finally {
+    if (testPool) {
+      try {
+        await testPool.end();
+      } catch (err) {
+        console.error('❌ Erro ao encerrar pool:', err);
       }
     }
   }
