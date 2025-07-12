@@ -536,6 +536,45 @@ app.post('/api/create-test-user', async (req, res) => {
   }
 });
 
+// ENDPOINT TEMPORÁRIO: Listar usuários (REMOVER EM PRODUÇÃO)
+app.get('/api/list-users', async (req, res) => {
+  try {
+    console.log('📋 Listando usuários...');
+    
+    // Verificar se a tabela usuarios existe
+    const checkTable = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'usuarios'
+      );
+    `);
+    
+    if (!checkTable.rows[0].exists) {
+      return res.json({
+        message: 'Tabela usuarios não existe',
+        users: []
+      });
+    }
+
+    // Listar usuários (sem senhas)
+    const result = await pool.query('SELECT id, email, nome, created_at FROM usuarios ORDER BY id');
+    
+    res.json({
+      message: 'Usuários encontrados',
+      count: result.rows.length,
+      users: result.rows
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro ao listar usuários:', error);
+    res.status(500).json({ 
+      error: 'Erro ao listar usuários', 
+      details: error.message 
+    });
+  }
+});
+
 app.options('*', cors());
 
 const PORT = process.env.PORT || 3001;
