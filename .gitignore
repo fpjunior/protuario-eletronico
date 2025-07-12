@@ -5,6 +5,7 @@ frontend/node_modules/
 
 # Environment files
 .env
+.env.*
 .env.local
 .env.production
 
@@ -39,3 +40,16 @@ test-*.js
 # Temporary files
 tmp/
 temp/
+
+# Installers and binaries
+*.msi
+*.exe
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# Backup files
+*.backup
+*.bak
+*.old
