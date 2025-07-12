@@ -1267,3 +1267,104 @@ app.get('/api/setup-database', async (req, res) => {
     });
   }
 });
+
+// ENDPOINT SUPER SIMPLES: Criar tabelas diretamente
+app.get('/api/create-tables-simple', async (req, res) => {
+  try {
+    console.log('🏗️ Criando tabelas de forma simples...');
+    
+    // Query 1: Tabela usuarios
+    console.log('Criando tabela usuarios...');
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        senha VARCHAR(255) NOT NULL,
+        nome VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    // Query 2: Tabela pacientes
+    console.log('Criando tabela pacientes...');
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS pacientes (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(255) NOT NULL,
+        mae VARCHAR(255),
+        nascimento DATE,
+        sexo VARCHAR(1),
+        estado_civil VARCHAR(50),
+        profissao VARCHAR(100),
+        escolaridade VARCHAR(100),
+        raca VARCHAR(50),
+        endereco TEXT,
+        bairro VARCHAR(100),
+        municipio VARCHAR(100),
+        uf VARCHAR(2),
+        cep VARCHAR(10),
+        acompanhante VARCHAR(255),
+        procedencia VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    // Query 3: Criar admin (com senha hash fixa)
+    console.log('Criando usuário admin...');
+    await pool.query(`
+      INSERT INTO usuarios (email, senha, nome) 
+      VALUES ('admin@teste.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin Teste')
+      ON CONFLICT (email) DO NOTHING
+    `);
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Tabelas criadas com sucesso!',
+      tables: ['usuarios', 'pacientes'],
+      admin: 'admin@teste.com / 123456'
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro simples:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro ao criar tabelas',
+      error: error.message
+    });
+  }
+});
+
+// ENDPOINT SUPER SIMPLES: Verificar se tabelas existem
+app.get('/api/tables-exist', async (req, res) => {
+  try {
+    console.log('🔍 Verificando se tabelas existem...');
+    
+    const result = await pool.query(`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name IN ('usuarios', 'pacientes')
+    `);
+    
+    const tables = result.rows.map(row => row.table_name);
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Verificação concluída',
+      existingTables: tables,
+      hasUsuarios: tables.includes('usuarios'),
+      hasPacientes: tables.includes('pacientes'),
+      needsSetup: tables.length < 2
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro na verificação:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro ao verificar',
+      error: error.message
+    });
+  }
+});
+
+export default app;
