@@ -173,31 +173,75 @@ app.get('/', (req, res) => {
   res.send('API do Prontuário Eletrônico');
 });
 
+// Endpoint de health check para diagnóstico
+app.get('/api/health', async (req, res) => {
+  try {
+    const dbTest = await pool.query('SELECT NOW()');
+    res.json({
+      status: 'OK',
+      message: 'API funcionando corretamente',
+      database: 'Conectado',
+      timestamp: dbTest.rows[0].now,
+      environment: {
+        NODE_ENV: process.env.NODE_ENV,
+        PORT: process.env.PORT,
+        FRONTEND_URL: process.env.FRONTEND_URL,
+        HAS_DATABASE_URL: !!process.env.DATABASE_URL,
+        HAS_JWT_SECRET: !!process.env.JWT_SECRET
+      }
+    });
+  } catch (error) {
+    console.error('Erro no health check:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro na API',
+      database: 'Erro de conexão',
+      error: error.message,
+      environment: {
+        NODE_ENV: process.env.NODE_ENV,
+        PORT: process.env.PORT,
+        FRONTEND_URL: process.env.FRONTEND_URL,
+        HAS_DATABASE_URL: !!process.env.DATABASE_URL,
+        HAS_JWT_SECRET: !!process.env.JWT_SECRET
+      }
+    });
+  }
+});
+
 // Endpoint de login
 app.post('/api/login', async (req, res) => {
   try {
+    console.log('📝 Tentativa de login recebida');
     const { email, senha } = req.body;
 
     // Validar campos obrigatórios
     if (!email || !senha) {
+      console.log('❌ Campos obrigatórios ausentes');
       return res.status(400).json({ error: 'Email e senha são obrigatórios' });
     }
 
+    console.log(`📧 Buscando usuário: ${email}`);
+    
     // Buscar usuário no banco
     const { rows } = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
 
     if (rows.length === 0) {
+      console.log('❌ Usuário não encontrado');
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
 
     const usuario = rows[0];
+    console.log('✅ Usuário encontrado, verificando senha');
 
     // Verificar senha
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
     if (!senhaValida) {
+      console.log('❌ Senha inválida');
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
+
+    console.log('✅ Login bem-sucedido, gerando token');
 
     // Gerar JWT
     const token = jwt.sign(
@@ -220,8 +264,8 @@ app.post('/api/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erro no login:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error('❌ Erro no login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
   }
 });
 
