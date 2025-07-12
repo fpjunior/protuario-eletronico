@@ -1030,3 +1030,55 @@ app.get('/api/my-ip', (req, res) => {
     socket_ip: req.socket.remoteAddress
   });
 });
+
+// WORKAROUND: Login temporário sem banco
+app.post('/api/login-temp', async (req, res) => {
+  try {
+    console.log('🔧 Login temporário (sem banco)');
+    const { email, senha } = req.body;
+
+    // Validar campos
+    if (!email || !senha) {
+      return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+    }
+
+    // Usuários temporários para teste
+    const usuarios = [
+      { id: 1, email: 'admin@teste.com', senha: '123456', nome: 'Admin Teste' },
+      { id: 2, email: 'admin@alianca.com.br', senha: '123456', nome: 'Admin Aliança' },
+      { id: 3, email: 'test@test.com', senha: 'test', nome: 'Usuário Teste' }
+    ];
+
+    // Buscar usuário
+    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+
+    if (!usuario) {
+      return res.status(401).json({ error: 'Credenciais inválidas' });
+    }
+
+    // Gerar JWT
+    const token = jwt.sign(
+      { 
+        id: usuario.id, 
+        email: usuario.email, 
+        nome: usuario.nome 
+      },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      token,
+      usuario: {
+        id: usuario.id,
+        email: usuario.email,
+        nome: usuario.nome
+      },
+      message: 'Login temporário - banco será conectado em breve'
+    });
+
+  } catch (error) {
+    console.error('❌ Erro no login temporário:', error);
+    res.status(500).json({ error: 'Erro interno', details: error.message });
+  }
+});
