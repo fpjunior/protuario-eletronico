@@ -575,6 +575,71 @@ app.get('/api/list-users', async (req, res) => {
   }
 });
 
+// Endpoint de diagnóstico detalhado da conexão
+app.get('/api/debug-connection', async (req, res) => {
+  try {
+    console.log('🔍 Diagnóstico detalhado da conexão...');
+    
+    // Informações da URL (sem revelar senha)
+    const dbUrl = process.env.DATABASE_URL;
+    const urlParts = dbUrl ? dbUrl.match(/postgresql:\/\/([^:]+):([^@]+)@([^:\/]+):?(\d+)?\/(.+)/) : null;
+    
+    const diagnostics = {
+      hasUrl: !!dbUrl,
+      urlLength: dbUrl ? dbUrl.length : 0,
+      parsedUrl: urlParts ? {
+        user: urlParts[1],
+        passwordLength: urlParts[2] ? urlParts[2].length : 0,
+        host: urlParts[3],
+        port: urlParts[4] || '5432',
+        database: urlParts[5]
+      } : null,
+      environment: process.env.NODE_ENV,
+      sslConfig: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    };
+
+    // Teste básico de conexão
+    console.log('🔗 Testando conexão básica...');
+    const client = await pool.connect();
+    
+    console.log('✅ Cliente conectado, testando query...');
+    const result = await client.query('SELECT NOW() as timestamp, version() as pg_version');
+    
+    client.release();
+    console.log('✅ Query executada com sucesso');
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Conexão estabelecida com sucesso',
+      diagnostics,
+      database: {
+        connected: true,
+        timestamp: result.rows[0].timestamp,
+        version: result.rows[0].pg_version
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Erro no diagnóstico:', error);
+    
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro na conexão',
+      error: {
+        message: error.message,
+        code: error.code,
+        detail: error.detail,
+        hint: error.hint
+      },
+      diagnostics: {
+        hasUrl: !!process.env.DATABASE_URL,
+        urlLength: process.env.DATABASE_URL ? process.env.DATABASE_URL.length : 0,
+        environment: process.env.NODE_ENV
+      }
+    });
+  }
+});
+
 app.options('*', cors());
 
 const PORT = process.env.PORT || 3001;
