@@ -20,7 +20,12 @@ app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: 20, // máximo de conexões no pool
+  idleTimeoutMillis: 30000, // tempo limite para conexões inativas
+  connectionTimeoutMillis: 2000, // tempo limite para conectar
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 0
 });
 
 // JWT Secret (em produção deve vir de variável de ambiente)
@@ -638,6 +643,20 @@ app.get('/api/debug-connection', async (req, res) => {
       }
     });
   }
+});
+
+// Tratamento de erros do pool
+pool.on('error', (err, client) => {
+  console.error('❌ Erro inesperado no pool de conexões:', err);
+  console.error('Cliente:', client);
+});
+
+pool.on('connect', (client) => {
+  console.log('✅ Nova conexão estabelecida no pool');
+});
+
+pool.on('remove', (client) => {
+  console.log('🔄 Conexão removida do pool');
 });
 
 app.options('*', cors());
