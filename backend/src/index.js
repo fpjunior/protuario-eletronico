@@ -19,7 +19,8 @@ app.options('*', cors());
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 // JWT Secret (em produção deve vir de variável de ambiente)
@@ -176,7 +177,15 @@ app.get('/', (req, res) => {
 // Endpoint de health check para diagnóstico
 app.get('/api/health', async (req, res) => {
   try {
+    // Verificar se a URL do banco está definida
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL não está definida');
+    }
+
+    console.log('🔍 Testando conexão com banco...');
     const dbTest = await pool.query('SELECT NOW()');
+    console.log('✅ Conexão com banco funcionando');
+
     res.json({
       status: 'OK',
       message: 'API funcionando corretamente',
@@ -187,11 +196,13 @@ app.get('/api/health', async (req, res) => {
         PORT: process.env.PORT,
         FRONTEND_URL: process.env.FRONTEND_URL,
         HAS_DATABASE_URL: !!process.env.DATABASE_URL,
-        HAS_JWT_SECRET: !!process.env.JWT_SECRET
+        HAS_JWT_SECRET: !!process.env.JWT_SECRET,
+        DATABASE_URL_LENGTH: process.env.DATABASE_URL ? process.env.DATABASE_URL.length : 0,
+        JWT_SECRET_LENGTH: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0
       }
     });
   } catch (error) {
-    console.error('Erro no health check:', error);
+    console.error('❌ Erro no health check:', error);
     res.status(500).json({
       status: 'ERROR',
       message: 'Erro na API',
@@ -202,7 +213,9 @@ app.get('/api/health', async (req, res) => {
         PORT: process.env.PORT,
         FRONTEND_URL: process.env.FRONTEND_URL,
         HAS_DATABASE_URL: !!process.env.DATABASE_URL,
-        HAS_JWT_SECRET: !!process.env.JWT_SECRET
+        HAS_JWT_SECRET: !!process.env.JWT_SECRET,
+        DATABASE_URL_LENGTH: process.env.DATABASE_URL ? process.env.DATABASE_URL.length : 0,
+        JWT_SECRET_LENGTH: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0
       }
     });
   }
@@ -451,6 +464,76 @@ app.put('/api/pacientes/:id', authenticateToken, async (req, res) => {
     return res.status(404).json({ error: 'Paciente não encontrado' });
   }
   res.json(mapPacienteDbToApi(rows[0]));
+});
+
+// ENDPOINT TEMPORÁRIO: Criar usuário de teste (REMOVER EM PRODUÇÃO)
+app.post('/api/create-test-user', async (req, res) => {
+  try {
+    console.log('🔧 Criando usuário de teste...');
+    
+    // Verificar se a tabela usuarios existe
+    const checkTable = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'usuarios'
+      );
+    `);
+    
+    if (!checkTable.rows[0].exists) {
+      console.log('📋 Criando tabela usuarios...');
+      await pool.query(`
+        CREATE TABLE usuarios (
+          id SERIAL PRIMARY KEY,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          senha VARCHAR(255) NOT NULL,
+          nome VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+      console.log('✅ Tabela usuarios criada!');
+    }
+
+    // Verificar se já existe um usuário teste
+    const existingUser = await pool.query('SELECT * FROM usuarios WHERE email = $1', ['admin@teste.com']);
+    
+    if (existingUser.rows.length > 0) {
+      return res.json({
+        message: 'Usuário teste já existe',
+        email: 'admin@teste.com',
+        senha: '123456'
+      });
+    }
+
+    // Criar senha hash
+    const senhaHash = await bcrypt.hash('123456', 10);
+    
+    // Inserir usuário teste
+    const result = await pool.query(
+      'INSERT INTO usuarios (email, senha, nome) VALUES ($1, $2, $3) RETURNING *',
+      ['admin@teste.com', senhaHash, 'Administrador Teste']
+    );
+    
+    console.log('🎉 Usuário teste criado com sucesso!');
+    
+    res.json({
+      message: 'Usuário teste criado com sucesso!',
+      email: 'admin@teste.com',
+      senha: '123456',
+      usuario: {
+        id: result.rows[0].id,
+        email: result.rows[0].email,
+        nome: result.rows[0].nome
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro ao criar usuário teste:', error);
+    res.status(500).json({ 
+      error: 'Erro ao criar usuário teste', 
+      details: error.message 
+    });
+  }
 });
 
 app.options('*', cors());
