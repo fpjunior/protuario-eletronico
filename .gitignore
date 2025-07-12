@@ -7,7 +7,7 @@ frontend/node_modules/
 .env
 .env.*
 .env.local
-.env.production
+# Note: .env.production está no repo para deploy automático
 
 # Build outputs
 dist/
