@@ -794,3 +794,91 @@ app.post('/api/emergency-login', async (req, res) => {
     res.status(500).json({ error: 'Erro interno', details: error.message });
   }
 });
+
+// TESTE BÁSICO: Backend funcionando (sem banco)
+app.get('/api/status', (req, res) => {
+  res.json({
+    status: 'OK',
+    message: 'Backend funcionando',
+    timestamp: new Date().toISOString(),
+    environment: {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT,
+      HAS_DATABASE_URL: !!process.env.DATABASE_URL,
+      HAS_JWT_SECRET: !!process.env.JWT_SECRET,
+      FRONTEND_URL: process.env.FRONTEND_URL
+    }
+  });
+});
+
+// TESTE BANCO: Conexão isolada
+app.get('/api/test-db', async (req, res) => {
+  try {
+    console.log('🔍 Testando banco isoladamente...');
+    console.log('DATABASE_URL existe:', !!process.env.DATABASE_URL);
+    console.log('DATABASE_URL length:', process.env.DATABASE_URL?.length || 0);
+    
+    // Criar nova conexão só para este teste
+    const testPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.NODE_ENV === 'production' ? {
+        rejectUnauthorized: false
+      } : false,
+      max: 1, // apenas uma conexão para teste
+      connectionTimeoutMillis: 5000
+    });
+
+    const client = await testPool.connect();
+    console.log('✅ Cliente conectado com sucesso');
+    
+    const result = await client.query('SELECT NOW() as now, version() as version');
+    console.log('✅ Query executada:', result.rows[0]);
+    
+    client.release();
+    await testPool.end();
+    console.log('✅ Pool encerrado');
+
+    res.json({
+      status: 'SUCCESS',
+      message: 'Banco conectado com sucesso',
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao testar banco:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro na conexão com banco',
+      error: {
+        message: error.message,
+        code: error.code,
+        name: error.name,
+        stack: error.stack?.substring(0, 500)
+      }
+    });
+  }
+});
+
+// TESTE VARIÁVEIS: Mostrar todas as variáveis (TEMPORÁRIO)
+app.get('/api/debug-env', (req, res) => {
+  const env = process.env;
+  const debugInfo = {
+    NODE_ENV: env.NODE_ENV,
+    PORT: env.PORT,
+    FRONTEND_URL: env.FRONTEND_URL,
+    HAS_DATABASE_URL: !!env.DATABASE_URL,
+    DATABASE_URL_START: env.DATABASE_URL?.substring(0, 20) || 'não definida',
+    DATABASE_URL_LENGTH: env.DATABASE_URL?.length || 0,
+    HAS_JWT_SECRET: !!env.JWT_SECRET,
+    JWT_SECRET_LENGTH: env.JWT_SECRET?.length || 0,
+    // Mostrar todas as variáveis que começam com DB ou DATABASE
+    DATABASE_VARS: Object.keys(env).filter(key => 
+      key.toUpperCase().includes('DATABASE') || key.toUpperCase().includes('DB')
+    ).reduce((obj, key) => {
+      obj[key] = env[key] ? `${env[key].substring(0, 20)}...` : 'undefined';
+      return obj;
+    }, {})
+  };
+
+  res.json(debugInfo);
+});
