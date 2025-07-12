@@ -909,3 +909,23 @@ app.get('/api/debug-env', (req, res) => {
 
   res.json(debugInfo);
 });
+
+// DESCOBRIR IP DO RENDER
+app.get('/api/my-ip', (req, res) => {
+  const clientIP = req.headers['x-forwarded-for'] || 
+                   req.headers['x-real-ip'] || 
+                   req.connection.remoteAddress || 
+                   req.socket.remoteAddress ||
+                   req.ip;
+                   
+  res.json({
+    client_ip: clientIP,
+    headers: {
+      'x-forwarded-for': req.headers['x-forwarded-for'],
+      'x-real-ip': req.headers['x-real-ip'],
+      'cf-connecting-ip': req.headers['cf-connecting-ip']
+    },
+    connection_ip: req.connection.remoteAddress,
+    socket_ip: req.socket.remoteAddress
+  });
+});
