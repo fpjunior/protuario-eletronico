@@ -10,10 +10,39 @@ import nodemailer from 'nodemailer';
 dotenv.config();
 
 const app = express();
+
+// Configuração CORS mais flexível para Vercel
+const allowedOrigins = [
+  'http://localhost:4200',
+  'https://protuario-eletronico-t3wu.vercel.app',
+  /^https:\/\/protuario-eletronico.*\.vercel\.app$/
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: function (origin, callback) {
+    // Permitir requisições sem origin (ex: aplicações mobile)
+    if (!origin) return callback(null, true);
+    
+    // Verificar se origin está na lista permitida ou corresponde ao padrão Vercel
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return origin === allowedOrigin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log('🚫 Origin bloqueada:', origin);
+      callback(new Error('Não permitido pelo CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 app.options('*', cors());
 app.use(express.json());
@@ -645,6 +674,44 @@ app.get('/api/debug-connection', async (req, res) => {
   }
 });
 
+// Função para testar e reconectar se necessário
+async function ensureConnection() {
+  try {
+    const client = await pool.connect();
+    await client.query('SELECT 1');
+    client.release();
+    return true;
+  } catch (error) {
+    console.error('❌ Falha na conexão:', error.message);
+    return false;
+  }
+}
+
+// Verificar conexão na inicialização
+async function initializeDatabase() {
+  console.log('🔄 Inicializando conexão com banco...');
+  let attempts = 0;
+  const maxAttempts = 5;
+  
+  while (attempts < maxAttempts) {
+    attempts++;
+    console.log(`🔄 Tentativa ${attempts}/${maxAttempts}`);
+    
+    if (await ensureConnection()) {
+      console.log('✅ Conexão com banco estabelecida');
+      return true;
+    }
+    
+    if (attempts < maxAttempts) {
+      console.log('⏳ Aguardando 3 segundos antes da próxima tentativa...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+  }
+  
+  console.error('❌ Falha ao conectar após', maxAttempts, 'tentativas');
+  return false;
+}
+
 // Tratamento de erros do pool
 pool.on('error', (err, client) => {
   console.error('❌ Erro inesperado no pool de conexões:', err);
@@ -662,6 +729,30 @@ pool.on('remove', (client) => {
 app.options('*', cors());
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+
+// Inicializar servidor e banco
+async function startServer() {
+  try {
+    console.log('🚀 Iniciando servidor...');
+    
+    // Configurar transportador de email
+    await createEmailTransporter();
+    
+    // Inicializar conexão com banco
+    await initializeDatabase();
+    
+    // Iniciar servidor
+    app.listen(PORT, () => {
+      console.log(`✅ Servidor rodando na porta ${PORT}`);
+      console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
+      console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL}`);
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+}
+
+// Iniciar aplicação
+startServer();
