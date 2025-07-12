@@ -14,7 +14,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   backend:
     build: .
-    command: npm run dev
+    command: npm start
     volumes:
       - ./src:/app/src
       - ./package.json:/app/package.json
