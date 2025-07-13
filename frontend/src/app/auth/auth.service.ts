@@ -33,8 +33,7 @@ export class AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<LoginResponse> {
-    // TEMPORÁRIO: Usar endpoint sem banco enquanto resolvemos o PostgreSQL
-    return this.http.post<LoginResponse>(`${this.baseUrl}/api/login-temp`, credentials)
+    return this.http.post<LoginResponse>(`${this.baseUrl}/api/login`, credentials)
       .pipe(
         tap(response => {
           localStorage.setItem(this.tokenKey, response.token);
