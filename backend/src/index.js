@@ -1476,4 +1476,60 @@ app.post('/api/debug-login', async (req, res) => {
   }
 });
 
+// ENDPOINT: Corrigir senha do admin
+app.get('/api/fix-admin-password', async (req, res) => {
+  let client = null;
+  try {
+    console.log('🔧 Corrigindo senha do admin...');
+    
+    client = await pool.connect();
+    
+    // Gerar hash correto para "123456"
+    const novaSenhaHash = await bcrypt.hash('123456', 10);
+    console.log('🆕 Novo hash gerado:', novaSenhaHash);
+    
+    // Atualizar usuário admin
+    const updateResult = await client.query(
+      'UPDATE usuarios SET senha = $1 WHERE email = $2 RETURNING id, email, nome',
+      [novaSenhaHash, 'admin@teste.com']
+    );
+    
+    if (updateResult.rows.length === 0) {
+      return res.json({
+        status: 'NOT_FOUND',
+        message: 'Usuário admin não encontrado'
+      });
+    }
+    
+    // Testar o novo hash
+    const testeHash = await bcrypt.compare('123456', novaSenhaHash);
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Senha do admin corrigida com sucesso',
+      usuario: updateResult.rows[0],
+      hash_test: {
+        new_hash_start: novaSenhaHash.substring(0, 20),
+        test_result: testeHash
+      },
+      credentials: {
+        email: 'admin@teste.com',
+        senha: '123456'
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro ao corrigir senha:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro ao corrigir senha',
+      error: error.message
+    });
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+});
+
 export default app;
