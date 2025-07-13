@@ -50,17 +50,13 @@ app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false,
-    ca: false,
-    checkServerIdentity: false
+    rejectUnauthorized: false
   } : false,
-  max: 5, // reduzir ainda mais
-  min: 1,
-  idleTimeoutMillis: 5000,
-  connectionTimeoutMillis: 20000, // aumentar timeout
-  acquireTimeoutMillis: 15000,
-  keepAlive: false, // desabilitar keepAlive
-  application_name: 'protuario-backend'
+  max: 3, // reduzir ainda mais
+  min: 0, // mínimo zero para evitar problemas
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 30000,
+  acquireTimeoutMillis: 30000
 });
 
 // JWT Secret (em produção deve vir de variável de ambiente)
@@ -1301,6 +1297,98 @@ app.get('/api/test-usuarios', async (req, res) => {
       message: 'Erro ao buscar usuários',
       error: error.message
     });
+  }
+});
+
+// ENDPOINT ULTRA SIMPLES: Testar conexão direta
+app.get('/api/direct-test', async (req, res) => {
+  let client = null;
+  try {
+    console.log('🔍 Teste direto com cliente...');
+    
+    // Criar conexão direta
+    client = await pool.connect();
+    console.log('✅ Cliente conectado');
+    
+    // Query super simples
+    const result = await client.query('SELECT 1 as test');
+    console.log('✅ Query executada:', result.rows[0]);
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Conexão direta funcionando',
+      result: result.rows[0]
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro na conexão direta:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro na conexão direta',
+      error: error.message,
+      stack: error.stack
+    });
+  } finally {
+    if (client) {
+      try {
+        client.release();
+        console.log('✅ Cliente liberado');
+      } catch (releaseError) {
+        console.error('❌ Erro ao liberar cliente:', releaseError);
+      }
+    }
+  }
+});
+
+// ENDPOINT: Criar usuário admin manualmente
+app.get('/api/create-admin-manual', async (req, res) => {
+  let client = null;
+  try {
+    console.log('👤 Criando usuário admin manualmente...');
+    
+    client = await pool.connect();
+    
+    // Verificar se já existe
+    const checkResult = await client.query('SELECT id FROM usuarios WHERE email = $1', ['admin@teste.com']);
+    
+    if (checkResult.rows.length > 0) {
+      return res.json({
+        status: 'EXISTS',
+        message: 'Usuário admin já existe',
+        admin: 'admin@teste.com / 123456'
+      });
+    }
+    
+    // Hash da senha "123456" gerado previamente
+    const senhaHash = '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+    
+    // Inserir usuário
+    const insertResult = await client.query(
+      'INSERT INTO usuarios (email, senha, nome) VALUES ($1, $2, $3) RETURNING id, email, nome',
+      ['admin@teste.com', senhaHash, 'Admin Teste']
+    );
+    
+    res.json({
+      status: 'SUCCESS',
+      message: 'Usuário admin criado com sucesso',
+      usuario: insertResult.rows[0],
+      credentials: {
+        email: 'admin@teste.com',
+        senha: '123456'
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Erro ao criar admin:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro ao criar admin',
+      error: error.message
+    });
+  } finally {
+    if (client) {
+      client.release();
+    }
   }
 });
 
