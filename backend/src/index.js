@@ -1392,4 +1392,88 @@ app.get('/api/create-admin-manual', async (req, res) => {
   }
 });
 
+// ENDPOINT DE DEBUG: Testar login com detalhes
+app.post('/api/debug-login', async (req, res) => {
+  let client = null;
+  try {
+    console.log('🔍 DEBUG LOGIN - Início');
+    const { email, senha } = req.body;
+
+    console.log('📧 Email recebido:', email);
+    console.log('🔑 Senha recebida:', senha);
+
+    if (!email || !senha) {
+      return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+    }
+
+    client = await pool.connect();
+    
+    // Buscar usuário
+    const result = await client.query('SELECT id, email, senha, nome FROM usuarios WHERE email = $1', [email]);
+    
+    if (result.rows.length === 0) {
+      return res.json({
+        status: 'USER_NOT_FOUND',
+        message: 'Usuário não encontrado',
+        email: email
+      });
+    }
+
+    const usuario = result.rows[0];
+    console.log('👤 Usuário encontrado:', { id: usuario.id, email: usuario.email, nome: usuario.nome });
+    console.log('🔐 Hash no banco (primeiros 20 chars):', usuario.senha.substring(0, 20));
+
+    // Testar bcrypt
+    try {
+      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+      console.log('🔍 Resultado do bcrypt.compare:', senhaValida);
+      
+      // Gerar novo hash para comparação
+      const novoHash = await bcrypt.hash(senha, 10);
+      console.log('🆕 Novo hash gerado (primeiros 20 chars):', novoHash.substring(0, 20));
+      
+      res.json({
+        status: 'DEBUG_SUCCESS',
+        message: 'Debug concluído',
+        user: {
+          id: usuario.id,
+          email: usuario.email,
+          nome: usuario.nome
+        },
+        password_check: {
+          provided_password: senha,
+          stored_hash_start: usuario.senha.substring(0, 20),
+          bcrypt_result: senhaValida,
+          new_hash_start: novoHash.substring(0, 20)
+        }
+      });
+      
+    } catch (bcryptError) {
+      console.error('❌ Erro no bcrypt:', bcryptError);
+      res.json({
+        status: 'BCRYPT_ERROR',
+        message: 'Erro no bcrypt',
+        error: bcryptError.message,
+        user: {
+          id: usuario.id,
+          email: usuario.email,
+          nome: usuario.nome
+        }
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ Erro no debug login:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Erro no debug',
+      error: error.message
+    });
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+});
+
 export default app;
