@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS pacientes (
   cep VARCHAR(9),
   acompanhante VARCHAR(100),
   procedencia VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT unique_nome_nascimento UNIQUE (nome, nascimento)
 );
 

@@ -1,25 +1,47 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "prontuario-eletronico-backend",
+  "version": "2.0.0",
+  "description": "API backend para prontuário eletrônico com arquitetura MVC",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "dev:legacy": "nodemon src/index.js",
     "build": "echo 'Build completed'",
-    "test": "echo 'No tests specified' && exit 0"
+    "test": "echo 'No tests specified' && exit 0",
+    "lint": "echo 'No linting configured'",
+    "db:migrate": "echo 'Migration system not implemented'",
+    "db:seed": "echo 'Seeding system not implemented'"
   },
+  "keywords": [
+    "prontuario",
+    "eletronico",
+    "api",
+    "healthcare",
+    "nodejs",
+    "express"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
+    "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
+    "express-validator": "^7.2.1",
+    "helmet": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.5",
     "pg": "^8.11.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
