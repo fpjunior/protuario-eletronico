@@ -3,6 +3,7 @@ import { generateToken } from '../middleware/auth.js';
 import { AppError } from '../middleware/errorHandler.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env.js';
+import emailService from '../services/emailService.js';
 
 class AuthController {
   /**
@@ -321,9 +322,9 @@ class AuthController {
       console.log('=====================================');
 
       try {
-        // TODO: Implementar envio de e-mail de recuperação
-        // await sendPasswordResetEmail(usuario.email, resetToken, usuario.nome);
-        console.log(`✅ Token de recuperação gerado para: ${usuario.email}`);
+        // Enviar email de recuperação usando o serviço de email
+        await emailService.sendPasswordResetEmail(usuario.email, resetToken, usuario.nome);
+        console.log(`✅ Email de recuperação enviado para: ${usuario.email}`);
       } catch (emailError) {
         console.error('❌ Erro ao enviar email:', emailError.message);
         // Mesmo com erro no email, retornamos sucesso por segurança
