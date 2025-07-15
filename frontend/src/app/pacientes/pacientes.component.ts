@@ -27,9 +27,10 @@ export interface Paciente {
 }
 
 @Component({
-  selector: 'app-pacientes',
-  templateUrl: './pacientes.component.html',
-  styleUrls: ['./pacientes.component.scss']
+    selector: 'app-pacientes',
+    templateUrl: './pacientes.component.html',
+    styleUrls: ['./pacientes.component.scss'],
+    standalone: false
 })
 export class PacientesComponent implements OnInit, AfterViewInit {
   pacientes: Paciente[] = [];
@@ -58,7 +59,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     'acoes', 'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia'
   ];
-  apiUrl = environment.apiUrl + '/api/pacientes';
+  apiUrl = environment.apiUrl + '/pacientes';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<Paciente>([]);

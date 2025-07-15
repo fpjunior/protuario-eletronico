@@ -10,16 +10,17 @@ import { AuthService } from '../auth/auth.service';
 import * as jsPDF from 'jspdf';
 
 @Component({
-  selector: 'app-pacientes-form',
-  templateUrl: './pacientes-form.component.html',
-  styleUrls: ['./pacientes.component.scss']
+    selector: 'app-pacientes-form',
+    templateUrl: './pacientes-form.component.html',
+    styleUrls: ['./pacientes.component.scss'],
+    standalone: false
 })
 export class PacientesFormComponent implements OnInit, OnDestroy {
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
   loading = false;
   verificandoDuplicidade = false;
-  apiUrl = environment.apiUrl + '/api/pacientes';
+  apiUrl = environment.apiUrl + '/pacientes';
   private destroy$ = new Subject<void>();
   private validationSubject = new Subject<{nome: string, mae: string}>();
   currentUser: any = null;

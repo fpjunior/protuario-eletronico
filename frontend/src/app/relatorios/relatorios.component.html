@@ -1,0 +1,324 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-header-gradient shadow-header text-white py-4 relative z-10">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <svg class="h-8 w-8 brightness-0 invert" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+          </svg>
+          <h1 class="text-xl font-semibold">Relatórios de Pacientes</h1>
+        </div>
+        <nav class="flex space-x-4">
+          <a routerLink="/pacientes" class="text-white/80 hover:text-white transition-colors duration-200">
+            Pacientes
+          </a>
+          <a routerLink="/relatorios" class="text-white font-semibold">
+            Relatórios
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container mx-auto px-4 py-8">
+    <!-- Filtros -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-lg font-semibold text-gray-800 mb-6">Filtros</h2>
+
+      <form [formGroup]="filtrosForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Data Início -->
+        <div class="space-y-2">
+          <label for="dataInicio" class="block text-sm font-medium text-gray-700">
+            Data de Cadastro - Início
+          </label>
+          <input
+            type="date"
+            id="dataInicio"
+            formControlName="dataInicio"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+        </div>
+
+        <!-- Data Fim -->
+        <div class="space-y-2">
+          <label for="dataFim" class="block text-sm font-medium text-gray-700">
+            Data de Cadastro - Fim
+          </label>
+          <input
+            type="date"
+            id="dataFim"
+            formControlName="dataFim"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+        </div>
+
+        <!-- Sexo -->
+        <div class="space-y-2">
+          <label for="sexo" class="block text-sm font-medium text-gray-700">
+            Sexo
+          </label>
+          <select
+            id="sexo"
+            formControlName="sexo"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+            <option *ngFor="let opcao of opcoesSexo" [value]="opcao.value">
+              {{ opcao.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Município -->
+        <div class="space-y-2">
+          <label for="municipio" class="block text-sm font-medium text-gray-700">
+            Município
+          </label>
+          <input
+            type="text"
+            id="municipio"
+            formControlName="municipio"
+            placeholder="Digite o município"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+        </div>
+
+        <!-- UF -->
+        <div class="space-y-2">
+          <label for="uf" class="block text-sm font-medium text-gray-700">
+            Estado (UF)
+          </label>
+          <select
+            id="uf"
+            formControlName="uf"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+            <option *ngFor="let opcao of opcoesUF" [value]="opcao.value">
+              {{ opcao.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Estado Civil -->
+        <div class="space-y-2">
+          <label for="estadoCivil" class="block text-sm font-medium text-gray-700">
+            Estado Civil
+          </label>
+          <select
+            id="estadoCivil"
+            formControlName="estadoCivil"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+            <option *ngFor="let opcao of opcoesEstadoCivil" [value]="opcao.value">
+              {{ opcao.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Escolaridade -->
+        <div class="space-y-2">
+          <label for="escolaridade" class="block text-sm font-medium text-gray-700">
+            Escolaridade
+          </label>
+          <select
+            id="escolaridade"
+            formControlName="escolaridade"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          >
+            <option *ngFor="let opcao of opcoesEscolaridade" [value]="opcao.value">
+              {{ opcao.label }}
+            </option>
+          </select>
+        </div>
+      </form>
+
+      <!-- Botões de Filtro -->
+      <div class="flex flex-wrap gap-4 mt-6 pt-6 border-t border-gray-200">
+        <button
+          type="button"
+          (click)="aplicarFiltros()"
+          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors font-medium"
+        >
+          Aplicar Filtros
+        </button>
+        <button
+          type="button"
+          (click)="limparFiltros()"
+          class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors font-medium"
+        >
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- Resumo dos Resultados -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-800">Resultados</h2>
+        <div class="text-sm text-gray-600">
+          {{ pacientesFiltrados.length }} paciente(s) encontrado(s)
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="carregando" class="flex justify-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+
+      <!-- Tabela de Resultados -->
+      <div *ngIf="!carregando && pacientesFiltrados.length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Nome
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Sexo
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Nascimento
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Município
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                UF
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let paciente of pacientesFiltrados; let i = index"
+                [class.bg-gray-50]="i % 2 === 1">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {{ paciente.nome }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ paciente.sexo }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ paciente.nascimento | date:'dd/MM/yyyy' }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ paciente.municipio }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ paciente.uf }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mensagem quando não há resultados -->
+      <div *ngIf="!carregando && pacientesFiltrados.length === 0"
+           class="text-center py-8 text-gray-500">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p class="mt-2">Nenhum paciente encontrado com os filtros aplicados</p>
+      </div>
+    </div>
+
+    <!-- Opções de Relatórios -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-6">Gerar Relatórios</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Relatório Simples -->
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center space-x-3 mb-3">
+            <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3 class="font-medium text-gray-900">Relatório Simples</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">
+            Lista resumida com informações básicas dos pacientes filtrados.
+          </p>
+          <button
+            (click)="gerarRelatorioSimples()"
+            [disabled]="pacientesFiltrados.length === 0"
+            class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Gerar PDF
+          </button>
+        </div>
+
+        <!-- Relatório Detalhado -->
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center space-x-3 mb-3">
+            <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3 class="font-medium text-gray-900">Relatório Detalhado</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">
+            Lista completa com todas as informações dos pacientes filtrados.
+          </p>
+          <button
+            (click)="gerarRelatorioDetalhado()"
+            [disabled]="pacientesFiltrados.length === 0"
+            class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Gerar PDF
+          </button>
+        </div>
+
+        <!-- Imprimir Resumo -->
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center space-x-3 mb-3">
+            <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            <h3 class="font-medium text-gray-900">Imprimir Resumo</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">
+            Abre janela de impressão com resumo dos pacientes filtrados.
+          </p>
+          <button
+            (click)="imprimirResumo()"
+            [disabled]="pacientesFiltrados.length === 0"
+            class="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Imprimir
+          </button>
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div *ngIf="pacientesFiltrados.length > 0" class="mt-8 pt-6 border-t border-gray-200">
+        <h3 class="text-md font-medium text-gray-900 mb-4">Estatísticas dos Resultados</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <div class="text-2xl font-bold text-blue-600">{{ pacientesFiltrados.length }}</div>
+            <div class="text-sm text-blue-800">Total de Pacientes</div>
+          </div>
+          <div class="bg-pink-50 p-4 rounded-lg">
+            <div class="text-2xl font-bold text-pink-600">
+              {{ getQuantidadeFeminino() }}
+            </div>
+            <div class="text-sm text-pink-800">Feminino</div>
+          </div>
+          <div class="bg-indigo-50 p-4 rounded-lg">
+            <div class="text-2xl font-bold text-indigo-600">
+              {{ getQuantidadeMasculino() }}
+            </div>
+            <div class="text-sm text-indigo-800">Masculino</div>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg">
+            <div class="text-2xl font-bold text-green-600">
+              {{ getQuantidadeMunicipios() }}
+            </div>
+            <div class="text-sm text-green-800">Municípios</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
