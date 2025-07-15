@@ -59,7 +59,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     'acoes', 'nome', 'mae', 'nascimento', 'sexo', 'estadoCivil', 'profissao', 'escolaridade', 'raca',
     'endereco', 'bairro', 'municipio', 'uf', 'cep', 'acompanhante', 'procedencia'
   ];
-  apiUrl = environment.apiUrl + '/pacientes';
+  apiUrl = environment.apiUrl + '/pacientes'; // já está correto
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<Paciente>([]);

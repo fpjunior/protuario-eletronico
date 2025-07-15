@@ -20,7 +20,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = false;
   verificandoDuplicidade = false;
-  apiUrl = environment.apiUrl + '/pacientes';
+  apiUrl = environment.apiUrl + '/pacientes'; // já está correto
   private destroy$ = new Subject<void>();
   private validationSubject = new Subject<{nome: string, mae: string}>();
   currentUser: any = null;

@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials)
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
           localStorage.setItem(this.tokenKey, response.token);
@@ -81,6 +81,6 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/forgot-password`, { email });
+    return this.http.post(`${environment.apiUrl}/forgot-password`, { email });
   }
 }
