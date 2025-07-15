@@ -10,9 +10,10 @@ import { AuthService } from '../auth/auth.service';
 import * as jsPDF from 'jspdf';
 
 @Component({
-  selector: 'app-pacientes-form',
-  templateUrl: './pacientes-form.component.html',
-  styleUrls: ['./pacientes.component.scss']
+    selector: 'app-pacientes-form',
+    templateUrl: './pacientes-form.component.html',
+    styleUrls: ['./pacientes.component.scss'],
+    standalone: false
 })
 export class PacientesFormComponent implements OnInit, OnDestroy {
   pacienteEditando: Paciente | null = null;
