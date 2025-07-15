@@ -1,118 +1,36 @@
-/* Estilos principais da página de login */
-.login-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  display: flex;
-  flex-direction: column;
+/* Componente de Login - Usando apenas Tailwind CSS */
+/* Arquivo mantido para compatibilidade, mas sem estilos customizados */
+
+/* Animação de entrada suave para os cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Header do sistema - reutilizando estilos das outras telas */
-.header-sistema {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
+/* Aplicar animação nos cards */
+.bg-white {
+  animation: fadeInUp 0.6s ease-out;
 }
 
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Melhorar a transição do backdrop blur em navegadores mais antigos */
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur-sm {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo-alianca {
-  height: 50px;
-  width: auto;
-  filter: brightness(0) invert(1);
-}
-
-.sistema-info {
-  text-align: left;
-}
-
-.logo-principal {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.sistema-descricao {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  margin: 0;
-  font-weight: 300;
-}
-
-/* Container principal de login */
-.login-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-}
-
-.login-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 420px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-/* Header do card de login */
-.login-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.login-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin: 0 0 0.5rem 0;
-}
-
-.login-subtitle {
-  font-size: 0.9rem;
-  color: #7f8c8d;
-  margin: 0;
-  font-weight: 400;
-}
-
-/* Formulário de login */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-field {
-  width: 100%;
-}
-
-/* Customização dos campos Material */
-.form-field .mat-mdc-form-field-outline {
-  border-radius: 8px;
-}
-
-.form-field .mat-mdc-text-field-wrapper {
-  border-radius: 8px;
+/* Estilos de responsividade adicional para telas muito pequenas */
+@media (max-width: 360px) {
+  .rounded-xl {
+    margin: 0.5rem;
+    padding: 1.5rem !important;
+  }
 }
 
 .form-field .mat-mdc-form-field-focus-overlay {
