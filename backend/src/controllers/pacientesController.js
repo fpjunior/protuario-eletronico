@@ -375,6 +375,90 @@ class PacientesController {
       });
     }
   }
+
+  /**
+   * Gerar relatórios com filtros específicos
+   */
+  static async reports(req, res) {
+    try {
+      const {
+        dataInicio = '',
+        dataFim = '',
+        sexo = '',
+        municipio = '',
+        uf = '',
+        estadoCivil = '',
+        escolaridade = '',
+        orderBy = 'nome',
+        order = 'ASC'
+      } = req.query;
+
+      const filters = {
+        dataInicio,
+        dataFim,
+        sexo,
+        municipio,
+        uf,
+        estadoCivil,
+        escolaridade,
+        orderBy,
+        order
+      };
+
+      console.log('🔍 [RELATÓRIOS] Filtros aplicados:', filters);
+
+      // Buscar pacientes com filtros
+      const pacientes = await Paciente.findAllForReports(filters);
+      
+      // Calcular estatísticas
+      const total = pacientes.length;
+      const masculino = pacientes.filter(p => p.sexo === 'M').length;
+      const feminino = pacientes.filter(p => p.sexo === 'F').length;
+      const municipios = [...new Set(pacientes.map(p => p.municipio))].length;
+
+      console.log(`📊 [RELATÓRIOS] ${total} pacientes encontrados`);
+
+      res.json({
+        status: 'SUCCESS',
+        data: pacientes.map(p => ({
+          id: p.id,
+          nome: p.nome,
+          mae: p.mae,
+          nascimento: p.nascimento,
+          sexo: p.sexo,
+          estadoCivil: p.estadoCivil,
+          profissao: p.profissao,
+          escolaridade: p.escolaridade,
+          raca: p.raca,
+          endereco: p.endereco,
+          bairro: p.bairro,
+          municipio: p.municipio,
+          uf: p.uf,
+          cep: p.cep,
+          acompanhante: p.acompanhante,
+          procedencia: p.procedencia,
+          created_at: p.created_at,
+          updated_at: p.updated_at
+        })),
+        statistics: {
+          total,
+          masculino,
+          feminino,
+          municipios
+        },
+        filters
+      });
+
+    } catch (error) {
+      console.error('❌ [RELATÓRIOS] Erro ao gerar relatório:', error);
+      
+      res.status(500).json({
+        status: 'ERROR',
+        message: 'Erro ao gerar relatório',
+        code: 'REPORT_ERROR'
+      });
+    }
+  }
 }
 
 export default PacientesController;

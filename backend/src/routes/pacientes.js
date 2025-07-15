@@ -30,6 +30,13 @@ router.get('/', PacientesController.index);
 router.get('/search', PacientesController.search);
 
 /**
+ * @route GET /api/pacientes/reports
+ * @desc Gerar relatórios com filtros específicos
+ * @access Private
+ */
+router.get('/reports', PacientesController.reports);
+
+/**
  * @route GET /api/pacientes/statistics
  * @desc Obter estatísticas dos pacientes
  * @access Private

@@ -44,6 +44,11 @@
             <span>Novo Paciente</span>
           </button>
 
+          <button mat-raised-button color="accent" [routerLink]="['/relatorios']" [disabled]="loading" class="reports-btn">
+            <mat-icon>assessment</mat-icon>
+            <span>Relatórios</span>
+          </button>
+
           <div class="results-info" *ngIf="!loading && filtroNome && filtroNome.trim().length > 0">
             <span class="results-count">
               {{ dataSource.filteredData.length }}

@@ -1,0 +1,34 @@
+// Estilos específicos do componente de relatórios
+
+// Animação de fade in para os cards
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// Estilos para impressão
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    font-size: 12px;
+  }
+
+  .print-content {
+    margin: 0;
+    box-shadow: none;
+  }
+}

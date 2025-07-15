@@ -403,6 +403,99 @@ class Paciente {
       idade: this.getIdade()
     };
   }
+
+  /**
+   * Buscar pacientes para relatórios com filtros específicos
+   */
+  static async findAllForReports(options = {}) {
+    try {
+      const {
+        orderBy = 'nome',
+        order = 'ASC',
+        dataInicio = '',
+        dataFim = '',
+        sexo = '',
+        municipio = '',
+        uf = '',
+        estadoCivil = '',
+        escolaridade = ''
+      } = options;
+
+      let query = `
+        SELECT *, EXTRACT(YEAR FROM AGE(nascimento)) as idade 
+        FROM pacientes 
+        WHERE 1=1
+      `;
+      
+      const params = [];
+      let paramIndex = 1;
+
+      // Filtro por data de cadastro
+      if (dataInicio) {
+        query += ` AND DATE(created_at) >= $${paramIndex}`;
+        params.push(dataInicio);
+        paramIndex++;
+      }
+
+      if (dataFim) {
+        query += ` AND DATE(created_at) <= $${paramIndex}`;
+        params.push(dataFim);
+        paramIndex++;
+      }
+
+      // Filtro por sexo
+      if (sexo) {
+        query += ` AND sexo = $${paramIndex}`;
+        params.push(sexo);
+        paramIndex++;
+      }
+
+      // Filtro por município (busca parcial)
+      if (municipio) {
+        query += ` AND municipio ILIKE $${paramIndex}`;
+        params.push(`%${municipio}%`);
+        paramIndex++;
+      }
+
+      // Filtro por UF
+      if (uf) {
+        query += ` AND uf = $${paramIndex}`;
+        params.push(uf);
+        paramIndex++;
+      }
+
+      // Filtro por estado civil
+      if (estadoCivil) {
+        query += ` AND estado_civil = $${paramIndex}`;
+        params.push(estadoCivil);
+        paramIndex++;
+      }
+
+      // Filtro por escolaridade
+      if (escolaridade) {
+        query += ` AND escolaridade = $${paramIndex}`;
+        params.push(escolaridade);
+        paramIndex++;
+      }
+
+      // Ordenação
+      const allowedOrderBy = ['nome', 'created_at', 'nascimento', 'municipio', 'uf', 'sexo'];
+      const validOrderBy = allowedOrderBy.includes(orderBy) ? orderBy : 'nome';
+      const validOrder = ['ASC', 'DESC'].includes(order.toUpperCase()) ? order.toUpperCase() : 'ASC';
+
+      query += ` ORDER BY ${validOrderBy} ${validOrder}`;
+
+      console.log('🔍 [SQL] Query de relatórios:', query);
+      console.log('🔍 [SQL] Parâmetros:', params);
+
+      const result = await database.query(query, params);
+      
+      return result.rows.map(row => new Paciente(row));
+    } catch (error) {
+      console.error('❌ [PACIENTE] Erro ao buscar pacientes para relatórios:', error);
+      throw new Error(`Erro ao buscar pacientes para relatórios: ${error.message}`);
+    }
+  }
 }
 
 export default Paciente;

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PacientesComponent } from './pacientes/pacientes.component';
 import { PacientesFormComponent } from './pacientes/pacientes-form.component';
 import { LoginComponent } from './auth/login/login.component';
+import { RelatoriosComponent } from './relatorios/relatorios.component';
 import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'pacientes', component: PacientesComponent, canActivate: [AuthGuard] },
   { path: 'pacientes/novo', component: PacientesFormComponent, canActivate: [AuthGuard] },
+  { path: 'relatorios', component: RelatoriosComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/pacientes' }
 ];
 

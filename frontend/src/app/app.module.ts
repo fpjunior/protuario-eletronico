@@ -23,12 +23,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { RelatoriosComponent } from './relatorios/relatorios.component';
 
 @NgModule({ declarations: [
         AppComponent,
         PacientesComponent,
         PacientesFormComponent,
-        LoginComponent
+        LoginComponent,
+        RelatoriosComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
