@@ -7,6 +7,7 @@ class Usuario {
     this.id = data.id;
     this.email = data.email;
     this.nome = data.nome;
+    this.nivel = data.nivel;
     this.senha = data.senha;
     this.created_at = data.created_at;
     this.updated_at = data.updated_at;
@@ -49,24 +50,20 @@ class Usuario {
    */
   static async create(userData) {
     try {
-      const { email, senha, nome } = userData;
-      
+      const { email, senha, nome, nivel } = userData;
       // Verificar se email já existe
       const existingUser = await Usuario.findByEmail(email);
       if (existingUser) {
         throw new Error('Email já está em uso');
       }
-
       // Hash da senha
       const hashedPassword = await bcrypt.hash(senha, config.BCRYPT_ROUNDS);
-      
       const result = await database.query(
-        `INSERT INTO usuarios (email, senha, nome, created_at) 
-         VALUES ($1, $2, $3, CURRENT_TIMESTAMP) 
+        `INSERT INTO usuarios (email, senha, nome, nivel, created_at)
+         VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
          RETURNING *`,
-        [email.toLowerCase(), hashedPassword, nome]
+        [email.toLowerCase(), hashedPassword, nome, nivel || 'visualizador']
       );
-      
       return new Usuario(result.rows[0]);
     } catch (error) {
       throw new Error(`Erro ao criar usuário: ${error.message}`);
@@ -141,15 +138,13 @@ class Usuario {
   static async findAll(options = {}) {
     try {
       const { limit = 50, offset = 0, orderBy = 'created_at', order = 'DESC' } = options;
-      
       const result = await database.query(
-        `SELECT id, email, nome, created_at, updated_at 
-         FROM usuarios 
-         ORDER BY ${orderBy} ${order} 
+        `SELECT id, email, nome, nivel, created_at, updated_at
+         FROM usuarios
+         ORDER BY ${orderBy} ${order}
          LIMIT $1 OFFSET $2`,
         [limit, offset]
       );
-      
       return result.rows.map(row => new Usuario(row));
     } catch (error) {
       throw new Error(`Erro ao listar usuários: ${error.message}`);
@@ -206,6 +201,7 @@ class Usuario {
       id: this.id,
       email: this.email,
       nome: this.nome,
+      nivel: this.nivel,
       created_at: this.created_at,
       updated_at: this.updated_at
     };

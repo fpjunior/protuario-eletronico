@@ -29,22 +29,24 @@ class AuthController {
         throw new AppError('Credenciais inválidas', 401, 'INVALID_CREDENTIALS');
       }
 
-      // Gerar token JWT
+      // Gerar token JWT incluindo o campo nivel
       const token = generateToken({
         id: usuario.id,
         email: usuario.email,
-        nome: usuario.nome
+        nome: usuario.nome,
+        nivel: usuario.nivel
       });
 
       console.log(`✅ [AUTH] Login realizado: ${usuario.email}`);
 
-      // COMPATIBILIDADE COM PRODUÇÃO - Formato original esperado pelo frontend
+      // Retornar também o campo nivel no objeto usuario
       res.json({
         token,
         usuario: {
           id: usuario.id,
           email: usuario.email,
-          nome: usuario.nome
+          nome: usuario.nome,
+          nivel: usuario.nivel
         }
       });
 

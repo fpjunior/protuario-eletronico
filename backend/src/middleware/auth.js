@@ -1,3 +1,44 @@
+/**
+ * Middleware para checar nível de acesso (roles)
+ * Uso: auth(['admin'])
+ */
+const auth = (roles = []) => {
+  return (req, res, next) => {
+    // Middleware de autenticação
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({
+        status: 'ERROR',
+        message: 'Token de acesso requerido',
+        code: 'NO_TOKEN'
+      });
+    }
+    jwt.verify(token, config.JWT_SECRET, (err, user) => {
+      if (err) {
+        return res.status(403).json({
+          status: 'ERROR',
+          message: 'Token inválido ou expirado',
+          code: 'INVALID_TOKEN'
+        });
+      }
+      req.user = user;
+      // LOG para depuração do nível recebido no token
+      console.log('[AUTH DEBUG] user.nivel:', user.nivel, '| roles permitidos:', roles);
+      if (roles.length > 0 && !roles.includes(user.nivel)) {
+        return res.status(403).json({
+          status: 'ERROR',
+          message: 'Acesso não autorizado',
+          code: 'NO_PERMISSION',
+          nivelRecebido: user.nivel
+        });
+      }
+      next();
+    });
+  };
+};
+
+export default auth;
 import jwt from 'jsonwebtoken';
 import config from '../config/env.js';
 

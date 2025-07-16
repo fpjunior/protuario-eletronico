@@ -1,0 +1,1 @@
+ALTER TABLE usuarios ADD COLUMN nivel VARCHAR(20) NOT NULL DEFAULT 'visualizador';

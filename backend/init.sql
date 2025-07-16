@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   email VARCHAR(255) UNIQUE NOT NULL,
   senha VARCHAR(255) NOT NULL,
   nome VARCHAR(100),
+  nivel VARCHAR(20) NOT NULL DEFAULT 'visualizador',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -40,10 +41,10 @@ VALUES
   ('Marcos Lima', 'Helena Lima', '1975-03-15', 'M', 'Divorciado', 'Engenheiro', 'Superior', 'Preta', 'Rua Verde, 789', 'Industrial', 'Belo Horizonte', 'MG', '30000-000', 'Lucas Lima', 'Clinica');
 
 -- Inserir usuários de teste (senha: 123456)
-INSERT INTO usuarios (email, senha, nome) VALUES
-  ('admin@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Administrador'),
-  ('medico@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Dr. João Silva'),
-  ('medico1@teste.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Dr. Teste'),
-  ('enfermeiro@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Enfermeiro Paulo'),
-  ('fpsjunior87@gmail.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Fernando Junior');
+INSERT INTO usuarios (email, senha, nome, nivel) VALUES
+  ('admin@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Administrador', 'admin'),
+  ('medico@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Dr. João Silva', 'editor'),
+  ('medico1@teste.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Dr. Teste', 'editor'),
+  ('enfermeiro@alianca.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Enfermeiro Paulo', 'visualizador'),
+  ('fpsjunior87@gmail.com', '$2b$12$fTaXt0BM9Hz/e4PfjvI..uk2yr8d.iqBdXwEsP0gIhKiRtS5bCpfS', 'Fernando Junior', 'admin');
 ON CONFLICT (email) DO NOTHING;

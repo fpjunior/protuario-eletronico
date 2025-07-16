@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './auth.js';
 import pacientesRoutes from './pacientes.js';
+import usuariosRoutes from './usuarios.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = Router();
@@ -53,11 +54,17 @@ router.get('/info', (req, res) => {
  */
 router.use('/', authRoutes); // Rotas diretas em /api/
 
+
 /**
  * Rotas de pacientes - COMPATIBILIDADE COM PRODUÇÃO
  * Mantém as rotas originais: /api/pacientes
  */
 router.use('/pacientes', pacientesRoutes);
+
+/**
+ * Rotas de usuários - /api/usuarios
+ */
+router.use('/usuarios', usuariosRoutes);
 
 /**
  * Rota protegida de teste
