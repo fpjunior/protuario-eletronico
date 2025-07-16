@@ -1,11 +1,28 @@
+// Agrupa menu, logo e textos alinhados à esquerda
+.agrupado-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-left: 0.3rem;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .agrupado-esquerda {
+    gap: 1rem;
+    padding-left: 0.15rem;
+  }
+}
+@media (max-width: 600px) {
+  .agrupado-esquerda {
+    gap: 0.5rem;
+    padding-left: 0.08rem;
+  }
+}
 // Estilo para o menu hamburguer no header principal
 .menu-hamburguer {
-  margin-left: 0.5rem;
-  margin-right: 1.5rem;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-left: 0;
+  margin-right: 0;
   color: #fff !important;
   font-size: 2rem !important;
   vertical-align: middle;
@@ -80,13 +97,25 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  margin-left: 0;
+}
+
+@media (max-width: 900px) {
+  .logo-container {
+    gap: 1.2rem;
+  }
+}
+@media (max-width: 600px) {
+  .logo-container {
+    gap: 0.8rem;
+  }
 }
 
 .logo-alianca {
@@ -122,11 +151,33 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: auto;
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
+  position: fixed;
+  top: 20px;
+  right: 40px;
+  height: 64px;
+  padding-right: 0.3rem;
+  background: transparent;
+  z-index: 20;
+  .user-menu {
+    height: 56px;
+    padding-right: 0.15rem;
+  }
+  .user-menu {
+    height: 48px;
+    padding-right: 0.08rem;
+  }
+@media (max-width: 900px) {
+  .logo-container {
+    gap: 1.2rem;
+    margin-left: 44px;
+  }
+}
+@media (max-width: 600px) {
+  .logo-container {
+    gap: 0.8rem;
+    margin-left: 36px;
+  }
+}
 }
 
 .user-info {
@@ -509,6 +560,7 @@ background: linear-gradient(141deg, #1e222d 0%, rgb(43 105 242 / 97%) 100%), rep
 }
 
 .header-content {
+      margin-left: 10px;
   width: 100%;
   max-width: 1200px;
   display: flex;
