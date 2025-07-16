@@ -16,6 +16,7 @@ export interface LoginResponse {
     id: number;
     email: string;
     nome?: string;
+    nivel: 'admin' | 'editor' | 'visualizador';
   };
 }
 
@@ -27,6 +28,27 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
+
+  /**
+   * Retorna o usuário logado (objeto completo)
+   */
+  get user() {
+    return this.userSubject.value;
+  }
+
+  /**
+   * Retorna true se o usuário for admin
+   */
+  get isAdmin() {
+    return this.user && this.user.nivel === 'admin';
+  }
+
+  /**
+   * Retorna true se o usuário for editor
+   */
+  get isEditor() {
+    return this.user && (this.user.nivel === 'admin' || this.user.nivel === 'editor');
+  }
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadStoredUser();

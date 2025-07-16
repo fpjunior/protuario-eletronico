@@ -109,7 +109,7 @@ export class RelatoriosComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
+    public authService: AuthService,
     private fb: FormBuilder
   ) {
     this.filtrosForm = this.fb.group({

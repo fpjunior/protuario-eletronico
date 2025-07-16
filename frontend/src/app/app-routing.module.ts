@@ -5,6 +5,8 @@ import { PacientesFormComponent } from './pacientes/pacientes-form.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RelatoriosComponent } from './relatorios/relatorios.component';
 import { AuthGuard } from './auth/auth.guard';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', redirectTo: '/pacientes', pathMatch: 'full' },
@@ -12,6 +14,7 @@ const routes: Routes = [
   { path: 'pacientes', component: PacientesComponent, canActivate: [AuthGuard] },
   { path: 'pacientes/novo', component: PacientesFormComponent, canActivate: [AuthGuard] },
   { path: 'relatorios', component: RelatoriosComponent, canActivate: [AuthGuard] },
+  { path: 'usuarios', component: UsuariosComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/pacientes' }
 ];
 

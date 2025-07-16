@@ -24,15 +24,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { RelatoriosComponent } from './relatorios/relatorios.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({ declarations: [
         AppComponent,
         PacientesComponent,
         PacientesFormComponent,
         LoginComponent,
-        RelatoriosComponent
+        RelatoriosComponent,
+        UsuariosComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent],
+    imports: [BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         FormsModule,
@@ -49,7 +53,9 @@ import { RelatoriosComponent } from './relatorios/relatorios.component';
         MatProgressSpinnerModule,
         MatMenuModule,
         MatCardModule,
-        MatTooltipModule], providers: [
+        MatTooltipModule,
+        CommonModule
+    ], providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
