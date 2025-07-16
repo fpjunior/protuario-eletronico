@@ -1,1 +1,13 @@
+<nav class="bg-header-gradient shadow-header text-white py-4">
+  <div class="container mx-auto flex items-center justify-between px-4">
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">Prontuário Eletrônico</span>
+    </div>
+    <div class="flex space-x-4">
+      <a routerLink="/pacientes" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Pacientes</a>
+      <a routerLink="/relatorios" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Relatórios</a>
+      <a *ngIf="authService.isAdmin || authService.isEditor" routerLink="/usuarios" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Usuários</a>
+    </div>
+  </div>
+</nav>
 <router-outlet></router-outlet>
