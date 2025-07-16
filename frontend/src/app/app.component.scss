@@ -1,3 +1,22 @@
+// Estilo para o menu hamburguer no header principal
+.menu-hamburguer {
+  margin-left: 0.5rem;
+  margin-right: 1.5rem;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff !important;
+  font-size: 2rem !important;
+  vertical-align: middle;
+  background: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
 // Estilos para o texto do header principal
 .logo-principal {
   font-size: 2.8rem;
@@ -47,29 +66,13 @@
 
 // Cabeçalho do sistema (padrão pacientes-form)
 // Cabeçalho do sistema igual ao de pacientes
-.header-sistema {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);;
-  color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
-  margin-bottom: 0;
-}
+
 
 
 // Importa os estilos compartilhados
 
 // Cabeçalho do sistema
-.header-sistema {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
-  margin-bottom: 0;
-}
+
 
 .header-content {
   max-width: 1200px;
@@ -119,6 +122,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-left: auto;
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .user-info {
@@ -492,11 +500,12 @@ mat-form-field {
   align-items: center;
 }
 // Header global estilos
-.header-sistema  {
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    color: #fff;
-    padding: 20px 0;
-    /* Removido margin-bottom, border-radius, box-shadow, overflow, width e margin-left para eliminar faixa branca abaixo do header */
+.header-sistema {
+background: linear-gradient(141deg, #1e222d 0%, rgb(43 105 242 / 97%) 100%), repeating-linear-gradient(45deg, #000000, transparent 10px, rgba(255, 255, 255, 0.05) 10px, rgba(255, 255, 255, 0.05) 20px);  color: #fff;
+  padding: 20px 0;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 0;
 }
 
 .header-content {

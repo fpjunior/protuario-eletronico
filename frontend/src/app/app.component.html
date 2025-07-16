@@ -1,6 +1,24 @@
 <ng-container *ngIf="!isLoginRoute()">
+  <!-- Menu hamburguer à esquerda do header principal -->
+  <mat-menu #mainMenu="matMenu">
+    <button mat-menu-item routerLink="/pacientes" routerLinkActive="font-bold">
+      <mat-icon>people</mat-icon>
+      <span>Pacientes</span>
+    </button>
+    <button mat-menu-item routerLink="/relatorios" routerLinkActive="font-bold">
+      <mat-icon>description</mat-icon>
+      <span>Relatórios</span>
+    </button>
+    <button *ngIf="authService.isAdmin || authService.isEditor" mat-menu-item routerLink="/usuarios" routerLinkActive="font-bold">
+      <mat-icon>person</mat-icon>
+      <span>Usuários</span>
+    </button>
+  </mat-menu>
   <div class="header-sistema">
-      <div class="header-content">
+    <div class="header-content">
+      <button mat-icon-button [matMenuTriggerFor]="mainMenu" aria-label="Menu principal" class="menu-hamburguer">
+        <mat-icon>menu</mat-icon>
+      </button>
       <div class="logo-container">
         <img src="assets/logo-alianca.svg" alt="Aliança-PE" class="logo-alianca">
         <div class="sistema-info">
@@ -22,14 +40,5 @@
       </div>
     </div>
   </div>
-  <nav class="bg-header-gradient shadow-header text-white py-4">
-    <div class="container mx-auto flex items-center justify-between px-4">
-      <div class="flex space-x-4">
-        <a routerLink="/pacientes" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Pacientes</a>
-        <a routerLink="/relatorios" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Relatórios</a>
-        <a *ngIf="authService.isAdmin || authService.isEditor" routerLink="/usuarios" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Usuários</a>
-      </div>
-    </div>
-  </nav>
 </ng-container>
 <router-outlet></router-outlet>

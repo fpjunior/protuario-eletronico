@@ -1,26 +1,4 @@
-<div class="header-sistema">
-  <div class="header-content">
-    <div class="logo-container">
-      <img src="assets/logo-alianca.svg" alt="Aliança-PE" class="logo-alianca">
-      <div class="sistema-info">
-        <div class="logo-principal">e-Prontuário</div>
-        <div class="sistema-descricao">Gerenciamento de Prontuários Eletrônicos</div>
-      </div>
-    </div>
-    <div class="user-menu">
-      <span class="user-info" *ngIf="currentUser">Olá, {{ currentUser.nome || currentUser.email }}</span>
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu do usuário">
-        <mat-icon>account_circle</mat-icon>
-      </button>
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Sair</span>
-        </button>
-      </mat-menu>
-    </div>
-  </div>
-</div>
+
 
 <div class="form-container">
   <div class="ficha-container" [ngClass]="{edicao: pacienteEditando}">
