@@ -9,5 +9,16 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent {
   title = 'frontend';
-  constructor(public authService: AuthService) {}
+  currentUser: any;
+
+  constructor(public authService: AuthService) {
+    this.currentUser = this.authService.user;
+    this.authService.user$.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }

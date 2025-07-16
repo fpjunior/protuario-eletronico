@@ -1,8 +1,28 @@
+<div class="header-sistema">
+    <div class="header-content">
+    <div class="logo-container">
+      <img src="assets/logo-alianca.svg" alt="Aliança-PE" class="logo-alianca">
+      <div class="sistema-info">
+        <div class="logo-principal">e-Prontuário</div>
+        <div class="sistema-descricao">Gerenciamento de Prontuários Eletrônicos</div>
+      </div>
+    </div>
+    <div class="user-menu">
+      <span class="user-info" *ngIf="currentUser">Olá, {{ currentUser.nome || currentUser.email }}</span>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu do usuário">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
 <nav class="bg-header-gradient shadow-header text-white py-4">
   <div class="container mx-auto flex items-center justify-between px-4">
-    <div class="flex items-center space-x-4">
-      <span class="font-bold text-lg">Prontuário Eletrônico</span>
-    </div>
     <div class="flex space-x-4">
       <a routerLink="/pacientes" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Pacientes</a>
       <a routerLink="/relatorios" routerLinkActive="font-bold" class="text-white/80 hover:text-white transition-colors">Relatórios</a>
