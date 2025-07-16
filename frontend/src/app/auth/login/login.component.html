@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 flex flex-col">
-  <!-- Header com logo -->
-  <div class="bg-header-gradient shadow-header text-white py-4 relative z-10">
+  <!-- Header específico da tela de login -->
+  <div class="header-login shadow-header text-white py-4 relative z-10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-center h-16">
         <div class="flex items-center space-x-8">
@@ -97,7 +97,7 @@
           <!-- Botão de Login -->
           <button
             type="submit"
-            class="w-full flex justify-center items-center px-4 py-3 text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+            class="w-full flex justify-center items-center px-4 py-3 text-sm font-semibold rounded-lg text-white btn-login-gradient focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             [disabled]="loading || loginForm.invalid">
 
             <svg *ngIf="loading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
           <div class="text-center">
             <button
               type="button"
-              class="text-sm text-purple-600 hover:text-purple-500 hover:underline focus:outline-none focus:underline transition-colors font-medium"
+              class="text-sm btn-link-gradient focus:outline-none font-medium"
               (click)="toggleForgotPassword()">
               Esqueci minha senha
             </button>

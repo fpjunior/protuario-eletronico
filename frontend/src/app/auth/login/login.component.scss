@@ -1,3 +1,27 @@
+/* Botão 'Esqueci minha senha' com texto gradiente azul e fundo branco */
+.btn-link-gradient {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  background-color: #fff;
+}
+/* Botão de entrar com gradiente azul igual ao header principal */
+.btn-login-gradient {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+}
+.btn-login-gradient:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+}
+/* Header da tela de login com gradiente igual ao header principal */
+.header-login {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #fff;
+}
 /* Componente de Login - Usando apenas Tailwind CSS */
 /* Arquivo mantido para compatibilidade, mas sem estilos customizados */
 
