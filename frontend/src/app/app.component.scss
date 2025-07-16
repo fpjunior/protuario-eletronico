@@ -1,0 +1,575 @@
+// Estilos para o texto do header principal
+.logo-principal {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #e5e7eb;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18), 0 1px 0 #fff, 0 0 12px #222;
+  letter-spacing: 1px;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  background: linear-gradient(90deg, #e5e7eb 0%, #bfc3c9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+.sistema-descricao {
+  font-size: 1.15rem;
+  color: #fff;
+  background: #2563eb;
+  padding: 2px 8px 2px 8px;
+  border-radius: 4px;
+  font-weight: 400;
+  margin: 0;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+  display: inline-block;
+  letter-spacing: 0.2px;
+}
+}
+// Ícone do botão sair dentro do menu
+.mat-mdc-menu-item .mat-icon {
+  flex-shrink: 0;
+  color: #222 !important;
+  margin-right: var(--mat-menu-item-spacing, 12px);
+  height: var(--mat-menu-item-icon-size, 24px);
+  width: var(--mat-menu-item-icon-size, 24px);
+}
+// Ícone do botão sair
+.icone-sair {
+  color: #222 !important;
+  font-size: 1.3rem !important;
+  vertical-align: middle;
+  margin-right: 4px;
+  margin-left: 0;
+  line-height: normal;
+  display: inline-flex;
+  align-items: center;
+}
+
+// Cabeçalho do sistema (padrão pacientes-form)
+// Cabeçalho do sistema igual ao de pacientes
+.header-sistema {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);;
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  margin-bottom: 0;
+}
+
+
+// Importa os estilos compartilhados
+
+// Cabeçalho do sistema
+.header-sistema {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  margin-bottom: 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-alianca {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-alianca:hover {
+  transform: scale(1.15);
+}
+
+.sistema-info {
+  text-align: left;
+}
+
+.logo-principal {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.sistema-descricao {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 300;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+:host {
+  display: block;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ficha-container {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.ficha-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2c5aa0 0%, #1e3a8a 50%, #1565c0 100%);
+}
+
+.ficha-container.edicao {
+  border: none;
+  box-shadow: 0 10px 40px rgba(255, 152, 0, 0.15), 0 2px 8px rgba(255, 152, 0, 0.1);
+  position: relative;
+}
+
+.ficha-container.edicao::before {
+  background: linear-gradient(90deg, #ff9800 0%, #f57c00 50%, #ef6c00 100%);
+}
+
+h1 {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.paciente-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr; // Três colunas: primeira maior para nome/mãe
+  gap: 24px 32px; // Espaçamento entre campos
+  margin-bottom: 32px;
+}
+
+// Campos que devem ocupar mais espaço
+.paciente-form mat-form-field:first-child { // Nome
+  grid-column: 1 / 3; // Ocupa 2 colunas
+}
+
+.paciente-form mat-form-field:nth-child(2) { // Nome da mãe
+  grid-column: 1 / 3; // Ocupa 2 colunas
+}
+
+// Endereço também ocupa toda a largura
+.paciente-form mat-form-field:nth-child(9) { // Endereço
+  grid-column: 1 / -1; // Ocupa todas as colunas
+}
+
+mat-form-field {
+  width: 100%;
+
+  .mat-form-field-wrapper {
+    padding-bottom: 1.25em;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 8px 8px 0 0;
+    background: #f8fafc;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-underline::before {
+    background: #e2e8f0;
+  }
+
+  .mat-form-field-appearance-fill.mat-focused .mat-form-field-underline::before {
+    background: #2c5aa0;
+  }
+
+  .mat-form-field-label {
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  &.mat-focused .mat-form-field-label {
+    color: #2c5aa0;
+  }
+
+  .mat-input-element {
+    color: #1e293b;
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+
+  .mat-select-trigger {
+    color: #1e293b;
+    font-size: 1rem;
+  }
+
+  .mat-form-field-hint {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+
+  .mat-error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+.botoes-acao {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 32px;
+  position: relative;
+}
+
+.botoes-acao .grupo-esquerda {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+}
+
+.botoes-acao .grupo-direita {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 24px;
+}
+
+.botoes-acao button {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.botoes-acao button[color="primary"] {
+  background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  }
+}
+
+.botoes-acao button[color="accent"] {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  }
+}
+
+.cancelar-btn {
+  color: #64748b !important;
+  border: 2px solid #e2e8f0 !important;
+  background: white !important;
+
+  &:hover:not(:disabled) {
+    border-color: #cbd5e1 !important;
+    background: #f8fafc !important;
+  }
+}
+
+.botao-desabilitado {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+// Responsividade
+@media (max-width: 1200px) {
+  .ficha-container {
+    max-width: 800px;
+    padding: 2rem;
+  }
+
+  .paciente-form {
+    grid-template-columns: 1fr 1fr; // Volta para 2 colunas
+  }
+
+  .paciente-form mat-form-field:first-child,
+  .paciente-form mat-form-field:nth-child(2) {
+    grid-column: 1 / -1; // Nome e nome da mãe ocupam toda a largura
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+
+  .ficha-container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .paciente-form {
+    grid-template-columns: 1fr; // Uma coluna em mobile
+    gap: 20px;
+  }
+
+  .paciente-form mat-form-field:first-child,
+  .paciente-form mat-form-field:nth-child(2),
+  .paciente-form mat-form-field:nth-child(9) {
+    grid-column: 1; // Reset para mobile
+  }
+
+  .botoes-acao {
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+
+    .grupo-esquerda,
+    .grupo-direita {
+      width: 100%;
+      justify-content: center;
+      position: static;
+    }
+
+    .grupo-direita {
+      order: -1; // Botão PDF vai para o topo em mobile
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 0.5rem;
+  }
+
+  .ficha-container {
+    padding: 1.25rem;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .paciente-form {
+    gap: 16px;
+  }
+}
+
+
+
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-alianca {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.sistema-info {
+  text-align: left;
+}
+
+.logo-principal {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.sistema-descricao {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 300;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mat-icon {
+  color: white !important;
+  font-size: 1.5rem !important;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-left: 0;
+  line-height: normal;
+  display: inline-flex;
+  align-items: center;
+}
+// Header global estilos
+.header-sistema  {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #fff;
+    padding: 20px 0;
+    /* Removido margin-bottom, border-radius, box-shadow, overflow, width e margin-left para eliminar faixa branca abaixo do header */
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-alianca {
+  height: 70px;
+// Cabeçalho do sistema (padrão pacientes-form)
+.header-sistema {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  margin-bottom: 0;
+}
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.logo-alianca {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+.sistema-info {
+  text-align: left;
+}
+.logo-principal {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.sistema-descricao {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 300;
+}
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-info {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+.mat-icon {
+  color: white !important;
+  font-size: 2rem !important;
+}
+
+}
