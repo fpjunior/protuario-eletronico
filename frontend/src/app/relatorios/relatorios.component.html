@@ -1,28 +1,5 @@
 <div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <div class="bg-header-gradient shadow-header text-white py-4 relative z-10">
-    <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <svg class="h-8 w-8 brightness-0 invert" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-          </svg>
-          <h1 class="text-xl font-semibold">Relatórios de Pacientes</h1>
-        </div>
-        <nav class="flex space-x-4">
-          <a routerLink="/pacientes" class="text-white/80 hover:text-white transition-colors duration-200">
-            Pacientes
-          </a>
-          <a routerLink="/relatorios" class="text-white font-semibold">
-            Relatórios
-          </a>
-          <a *ngIf="authService.isAdmin" routerLink="/usuarios" class="text-white/80 hover:text-white transition-colors duration-200">
-            Usuários
-          </a>
-        </nav>
-      </div>
-    </div>
-  </div>
+  <!-- Header global removido, permanece apenas o header do app principal -->
 
   <!-- Conteúdo Principal -->
   <div class="container mx-auto px-4 py-8">
