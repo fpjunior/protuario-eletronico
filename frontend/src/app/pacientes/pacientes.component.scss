@@ -1,5 +1,5 @@
 // Importa os estilos compartilhados
-@import '../../shared-styles.scss';
+@use '../../shared-styles.scss' as *;
 
 :host {
   display: block;
