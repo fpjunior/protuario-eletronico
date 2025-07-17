@@ -8,4 +8,8 @@ export class AtendimentoService {
   registrarAtendimento(dto: { pacienteId: number; motivo: string; observacoes?: string }) {
     return this.http.post('http://localhost:3001/api/atendimentos', dto);
   }
+
+  listarAtendimentosDoDia() {
+    return this.http.get<any[]>('http://localhost:3001/api/atendimentos?dia=hoje');
+  }
 }

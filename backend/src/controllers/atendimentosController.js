@@ -22,4 +22,20 @@ const listarPorPaciente = async (req, res) => {
   res.json(atendimentos);
 };
 
-export default { registrar, listarPorPaciente };
+const listarDoDia = async (req, res) => {
+  // Busca atendimentos do dia atual
+  const hoje = new Date();
+  const inicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 0, 0, 0);
+  const fim = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 23, 59, 59);
+  const result = await db.query(
+    `SELECT a.*, p.nome as paciente_nome, p.nascimento as paciente_nascimento
+     FROM atendimentos a
+     JOIN pacientes p ON p.id = a.paciente_id
+     WHERE a.data_hora_chegada BETWEEN $1 AND $2
+     ORDER BY a.data_hora_chegada DESC`,
+    [inicio, fim]
+  );
+  res.json(result.rows);
+};
+
+export default { registrar, listarPorPaciente, listarDoDia };

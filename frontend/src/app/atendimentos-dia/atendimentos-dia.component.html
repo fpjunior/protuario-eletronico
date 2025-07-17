@@ -1,0 +1,30 @@
+<div class="min-h-screen bg-gray-50 flex flex-col items-center py-10">
+  <h2 class="text-2xl font-bold text-blue-700 mb-6">Atendimentos do Dia</h2>
+  <div class="w-full max-w-4xl bg-white rounded-lg shadow p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <input type="text" [(ngModel)]="filtro" placeholder="Pesquisar atendimento..." class="border rounded px-3 py-2 w-1/2" />
+      <a routerLink="/atendimentos/novo" class="bg-blue-600 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-700 transition">Cadastrar Atendimento</a>
+    </div>
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="py-2 px-4">Paciente</th>
+          <th class="py-2 px-4">Motivo</th>
+          <th class="py-2 px-4">Status</th>
+          <th class="py-2 px-4">Chegada</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let atendimento of atendimentosFiltrados">
+          <td class="py-2 px-4">{{ atendimento.paciente_nome }}</td>
+          <td class="py-2 px-4">{{ atendimento.motivo }}</td>
+          <td class="py-2 px-4">{{ atendimento.status }}</td>
+          <td class="py-2 px-4">{{ atendimento.data_hora_chegada | date:'HH:mm' }}</td>
+        </tr>
+        <tr *ngIf="atendimentosFiltrados.length === 0">
+          <td colspan="4" class="py-4 text-center text-gray-500">Nenhum atendimento encontrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
