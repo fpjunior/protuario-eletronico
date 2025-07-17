@@ -102,17 +102,17 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
         this.verificandoDuplicidade = false;
         const nomeControl = this.form.get('nome');
         if (nomeControl) {
-          // Se está editando, ignora o próprio paciente
-          const isDuplicate = this.pacienteEditando && pacientes.length === 1 && pacientes[0].id === this.pacienteEditando.id
-            ? false
-            : pacientes.length > 0;
+          // Só acusa duplicidade se existir paciente com mesmo nome E mesma mãe
+          const nome = this.form.get('nome')?.value?.trim().toLowerCase();
+          const mae = this.form.get('mae')?.value?.trim().toLowerCase();
+          const duplicado = pacientes.find(p => p.nome?.trim().toLowerCase() === nome && p.mae?.trim().toLowerCase() === mae && (!this.pacienteEditando || p.id !== this.pacienteEditando.id));
 
-          if (isDuplicate) {
+          if (duplicado) {
             nomeControl.setErrors({
               ...nomeControl.errors,
               duplicado: {
-                message: `Paciente já cadastrado: ${pacientes[0].nome}`,
-                paciente: pacientes[0]
+                message: `Paciente já cadastrado: ${duplicado.nome}`,
+                paciente: duplicado
               }
             });
           } else {
