@@ -2,11 +2,15 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
+import { NovoAtendimentoComponent } from './atendimentos-dia/novo-atendimento.component';
 import { AppComponent } from './app.component';
 import { PacientesComponent } from './pacientes/pacientes.component';
 import { PacientesFormComponent } from './pacientes/pacientes-form.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RelatoriosComponent } from './relatorios/relatorios.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,20 +24,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoginComponent } from './auth/login/login.component';
-import { AuthInterceptor } from './auth/auth.interceptor';
-import { RelatoriosComponent } from './relatorios/relatorios.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
 import { CommonModule } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @NgModule({ declarations: [
-        AppComponent,
-        PacientesComponent,
-        PacientesFormComponent,
-        LoginComponent,
-        RelatoriosComponent,
-        UsuariosComponent
+    AppComponent,
+    PacientesComponent,
+    PacientesFormComponent,
+    LoginComponent,
+    RelatoriosComponent,
+    UsuariosComponent,
+    NovoAtendimentoComponent
     ],
     bootstrap: [AppComponent],
     imports: [BrowserModule,

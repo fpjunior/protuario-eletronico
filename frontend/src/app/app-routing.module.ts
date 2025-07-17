@@ -6,16 +6,20 @@ import { LoginComponent } from './auth/login/login.component';
 import { RelatoriosComponent } from './relatorios/relatorios.component';
 import { AuthGuard } from './auth/auth.guard';
 import { UsuariosComponent } from './usuarios/usuarios.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AtendimentosDiaComponent } from './atendimentos-dia/atendimentos-dia.component';
+import { HomeComponent } from './home/home.component';
+import { NovoAtendimentoComponent } from './atendimentos-dia/novo-atendimento.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/pacientes', pathMatch: 'full' },
+  { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'pacientes', component: PacientesComponent, canActivate: [AuthGuard] },
   { path: 'pacientes/novo', component: PacientesFormComponent, canActivate: [AuthGuard] },
   { path: 'relatorios', component: RelatoriosComponent, canActivate: [AuthGuard] },
   { path: 'usuarios', component: UsuariosComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '/pacientes' }
+  { path: 'atendimentos', component: AtendimentosDiaComponent },
+  { path: 'atendimentos/novo', component: NovoAtendimentoComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
