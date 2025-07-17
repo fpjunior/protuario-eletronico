@@ -3,8 +3,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import * as jsPDF from 'jspdf';
@@ -39,16 +37,25 @@ export interface Paciente {
 export class PacientesComponent implements OnInit, AfterViewInit {
   pageSizeOptions = [5, 10, 25, 50];
   pageSize = 10;
-  // Handler para mudança de quantidade por página no select do HTML
+  currentPage = 0;
+  get totalPages() {
+    return Math.ceil(this.filteredPacientes.length / this.pageSize);
+  }
+  get paginatedPacientes() {
+    const start = this.currentPage * this.pageSize;
+    return this.filteredPacientes.slice(start, start + this.pageSize);
+  }
   onPageSizeChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     this.pageSize = Number(value);
-    if (this.paginator) {
-      this.paginator.pageSize = this.pageSize;
-      this.paginator.firstPage();
-    }
+    this.currentPage = 0;
   }
+  goToFirstPage() { this.currentPage = 0; }
+  goToPreviousPage() { if (this.currentPage > 0) this.currentPage--; }
+  goToNextPage() { if (this.currentPage < this.totalPages - 1) this.currentPage++; }
+  goToLastPage() { this.currentPage = this.totalPages - 1; }
   pacientes: Paciente[] = [];
+  filteredPacientes: Paciente[] = [];
   novoPaciente: Paciente = {
     nome: '',
     mae: '',
@@ -76,8 +83,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   ];
   apiUrl = environment.apiUrl + '/pacientes'; // já está correto
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  dataSource = new MatTableDataSource<Paciente>([]);
+  // Removido MatPaginator e MatTableDataSource
   currentUser: any = null;
 
   constructor(private http: HttpClient, private router: Router, private authService: AuthService, private dialog: MatDialog) {}
@@ -88,16 +94,10 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     this.authService.user$.subscribe(user => {
       this.currentUser = user;
     });
-
-    // Configurar filtro personalizado para a tabela
-    this.dataSource.filterPredicate = (paciente: Paciente, filter: string) => {
-      return paciente.nome.toLowerCase().includes(filter.toLowerCase());
-    };
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.paginator.pageSize = this.pageSize;
+    // Removido Angular Material paginator
   }
 
   listarPacientes() {
@@ -105,13 +105,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     this.http.get<Paciente[]>(this.apiUrl).subscribe({
       next: (pacientes) => {
         this.pacientes = pacientes;
-        this.dataSource.data = pacientes;
-        // Garante que o paginator é associado após atualizar os dados
-        setTimeout(() => {
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
-        });
+        this.filteredPacientes = pacientes;
         this.loading = false;
       },
       error: (error) => {
@@ -200,10 +194,11 @@ export class PacientesComponent implements OnInit, AfterViewInit {
 
   // Método para aplicar filtro na tabela
   aplicarFiltro() {
-    this.dataSource.filter = this.filtroNome.trim();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    const filtro = this.filtroNome.trim().toLowerCase();
+    this.filteredPacientes = this.pacientes.filter(p =>
+      p.nome.toLowerCase().includes(filtro)
+    );
+    this.currentPage = 0;
   }
 
   // Método para gerar PDF do cadastro do paciente

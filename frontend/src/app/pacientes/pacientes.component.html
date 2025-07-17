@@ -16,7 +16,7 @@
         <p class="text-gray-500">Carregando pacientes...</p>
       </div>
       <div *ngIf="!loading">
-        <table class="w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden" *ngIf="dataSource.filteredData.length > 0">
+        <table class="w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden" *ngIf="filteredPacientes.length > 0">
           <thead class="bg-gray-100">
             <tr>
               <th class="px-4 py-2 font-semibold text-gray-700">Ações</th>
@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let paciente of dataSource.filteredData" class="border-b hover:bg-gray-50">
+            <tr *ngFor="let paciente of paginatedPacientes" class="border-b hover:bg-gray-50">
               <td class="px-4 py-2 flex gap-2 justify-center">
                 <button (click)="editarPaciente(paciente)" [disabled]="loading" class="p-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 transition" title="Editar paciente">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.293-6.293a1 1 0 011.414 0l1.586 1.586a1 1 0 010 1.414L11 15H9v-2z" /></svg>
@@ -46,9 +46,36 @@
               <td class="px-4 py-2 text-gray-700">{{ paciente.sexo }}</td>
               <td class="px-4 py-2 text-gray-700">{{ paciente.municipio }}</td>
             </tr>
-    </table>
+          </tbody>
+        </table>
+    <!-- Rodapé customizado -->
+    <div class="flex flex-col md:flex-row justify-end items-center mt-4 gap-2 text-sm bg-gray-50 px-4 py-2 rounded-b-lg border-t border-gray-200">
+      <div class="flex items-center gap-4 text-gray-600">
+        <label class="flex items-center gap-1">
+          <span>Items per page:</span>
+          <select class="border rounded px-2 py-1 text-gray-700 bg-white focus:ring focus:ring-blue-500" (change)="onPageSizeChange($event)">
+            <option *ngFor="let opt of pageSizeOptions" [value]="opt" [selected]="opt === pageSize">{{ opt }}</option>
+          </select>
+        </label>
+        <span>{{ paginatedPacientes.length > 0 ? (currentPage * pageSize + 1) : 0 }} – {{ currentPage * pageSize + paginatedPacientes.length }} de {{ filteredPacientes.length }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50" title="Primeira página" (click)="goToFirstPage()" [disabled]="currentPage === 0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50" title="Página anterior" (click)="goToPreviousPage()" [disabled]="currentPage === 0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50" title="Próxima página" (click)="goToNextPage()" [disabled]="currentPage >= totalPages - 1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </button>
+        <button class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50" title="Última página" (click)="goToLastPage()" [disabled]="currentPage >= totalPages - 1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+    </div>
     <!-- Empty state -->
-    <div *ngIf="dataSource.filteredData.length === 0" class="flex flex-col items-center justify-center py-12 text-gray-400">
+    <div *ngIf="filteredPacientes.length === 0" class="flex flex-col items-center justify-center py-12 text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6" /></svg>
       <p class="text-lg">Nenhum paciente encontrado</p>
     </div>
