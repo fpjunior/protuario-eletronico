@@ -20,6 +20,7 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 // Rotas
 import apiRoutes from './routes/index.js';
+import atendimentosRouter from './routes/atendimentos.js';
 
 class App {
   constructor() {
@@ -92,6 +93,7 @@ class App {
 
     // Rotas da API
     this.app.use('/api', apiRoutes);
+    this.app.use('/api/atendimentos', atendimentosRouter);
   }
 
   setupErrorHandling() {

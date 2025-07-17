@@ -12,5 +12,5 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Criar e iniciar aplicação
-const app = new App();
-app.start();
+const appInstance = new App();
+appInstance.start();

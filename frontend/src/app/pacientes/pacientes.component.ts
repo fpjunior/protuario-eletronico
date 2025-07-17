@@ -6,6 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import * as jsPDF from 'jspdf';
+import { MatDialog } from '@angular/material/dialog';
+import { RegistrarAtendimentoComponent } from '../atendimento/registrar-atendimento.component';
 
 export interface Paciente {
   id?: number;
@@ -65,7 +67,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Paciente>([]);
   currentUser: any = null;
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.listarPacientes();
@@ -325,5 +327,12 @@ export class PacientesComponent implements OnInit, AfterViewInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  abrirRegistrarAtendimento(pacienteId: number) {
+    this.dialog.open(RegistrarAtendimentoComponent, {
+      width: '400px',
+      data: { pacienteId }
+    });
   }
 }
