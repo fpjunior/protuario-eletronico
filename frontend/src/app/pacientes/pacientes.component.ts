@@ -88,6 +88,10 @@ export class PacientesComponent implements OnInit, AfterViewInit {
 
   constructor(private http: HttpClient, private router: Router, private authService: AuthService, private dialog: MatDialog) {}
 
+  abrirRelatorios() {
+    this.router.navigate(['/relatorios']);
+  }
+
   ngOnInit() {
     this.listarPacientes();
     // Carregar informações do usuário atual
