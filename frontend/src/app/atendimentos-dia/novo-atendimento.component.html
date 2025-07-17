@@ -11,7 +11,7 @@
           </div>
         </div>
         <div *ngIf="filtroPaciente && pacientesFiltrados.length === 0" class="mt-2 text-sm text-gray-500">
-          Nenhum paciente encontrado. <a routerLink="/pacientes/novo" class="text-blue-600 underline">Cadastrar novo paciente</a>
+          Nenhum paciente encontrado. <button (click)="abrirCadastroPaciente()" class="text-blue-600 underline">Cadastrar novo paciente</button>
         </div>
       </div>
       <div *ngIf="pacienteSelecionado">
@@ -33,4 +33,5 @@
       <div *ngIf="mensagem" class="text-sm text-green-700 mt-2">{{ mensagem }}</div>
     </form>
   </div>
+  <app-pacientes-form *ngIf="exibirCadastroPaciente" (fechar)="fecharCadastroPaciente()"></app-pacientes-form>
 </div>

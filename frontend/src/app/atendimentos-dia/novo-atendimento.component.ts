@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+// Import necessário para o modal
+// import { PacientesFormComponent } from '../pacientes/pacientes-form.component';
 
 @Component({
   selector: 'app-novo-atendimento',
@@ -13,6 +15,8 @@ export class NovoAtendimentoComponent {
   observacoes: string = '';
   mensagem: string = '';
 
+  exibirCadastroPaciente: boolean = false;
+
   // Simulação de pacientes (substitua por chamada ao serviço real)
   pacientes: any[] = [
     { nome: 'João Silva', nascimento: new Date(1980, 5, 20) },
@@ -22,6 +26,14 @@ export class NovoAtendimentoComponent {
 
   ngOnInit() {
     this.filtrarPacientes();
+  }
+
+  abrirCadastroPaciente() {
+    this.exibirCadastroPaciente = true;
+  }
+
+  fecharCadastroPaciente() {
+    this.exibirCadastroPaciente = false;
   }
 
   filtrarPacientes() {
