@@ -357,7 +357,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   }
 
   cancelar() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/pacientes']);
   }
 
   logout() {
