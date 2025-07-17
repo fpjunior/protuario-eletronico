@@ -28,42 +28,50 @@ import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HomeComponent } from './home/home.component';
+import { AtendimentosDiaComponent } from './atendimentos-dia/atendimentos-dia.component';
 
-@NgModule({ declarations: [
+@NgModule({
+  declarations: [
     AppComponent,
     PacientesComponent,
     PacientesFormComponent,
+    NovoAtendimentoComponent,
     LoginComponent,
     RelatoriosComponent,
     UsuariosComponent,
-    NovoAtendimentoComponent
-    ],
-    bootstrap: [AppComponent],
-    imports: [BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatListModule,
-        MatIconModule,
-        MatDividerModule,
-        MatTableModule,
-        MatSelectModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        MatMenuModule,
-        MatCardModule,
-        MatTooltipModule,
-        CommonModule
-    ], providers: [
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi: true
-        },
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+    HomeComponent,
+    AtendimentosDiaComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
+    MatDividerModule,
+    MatTableModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatCardModule,
+    MatTooltipModule
+    // Removido CommonModule daqui, pois BrowserModule já inclui CommonModule para AppModule
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    provideHttpClient(withInterceptorsFromDi())
+  ],
+  bootstrap: [AppComponent]
+})
 export class AppModule { }

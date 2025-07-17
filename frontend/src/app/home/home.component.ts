@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  standalone: true
+  // styleUrls removido
+  standalone: false
 })
 export class HomeComponent {}

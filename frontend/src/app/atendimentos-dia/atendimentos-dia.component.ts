@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AtendimentoService } from '../services/atendimento.service';
-import { CommonModule, DatePipe } from '@angular/common';
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-atendimentos-dia',
   templateUrl: './atendimentos-dia.component.html',
-  standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe]
+  standalone: false,
+  providers: [DatePipe]
 })
 export class AtendimentosDiaComponent implements OnInit {
   atendimentos: any[] = [];
