@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
   standalone: false
 })
 export class AppComponent {
+  irParaMenuPrincipal() {
+    this.router.navigate(['/']);
+  }
   title = 'frontend';
   currentUser: any;
 
