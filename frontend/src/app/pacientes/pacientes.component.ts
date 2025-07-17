@@ -1,3 +1,5 @@
+// Removed duplicate misplaced methods outside the class
+// Removed all misplaced pagination methods from the top of the file
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -35,6 +37,17 @@ export interface Paciente {
     standalone: false
 })
 export class PacientesComponent implements OnInit, AfterViewInit {
+  pageSizeOptions = [5, 10, 25, 50];
+  pageSize = 10;
+  // Handler para mudança de quantidade por página no select do HTML
+  onPageSizeChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.pageSize = Number(value);
+    if (this.paginator) {
+      this.paginator.pageSize = this.pageSize;
+      this.paginator.firstPage();
+    }
+  }
   pacientes: Paciente[] = [];
   novoPaciente: Paciente = {
     nome: '',
@@ -84,6 +97,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.paginator.pageSize = this.pageSize;
   }
 
   listarPacientes() {
@@ -296,7 +310,6 @@ export class PacientesComponent implements OnInit, AfterViewInit {
         doc.text(`Acompanhante: ${paciente.acompanhante}`, 20, yPosition);
         yPosition += lineHeight;
       }
-
       if (paciente.procedencia) {
         doc.text(`Procedência: ${paciente.procedencia}`, 20, yPosition);
         yPosition += lineHeight;
