@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Paciente } from './pacientes.component';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -16,6 +16,7 @@ import * as jsPDF from 'jspdf';
     standalone: false
 })
 export class PacientesFormComponent implements OnInit, OnDestroy {
+  @Output() fechar = new EventEmitter<void>();
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
   loading = false;
@@ -357,7 +358,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   }
 
   cancelar() {
-    this.router.navigate(['/pacientes']);
+    this.fechar.emit();
   }
 
   logout() {

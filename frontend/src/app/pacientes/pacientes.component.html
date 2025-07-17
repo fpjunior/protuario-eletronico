@@ -19,7 +19,7 @@
       <div class="flex gap-2">
         <button
           class="flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-700 text-white font-semibold shadow hover:bg-blue-800 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
-          (click)="editarPaciente(novoPaciente)"
+          (click)="mostrarFormularioCadastro()"
           type="button"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
@@ -115,3 +115,4 @@
       <p class="text-lg">Nenhum paciente encontrado</p>
     </div>
         <!-- ...existing code... -->
+<app-pacientes-form *ngIf="exibirFormulario" (fechar)="exibirFormulario = false"></app-pacientes-form>
