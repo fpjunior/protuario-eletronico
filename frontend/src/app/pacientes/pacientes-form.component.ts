@@ -2,6 +2,7 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FeedbackDialogComponent } from '../shared/feedback-dialog.component';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 import { Paciente } from './pacientes.component';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -220,26 +221,52 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     const paciente = this.form.value;
     this.loading = true;
 
-    if (this.pacienteEditando && this.pacienteEditando.id) {
-      if (confirm('Tem certeza que deseja atualizar este registro?')) {
-        this.http.put(`${this.apiUrl}/${this.pacienteEditando.id}`, paciente).subscribe({
-          next: () => {
-            this.loading = false;
-            this.router.navigate(['/']);
-          },
-          error: (err) => {
-            this.loading = false;
-            if (err?.error?.code === 'NO_TOKEN' || err?.error?.code === 'INVALID_TOKEN' || err?.status === 401 || err?.status === 403) {
-              this.authService.logout();
-              alert('Sua sessão expirou. Faça login novamente.');
-            } else {
-              alert(err?.error?.error || 'Erro ao atualizar paciente.');
+    if (this.pacienteEditando?.id) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirmação',
+          message: 'Tem certeza que deseja atualizar este registro?'
+        }
+      });
+      dialogRef.afterClosed().subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          this.http.put(`${this.apiUrl}/${this.pacienteEditando!.id}`, paciente).subscribe({
+            next: () => {
+              this.loading = false;
+              // Feedback verdinho
+              const feedback = this.dialog.open(FeedbackDialogComponent, {
+                data: {
+                  title: 'Sucesso',
+                  message: 'Paciente atualizado com sucesso!',
+                  type: 'success'
+                },
+                panelClass: 'success'
+              });
+              setTimeout(() => feedback.close(), 2500);
+              this.fechar.emit();
+            },
+            error: (err) => {
+              this.loading = false;
+              // Feedback vermelhinho
+              const feedback = this.dialog.open(FeedbackDialogComponent, {
+                data: {
+                  title: 'Erro',
+                  message: err?.error?.error || 'Erro ao atualizar paciente.',
+                  type: 'error'
+                },
+                panelClass: 'error'
+              });
+              setTimeout(() => feedback.close(), 2500);
+              if (err?.error?.code === 'NO_TOKEN' || err?.error?.code === 'INVALID_TOKEN' || err?.status === 401 || err?.status === 403) {
+                this.authService.logout();
+                alert('Sua sessão expirou. Faça login novamente.');
+              }
             }
-          }
-        });
-      } else {
-        this.loading = false;
-      }
+          });
+        } else {
+          this.loading = false;
+        }
+      });
     } else {
       this.http.post(this.apiUrl, paciente).subscribe({
         next: () => {
@@ -253,7 +280,8 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
             panelClass: 'success'
           });
           setTimeout(() => dialogRef.close(), 3000);
-          this.router.navigate(['/']);
+          // Fecha o modal após cadastrar
+          this.fechar.emit();
         },
         error: (err) => {
           this.loading = false;
