@@ -53,7 +53,7 @@ export class UsuariosComponent implements OnInit {
     this.usuarioForm = this.fb.group({
       nome: [{value: '', disabled: false}, Validators.required],
       email: [{value: '', disabled: false}, [Validators.required, Validators.email]],
-      senha: [{value: '', disabled: false}, Validators.required],
+      senha: [{value: '', disabled: false}, [Validators.required, Validators.minLength(6)]],
       nivel: [{value: 'visualizador', disabled: false}, Validators.required]
     });
   }
@@ -209,7 +209,13 @@ export class UsuariosComponent implements OnInit {
           this.selectedUser = null;
         },
         error: err => {
-          this.error = err.error?.message || 'Erro ao editar usuário';
+          if (err.error?.error) {
+            this.error = err.error.error;
+          } else if (err.error?.message) {
+            this.error = err.error.message;
+          } else {
+            this.error = 'Erro ao editar usuário';
+          }
           this.loading = false;
         }
       });
@@ -232,7 +238,13 @@ export class UsuariosComponent implements OnInit {
           this.loading = false;
         },
         error: err => {
-          this.error = err.error?.message || 'Erro ao cadastrar usuário';
+          if (err.error?.error) {
+            this.error = err.error.error;
+          } else if (err.error?.message) {
+            this.error = err.error.message;
+          } else {
+            this.error = 'Erro ao cadastrar usuário';
+          }
           this.loading = false;
         }
       });
@@ -245,5 +257,21 @@ export class UsuariosComponent implements OnInit {
 
   podeCadastrar() {
     return this.authService.isAdmin;
+  }
+
+  verificarEmailEmUso(email: string) {
+    if (!email || !email.includes('@')) return;
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios?email=${encodeURIComponent(email)}`).subscribe({
+      next: (usuarios) => {
+        if (usuarios && usuarios.length > 0 && (!this.editandoUsuario || usuarios[0].id !== this.selectedUser?.id)) {
+          this.error = 'Email já está em uso';
+        } else {
+          this.error = null;
+        }
+      },
+      error: () => {
+        this.error = null;
+      }
+    });
   }
 }
