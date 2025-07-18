@@ -52,6 +52,9 @@
         <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu do usuário">
           <mat-icon>account_circle</mat-icon>
         </button>
+        <button mat-icon-button aria-label="Sobre o sistema" (click)="abrirSobre()" style="margin-left:8px;">
+          <mat-icon>info</mat-icon>
+        </button>
         <mat-menu #userMenu="matMenu">
           <button mat-menu-item (click)="logout()">
             <mat-icon>logout</mat-icon>
@@ -59,6 +62,49 @@
           </button>
         </mat-menu>
       </div>
+<ng-template #sobreDialog>
+  <div class="sobre-modal leve">
+    <h2 class="sobre-titulo">Sobre o sistema</h2>
+    <div class="sobre-empresa">Sistema desenvolvido por <strong>Kralinfo</strong> Soluções Tecnológicas</div>
+    <ul class="sobre-versoes">
+      <li>Frontend: <strong>v1.0.0</strong> (Angular 19)</li>
+      <li>Backend: <strong>v1.0.0</strong> (Node.js/Express)</li>
+    </ul>
+    <button mat-stroked-button color="primary" (click)="fecharSobre()">Fechar</button>
+  </div>
+</ng-template>
+<style>
+  .sobre-modal.leve {
+    min-width: 260px;
+    padding: 16px 8px 12px 8px;
+    text-align: center;
+    font-size: 0.98em;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-radius: 8px;
+  }
+  .sobre-titulo {
+    font-size: 1.08em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+  }
+  .sobre-empresa {
+    font-size: 0.97em;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .sobre-versoes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px 0;
+    font-size: 0.95em;
+    color: #666;
+  }
+  .sobre-versoes li {
+    margin-bottom: 2px;
+  }
+</style>
     </div>
   </div>
 </ng-container>
