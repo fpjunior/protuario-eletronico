@@ -105,6 +105,21 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
         const dd = String(date.getDate()).padStart(2, '0');
         patch.nascimento = `${yyyy}-${mm}-${dd}`;
       }
+      // Garante que estadoCivil seja uma opção válida
+      // Mapeia valores sem (a) para a opção correta
+      const mapEstadoCivil = {
+        'Solteiro': 'Solteiro(a)',
+        'Casado': 'Casado(a)',
+        'Viúvo': 'Viúvo(a)',
+        'Divorciado': 'Divorciado(a)',
+        'Ignorado': 'Ignorado',
+        'Solteiro(a)': 'Solteiro(a)',
+        'Casado(a)': 'Casado(a)',
+        'Viúvo(a)': 'Viúvo(a)',
+        'Divorciado(a)': 'Divorciado(a)',
+        '': ''
+      };
+      patch.estadoCivil = (mapEstadoCivil as any)[patch.estadoCivil] ?? '';
       this.form.patchValue(patch);
     }
 
