@@ -21,6 +21,7 @@ export class UsuariosComponent implements OnInit {
     { value: 'editor', label: 'Editor' },
     { value: 'visualizador', label: 'Visualizador' }
   ];
+  isVisualizador: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,14 +29,18 @@ export class UsuariosComponent implements OnInit {
     public authService: AuthService
   ) {
     this.usuarioForm = this.fb.group({
-      nome: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      senha: ['', Validators.required],
-      nivel: ['visualizador', Validators.required]
+      nome: [{value: '', disabled: false}, Validators.required],
+      email: [{value: '', disabled: false}, [Validators.required, Validators.email]],
+      senha: [{value: '', disabled: false}, Validators.required],
+      nivel: [{value: 'visualizador', disabled: false}, Validators.required]
     });
   }
 
   ngOnInit(): void {
+    this.isVisualizador = this.authService.user?.nivel === 'visualizador';
+    if (this.isVisualizador) {
+      this.usuarioForm.disable();
+    }
     this.listarUsuarios();
   }
 
