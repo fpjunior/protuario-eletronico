@@ -88,7 +88,17 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     });
 
     if (this.pacienteEditando) {
-      this.form.patchValue(this.pacienteEditando);
+      // Corrige o campo nascimento para formato yyyy-MM-dd
+      const patch = { ...this.pacienteEditando };
+      if (patch.nascimento) {
+        const date = new Date(patch.nascimento);
+        // Corrige para fuso local, evitando acréscimo de um dia
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        patch.nascimento = `${yyyy}-${mm}-${dd}`;
+      }
+      this.form.patchValue(patch);
     }
   }
 
