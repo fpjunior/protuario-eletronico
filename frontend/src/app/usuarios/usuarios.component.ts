@@ -38,9 +38,7 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.isVisualizador = this.authService.user?.nivel === 'visualizador';
-    if (this.isVisualizador) {
-      this.usuarioForm.disable();
-    }
+    // Não desabilite o form inteiro, apenas o botão
     this.listarUsuarios();
   }
 
