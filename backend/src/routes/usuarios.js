@@ -7,5 +7,6 @@ const router = express.Router();
 // Apenas admin pode criar/listar usuários
 router.get('/', auth(['admin', 'editor', 'visualizador']), usuariosController.list);
 router.post('/', auth(['admin', 'editor']), usuariosController.create);
+router.put('/:id', auth(['admin', 'editor']), usuariosController.update);
 
 export default router;

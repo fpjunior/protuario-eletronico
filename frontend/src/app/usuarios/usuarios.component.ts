@@ -184,18 +184,37 @@ export class UsuariosComponent implements OnInit {
 
   cadastrarUsuario() {
     this.loading = true;
-    this.http.post(`${environment.apiUrl}/usuarios`, this.usuarioForm.value).subscribe({
-      next: () => {
-        this.success = this.editandoUsuario ? 'Usuário editado com sucesso!' : 'Usuário cadastrado com sucesso!';
-        this.usuarioForm.reset({ nivel: 'visualizador' });
-        this.listarUsuarios();
-        this.loading = false;
-      },
-      error: err => {
-        this.error = err.error?.message || 'Erro ao cadastrar usuário';
-        this.loading = false;
-      }
-    });
+    if (this.editandoUsuario && this.selectedUser) {
+      // PUT para editar
+      this.http.put(`${environment.apiUrl}/usuarios/${this.selectedUser.id}`, this.usuarioForm.value).subscribe({
+        next: () => {
+          this.success = 'Usuário editado com sucesso!';
+          this.usuarioForm.reset({ nivel: 'visualizador' });
+          this.listarUsuarios();
+          this.loading = false;
+          this.editandoUsuario = false;
+          this.selectedUser = null;
+        },
+        error: err => {
+          this.error = err.error?.message || 'Erro ao editar usuário';
+          this.loading = false;
+        }
+      });
+    } else {
+      // POST para cadastrar
+      this.http.post(`${environment.apiUrl}/usuarios`, this.usuarioForm.value).subscribe({
+        next: () => {
+          this.success = 'Usuário cadastrado com sucesso!';
+          this.usuarioForm.reset({ nivel: 'visualizador' });
+          this.listarUsuarios();
+          this.loading = false;
+        },
+        error: err => {
+          this.error = err.error?.message || 'Erro ao cadastrar usuário';
+          this.loading = false;
+        }
+      });
+    }
   }
 
   podeCadastrar() {
