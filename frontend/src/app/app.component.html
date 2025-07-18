@@ -47,7 +47,7 @@
         </div>
 
       </div>
-      <div class="user-menu">
+      <div class="user-menu user-menu-fixo">
         <span class="user-info" *ngIf="currentUser">Olá, {{ currentUser.nome || currentUser.email }}</span>
         <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu do usuário">
           <mat-icon>account_circle</mat-icon>
@@ -82,6 +82,16 @@
     background: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     border-radius: 8px;
+  }
+  .user-menu-fixo {
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    transform: translateY(-50%);
+    z-index: 101;
   }
   .sobre-titulo {
     font-size: 1.08em;
