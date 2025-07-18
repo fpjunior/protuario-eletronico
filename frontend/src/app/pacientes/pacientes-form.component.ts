@@ -203,6 +203,11 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   }
 
   salvar() {
+    if (!this.authService.isAuthenticated()) {
+      this.authService.logout();
+      alert('Sua sessão expirou. Faça login novamente.');
+      return;
+    }
     if (this.form.invalid || this.form.pending || this.verificandoDuplicidade) {
       if (this.verificandoDuplicidade) {
         alert('Aguarde a verificação de duplicidade.');
@@ -224,7 +229,12 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             this.loading = false;
-            alert(err?.error?.error || 'Erro ao atualizar paciente.');
+            if (err?.error?.code === 'NO_TOKEN' || err?.error?.code === 'INVALID_TOKEN' || err?.status === 401 || err?.status === 403) {
+              this.authService.logout();
+              alert('Sua sessão expirou. Faça login novamente.');
+            } else {
+              alert(err?.error?.error || 'Erro ao atualizar paciente.');
+            }
           }
         });
       } else {
@@ -247,15 +257,20 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.loading = false;
-          const dialogRef = this.dialog.open(FeedbackDialogComponent, {
-            data: {
-              title: 'Erro',
-              message: err?.error?.error || 'Erro ao cadastrar paciente.',
-              type: 'error'
-            },
-            panelClass: 'error'
-          });
-          setTimeout(() => dialogRef.close(), 3000);
+          if (err?.error?.code === 'NO_TOKEN' || err?.error?.code === 'INVALID_TOKEN' || err?.status === 401 || err?.status === 403) {
+            this.authService.logout();
+            alert('Sua sessão expirou. Faça login novamente.');
+          } else {
+            const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+              data: {
+                title: 'Erro',
+                message: err?.error?.error || 'Erro ao cadastrar paciente.',
+                type: 'error'
+              },
+              panelClass: 'error'
+            });
+            setTimeout(() => dialogRef.close(), 3000);
+          }
         }
       });
     }
