@@ -1,4 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { FeedbackDialogComponent } from '../shared/feedback-dialog.component';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 // Import necessário para o modal
 // import { PacientesFormComponent } from '../pacientes/pacientes-form.component';
 
@@ -14,18 +22,23 @@ export class NovoAtendimentoComponent {
   motivo: string = '';
   observacoes: string = '';
   mensagem: string = '';
-
   exibirCadastroPaciente: boolean = false;
+  apiUrl = environment.apiUrl + '/pacientes';
+  private filtroSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
-  // Simulação de pacientes (substitua por chamada ao serviço real)
-  pacientes: any[] = [
-    { nome: 'João Silva', nascimento: new Date(1980, 5, 20) },
-    { nome: 'Maria Souza', nascimento: new Date(1992, 10, 3) },
-    { nome: 'Carlos Oliveira', nascimento: new Date(1975, 2, 15) }
-  ];
+  constructor(private http: HttpClient, private dialog: MatDialog, private router: Router) {
+    this.filtroSubject.pipe(
+      debounceTime(400),
+      takeUntil(this.destroy$)
+    ).subscribe(filtro => {
+      this.filtrarPacientes(filtro);
+    });
+  }
 
   ngOnInit() {
-    this.filtrarPacientes();
+    // Inicializa lista vazia
+    this.pacientesFiltrados = [];
   }
 
   abrirCadastroPaciente() {
@@ -36,11 +49,21 @@ export class NovoAtendimentoComponent {
     this.exibirCadastroPaciente = false;
   }
 
-  filtrarPacientes() {
-    const filtro = this.filtroPaciente?.toLowerCase() || '';
-    this.pacientesFiltrados = filtro
-      ? this.pacientes.filter(p => p.nome.toLowerCase().includes(filtro))
-      : [];
+  filtrarPacientes(filtro: string) {
+    filtro = filtro?.trim();
+    if (filtro && filtro.length > 1) {
+      this.http.get<any>(`${environment.apiUrl}/pacientes/search?nome=${encodeURIComponent(filtro)}`)
+        .subscribe(
+          res => {
+            this.pacientesFiltrados = res.data || [];
+          },
+          () => {
+            this.pacientesFiltrados = [];
+          }
+        );
+    } else {
+      this.pacientesFiltrados = [];
+    }
   }
 
   selecionarPaciente(paciente: any) {
@@ -54,18 +77,87 @@ export class NovoAtendimentoComponent {
       this.mensagem = 'Selecione um paciente e informe o motivo.';
       return;
     }
-    // Aqui você faria a chamada ao backend para registrar o atendimento
-    this.mensagem = 'Atendimento registrado com sucesso!';
-    // Limpar campos
-    this.motivo = '';
-    this.observacoes = '';
-    this.pacienteSelecionado = null;
-    this.filtroPaciente = '';
-    this.pacientesFiltrados = [];
+    const atendimento = {
+      pacienteId: this.pacienteSelecionado.id,
+      motivo: this.motivo,
+      observacoes: this.observacoes
+    };
+    // Verifica se já existe atendimento para o paciente hoje
+    const hoje = new Date().toISOString().slice(0, 10);
+    this.http.get<any>(`${environment.apiUrl}/atendimentos?pacienteId=${atendimento.pacienteId}&data=${hoje}`)
+      .subscribe(
+        res => {
+          if (res && res.length > 0) {
+            // Já existe atendimento hoje, perguntar ao usuário
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+              data: {
+                title: 'Atenção',
+                message: 'Já existe atendimento registrado para este paciente na data de hoje. Deseja criar outro atendimento mesmo assim?'
+              }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                this.criarAtendimento(atendimento);
+              }
+              // Se não, não faz nada
+            });
+          } else {
+            // Não existe, pode criar direto
+            this.criarAtendimento(atendimento);
+          }
+        },
+        () => {
+          // Em caso de erro na verificação, permite criar
+          this.criarAtendimento(atendimento);
+        }
+      );
   }
 
+  criarAtendimento(atendimento: any) {
+    this.http.post(`${environment.apiUrl}/atendimentos`, atendimento)
+      .subscribe({
+        next: () => {
+          this.mensagem = '';
+          const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+            data: {
+              title: 'Sucesso',
+              message: 'Atendimento registrado com sucesso!',
+              type: 'success'
+            }
+          });
+          setTimeout(() => {
+            dialogRef.close();
+            this.router.navigate(['/atendimentos']);
+          }, 2500);
+          // Limpar campos
+          this.motivo = '';
+          this.observacoes = '';
+          this.pacienteSelecionado = null;
+          this.filtroPaciente = '';
+          this.pacientesFiltrados = [];
+        },
+        error: (err) => {
+          this.mensagem = '';
+          this.dialog.open(FeedbackDialogComponent, {
+            data: {
+              title: 'Erro',
+              message: err?.error?.message || 'Erro ao registrar atendimento.',
+              type: 'error'
+            }
+          });
+        }
+      });
+  }
   // Atualizar lista de pacientes filtrados ao digitar
   onFiltroPacienteChange() {
-    this.filtrarPacientes();
+    this.pacienteSelecionado = null;
+    this.filtroSubject.next(this.filtroPaciente);
+    if (!this.filtroPaciente || this.filtroPaciente.trim().length <= 1) {
+      this.pacientesFiltrados = [];
+    }
+  }
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
