@@ -15,6 +15,9 @@
     z-index: 100;
     pointer-events: none;
   }
+  body {
+    padding-top: 64px;
+  }
 </style>
 <ng-container *ngIf="!isLoginRoute()">
   <!-- Menu hamburguer à esquerda do header principal -->
@@ -34,7 +37,7 @@
   </mat-menu>
   <div class="header-sistema">
     <div class="header-content">
-      <div class="agrupado-esquerda">
+      <div class="logo-container">
         <button mat-icon-button [matMenuTriggerFor]="mainMenu" aria-label="Menu principal" class="menu-hamburguer">
           <mat-icon>menu</mat-icon>
         </button>
@@ -45,23 +48,24 @@
             <div class="sistema-descricao">Gerenciamento de Prontuários Eletrônicos</div>
           </div>
         </div>
-
       </div>
       <div class="user-menu user-menu-fixo">
-        <span class="user-info" *ngIf="currentUser">Olá, {{ currentUser.nome || currentUser.email }}</span>
+        <span class="user-info" *ngIf="authService.user">
+          {{ authService.user.nome }}
+        </span>
         <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu do usuário">
           <mat-icon>account_circle</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Sobre o sistema" (click)="abrirSobre()" style="margin-left:8px;">
+        <button mat-icon-button aria-label="Sobre o sistema" (click)="abrirSobre()">
           <mat-icon>info</mat-icon>
         </button>
-        <mat-menu #userMenu="matMenu">
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Sair</span>
-          </button>
-        </mat-menu>
       </div>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </mat-menu>
 <ng-template #sobreDialog>
   <div class="sobre-modal leve">
     <h2 class="sobre-titulo">Sobre o sistema</h2>

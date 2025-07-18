@@ -1,0 +1,8 @@
+a.botao-3d {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18), 0 2px 0 #bdbdbd !important;
+  transition: box-shadow 0.18s, transform 0.18s !important;
+}
+a.botao-3d:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.32), 0 4px 0 #888 !important;
+  transform: translateY(-5px) scale(1.08) !important;
+}

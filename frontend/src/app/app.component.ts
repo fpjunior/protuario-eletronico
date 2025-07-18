@@ -2,6 +2,7 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
+import { MatMenu } from '@angular/material/menu';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   @ViewChild('sobreDialog') sobreDialog!: TemplateRef<any>;
+  @ViewChild('userMenu', { static: true }) userMenu!: MatMenu;
   sobreDialogRef: any;
   irParaMenuPrincipal() {
     this.router.navigate(['/']);

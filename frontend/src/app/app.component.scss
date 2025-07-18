@@ -1,3 +1,36 @@
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 12px;
+}
+.user-menu-fixo {
+  min-width: 160px;
+  flex-shrink: 1;
+  flex-basis: 160px;
+  text-align: right;
+}
+@media (max-width: 600px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    gap: 4px;
+    padding: 8px 4px;
+  }
+  .user-menu-fixo {
+    min-width: unset;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+}
+.user-menu-fixo {
+  min-width: 180px;
+  flex-shrink: 0;
+}
 // Agrupa menu, logo e textos alinhados à esquerda
 .agrupado-esquerda {
   display: flex;
@@ -579,10 +612,14 @@ background: linear-gradient(141deg, #1e222d 0%, rgb(43 105 242 / 97%) 100%), rep
 .header-sistema {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 1rem 0;
+  padding: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 100;
   margin-bottom: 0;
 }
 .header-content {
@@ -591,7 +628,9 @@ background: linear-gradient(141deg, #1e222d 0%, rgb(43 105 242 / 97%) 100%), rep
   padding: 0 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  height: 64px;
+  width: 100%;
 }
 .logo-container {
   display: flex;
@@ -622,6 +661,11 @@ background: linear-gradient(141deg, #1e222d 0%, rgb(43 105 242 / 97%) 100%), rep
   display: flex;
   align-items: center;
   gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+body {
+  padding-top: 64px;
 }
 .user-info {
   color: white;
