@@ -6,7 +6,7 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 import { Paciente } from './pacientes.component';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -61,6 +61,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     { sigla: 'SE', nome: 'Sergipe' },
     { sigla: 'TO', nome: 'Tocantins' }
   ];
+  pacienteService: any;
 
   constructor(
     private router: Router,
@@ -72,7 +73,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       nome: ['', [Validators.required]],
       mae: ['', [Validators.required]],
-      nascimento: ['', [Validators.required]],
+      nascimento: ['', [Validators.required,this.yearDigitsValidator]],
       sexo: ['', [Validators.required]],
       estadoCivil: [''],
       profissao: [''],
@@ -459,4 +460,21 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   logout() {
     this.authService.logout();
   }
+
+  /* Não permite que o admin coloque ano com mais de 4 dígitos */
+
+  yearDigitsValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+
+  if (!value) return null;
+
+  // Verifica se tem padrão de data (YYYY-MM-DD)
+  const dateParts = value.split('-');
+  if (dateParts.length !== 3) return { invalidDateFormat: true };
+
+  const year = dateParts[0];
+  if (year.length > 4) return { invalidYearLength: true };
+
+  return null;
+}
 }
