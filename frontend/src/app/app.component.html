@@ -54,7 +54,7 @@
           {{ authService.user.nome }}
         </span>
         <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu do usuário">
-          <mat-icon>account_circle</mat-icon>
+          <mat-icon>person_outline</mat-icon>
         </button>
         <button mat-icon-button aria-label="Sobre o sistema" (click)="abrirSobre()">
           <mat-icon>info</mat-icon>
@@ -117,6 +117,22 @@
   }
   .sobre-versoes li {
     margin-bottom: 2px;
+  }
+  .user-info {
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+    margin-right: 2px;
+    margin-left: 0;
+    display: inline-block;
+    vertical-align: middle;
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    letter-spacing: 0.2px;
+  }
+  .user-menu-fixo button[mat-icon-button] {
+    margin-left: 0;
+    margin-right: 0;
+    vertical-align: middle;
   }
 </style>
     </div>
