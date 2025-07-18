@@ -6,3 +6,182 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* --- DARK MODE COM CINZA ESCURO --- */
+body.dark-mode {
+  background: #22272b !important;
+  color: #e0e6ed !important;
+  transition: background 0.3s, color 0.3s;
+}
+body.dark-mode .mat-card,
+body.dark-mode .card,
+body.dark-mode .bg-white,
+body.dark-mode .bg-gray-50,
+body.dark-mode .bg-gray-100 {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+  box-shadow: 0 2px 8px #10121a80;
+}
+body.dark-mode .mat-toolbar,
+body.dark-mode .header-sistema {
+  background: linear-gradient(135deg, #2c3136 0%, #3a4250 100%) !important;
+  color: #e0e6ed !important;
+  box-shadow: 0 2px 8px #10121a80;
+}
+body.dark-mode .footer-kralinfo {
+  background: #2c3136 !important;
+  color: #8fa2c7 !important;
+  border-top: 1px solid #3a4250;
+}
+body.dark-mode .main-menu-modern .mat-menu-content,
+body.dark-mode .mat-menu-panel {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+  box-shadow: 0 2px 8px #10121a80;
+}
+body.dark-mode .sobre-modal.leve {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+  border: 1px solid #3a4250;
+}
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .mat-input-element {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+  border: 1px solid #3a4250 !important;
+}
+body.dark-mode .mat-menu-item {
+  background: transparent !important;
+  color: #e0e6ed !important;
+}
+body.dark-mode .mat-menu-item:hover {
+  background: #3a4250 !important;
+  color: #fff !important;
+}
+body.dark-mode .mat-form-field-appearance-outline,
+body.dark-mode .mat-form-field-label {
+  color: #8fa2c7 !important;
+  border-color: #3a4250 !important;
+}
+body.dark-mode .mat-stroked-button,
+body.dark-mode .mat-raised-button {
+  background: #2c3136 !important;
+  color: #3a4250 !important;
+  border: 1px solid #3a4250 !important;
+  box-shadow: 0 2px 8px #10121a80;
+}
+body.dark-mode .mat-icon {
+  color: #3a4250 !important;
+}
+body.dark-mode .user-info,
+body.dark-mode .menu-label,
+body.dark-mode .logo-principal,
+body.dark-mode .sistema-descricao,
+body.dark-mode .sistema-empresa,
+body.dark-mode .sobre-titulo,
+body.dark-mode .sobre-versoes {
+  color: #8fa2c7 !important;
+}
+body.dark-mode .disabled-input:disabled {
+  background: #2c3136 !important;
+  color: #5c6b8a !important;
+  border-color: #3a4250 !important;
+}
+body.dark-mode .mat-table {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+}
+body.dark-mode .mat-row,
+body.dark-mode .mat-header-row {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+}
+body.dark-mode .mat-paginator {
+  background: #2c3136 !important;
+  color: #8fa2c7 !important;
+}
+body.dark-mode .mat-dialog-container {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+  border-radius: 8px;
+}
+body.dark-mode .mat-snack-bar-container {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+}
+body.dark-mode .mat-chip {
+  background: #3a4250 !important;
+  color: #fff !important;
+}
+body.dark-mode .mat-badge-content {
+  background: #3a4250 !important;
+  color: #fff !important;
+}
+body.dark-mode .mat-progress-bar {
+  background: #2c3136 !important;
+}
+body.dark-mode .mat-progress-bar-fill {
+  background: #3a4250 !important;
+}
+body.dark-mode .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background: #3a4250 !important;
+}
+body.dark-mode .mat-radio-outer-circle {
+  border-color: #3a4250 !important;
+}
+body.dark-mode .mat-radio-inner-circle {
+  background: #3a4250 !important;
+}
+body.dark-mode .mat-slide-toggle-bar {
+  background: #2c3136 !important;
+}
+body.dark-mode .mat-slide-toggle-thumb {
+  background: #3a4250 !important;
+}
+body.dark-mode .mat-tooltip {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+}
+/* --- FIM DARK MODE COM CINZA ESCURO --- */
+
+/* --- AJUSTE LABELS PARA DARK MODE --- */
+body.dark-mode label,
+body.dark-mode .mat-form-field-label,
+body.dark-mode .mat-label,
+body.dark-mode .form-label,
+body.dark-mode .mat-form-field-required-marker {
+  color: #e0e6ed !important;
+  font-weight: 500;
+  opacity: 1 !important;
+}
+body.dark-mode .mat-form-field-appearance-outline .mat-form-field-label {
+  color: #e0e6ed !important;
+  opacity: 1 !important;
+}
+body.dark-mode .mat-form-field-appearance-outline .mat-form-field-label.mat-form-field-empty {
+  color: #8fa2c7 !important;
+  opacity: 1 !important;
+}
+/* --- FIM AJUSTE LABELS PARA DARK MODE --- */
+
+/* --- AJUSTE FUNDO TELA DE PACIENTES PARA DARK MODE --- */
+body.dark-mode .pacientes-content,
+body.dark-mode .pacientes-list,
+body.dark-mode .pacientes-form,
+body.dark-mode .pacientes-container {
+  background: #2c3136 !important;
+  color: #e0e6ed !important;
+}
+/* --- FIM AJUSTE FUNDO TELA DE PACIENTES --- */
+
+/* --- AJUSTE ICONE HEADER PARA DARK MODE --- */
+body.dark-mode .header-sistema .mat-icon,
+body.dark-mode .header-sistema .material-icons,
+body.dark-mode .header-sistema .icon {
+  color: #e0e6ed !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+/* --- FIM AJUSTE ICONE HEADER --- */

@@ -19,6 +19,7 @@ export class AppComponent {
   }
   title = 'frontend';
   currentUser: any;
+  isDarkMode = false;
 
   constructor(public authService: AuthService, private router: Router, private dialog: MatDialog) {
     this.currentUser = this.authService.user;
@@ -46,5 +47,15 @@ export class AppComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  alternarDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    const body = document.body;
+    if (this.isDarkMode) {
+      body.classList.add('dark-mode');
+    } else {
+      body.classList.remove('dark-mode');
+    }
   }
 }

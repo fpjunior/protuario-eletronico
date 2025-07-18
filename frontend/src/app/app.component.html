@@ -63,6 +63,9 @@
         <button mat-icon-button aria-label="Sobre o sistema" (click)="abrirSobre()">
           <mat-icon>info</mat-icon>
         </button>
+        <button mat-icon-button (click)="alternarDarkMode()" aria-label="Alternar tema" style="margin-left: auto;">
+          <mat-icon>{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+        </button>
       </div>
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item (click)="logout()">
