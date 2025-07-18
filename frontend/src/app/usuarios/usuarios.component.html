@@ -1,5 +1,3 @@
-
-
 <div class="w-full p-4">
   <h2 class="text-2xl font-bold mb-6 text-blue-700">Usuários</h2>
   <div class="flex flex-col md:flex-row gap-8 w-full">
@@ -70,7 +68,7 @@
           </div>
           <div *ngIf="isVisualizador" class="text-red-600 mt-2">Usuário não autorizado para editar ou cadastrar um usuário.</div>
           <div *ngIf="success" class="text-green-600 mt-2">{{ success }}</div>
-          <!-- Mensagem de erro global removida, pois email já cadastrado aparece abaixo do campo -->
+          <!-- Mensagem de erro global removida, agora exibida em modal -->
         </form>
         <div *ngIf="loading && !usuarios.length" class="text-center text-blue-600 font-semibold">Carregando...</div>
       </div>

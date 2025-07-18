@@ -209,13 +209,22 @@ export class UsuariosComponent implements OnInit {
           this.selectedUser = null;
         },
         error: err => {
+          let msg = 'Erro ao editar usuário';
           if (err.error?.error) {
-            this.error = err.error.error;
+            msg = err.error.error;
           } else if (err.error?.message) {
-            this.error = err.error.message;
-          } else {
-            this.error = 'Erro ao editar usuário';
+            msg = err.error.message;
           }
+          const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+            data: {
+              title: 'Erro',
+              message: msg,
+              type: 'error'
+            }
+          });
+          setTimeout(() => {
+            dialogRef.close();
+          }, 2500);
           this.loading = false;
         }
       });
@@ -238,13 +247,22 @@ export class UsuariosComponent implements OnInit {
           this.loading = false;
         },
         error: err => {
+          let msg = 'Erro ao cadastrar usuário';
           if (err.error?.error) {
-            this.error = err.error.error;
+            msg = err.error.error;
           } else if (err.error?.message) {
-            this.error = err.error.message;
-          } else {
-            this.error = 'Erro ao cadastrar usuário';
+            msg = err.error.message;
           }
+          const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+            data: {
+              title: 'Erro',
+              message: msg,
+              type: 'error'
+            }
+          });
+          setTimeout(() => {
+            dialogRef.close();
+          }, 2500);
           this.loading = false;
         }
       });
