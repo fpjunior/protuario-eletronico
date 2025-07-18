@@ -1,6 +1,6 @@
 {
   "name": "prontuario-eletronico-backend",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "API backend para prontuário eletrônico com arquitetura MVC",
   "main": "src/server.js",
   "type": "module",
