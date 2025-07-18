@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { FeedbackDialogComponent } from '../shared/feedback-dialog.component';
 import { Paciente } from './pacientes.component';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -16,6 +18,7 @@ import * as jsPDF from 'jspdf';
     standalone: false
 })
 export class PacientesFormComponent implements OnInit, OnDestroy {
+  // ...existing code...
   @Output() fechar = new EventEmitter<void>();
   pacienteEditando: Paciente | null = null;
   form: FormGroup;
@@ -57,7 +60,13 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     { sigla: 'TO', nome: 'Tocantins' }
   ];
 
-  constructor(private router: Router, private http: HttpClient, private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private dialog: MatDialog
+  ) {
     const nav = this.router.getCurrentNavigation();
     this.pacienteEditando = nav?.extras.state?.['paciente'] || null;
     this.form = this.fb.group({
@@ -200,11 +209,28 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
       this.http.post(this.apiUrl, paciente).subscribe({
         next: () => {
           this.loading = false;
+          const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+            data: {
+              title: 'Sucesso',
+              message: 'Paciente cadastrado com sucesso!',
+              type: 'success'
+            },
+            panelClass: 'success'
+          });
+          setTimeout(() => dialogRef.close(), 3000);
           this.router.navigate(['/']);
         },
         error: (err) => {
           this.loading = false;
-          alert(err?.error?.error || 'Erro ao cadastrar paciente.');
+          const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+            data: {
+              title: 'Erro',
+              message: err?.error?.error || 'Erro ao cadastrar paciente.',
+              type: 'error'
+            },
+            panelClass: 'error'
+          });
+          setTimeout(() => dialogRef.close(), 3000);
         }
       });
     }

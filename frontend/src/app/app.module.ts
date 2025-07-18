@@ -24,7 +24,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FeedbackDialogComponent } from './shared/feedback-dialog.component';
 import { CommonModule } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -54,6 +57,8 @@ import { AtendimentosDiaComponent } from './atendimentos-dia/atendimentos-dia.co
     MatButtonModule,
     MatListModule,
     MatIconModule,
+    MatSnackBarModule,
+    MatDialogModule,
     MatDividerModule,
     MatTableModule,
     MatSelectModule,
@@ -61,7 +66,7 @@ import { AtendimentosDiaComponent } from './atendimentos-dia/atendimentos-dia.co
     MatProgressSpinnerModule,
     MatMenuModule,
     MatCardModule,
-    MatTooltipModule
+    MatTooltipModule,
     // Removido CommonModule daqui, pois BrowserModule já inclui CommonModule para AppModule
   ],
   providers: [
