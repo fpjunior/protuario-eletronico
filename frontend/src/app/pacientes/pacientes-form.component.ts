@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+// ...existing code...
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FeedbackDialogComponent } from '../shared/feedback-dialog.component';
 import { Paciente } from './pacientes.component';
@@ -20,7 +21,7 @@ import * as jsPDF from 'jspdf';
 export class PacientesFormComponent implements OnInit, OnDestroy {
   // ...existing code...
   @Output() fechar = new EventEmitter<void>();
-  pacienteEditando: Paciente | null = null;
+  @Input() pacienteEditando: Paciente | null = null;
   form: FormGroup;
   loading = false;
   verificandoDuplicidade = false;
@@ -67,8 +68,6 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog
   ) {
-    const nav = this.router.getCurrentNavigation();
-    this.pacienteEditando = nav?.extras.state?.['paciente'] || null;
     this.form = this.fb.group({
       nome: ['', [Validators.required]],
       mae: ['', [Validators.required]],
@@ -87,19 +86,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
       procedencia: ['']
     });
 
-    if (this.pacienteEditando) {
-      // Corrige o campo nascimento para formato yyyy-MM-dd
-      const patch = { ...this.pacienteEditando };
-      if (patch.nascimento) {
-        const date = new Date(patch.nascimento);
-        // Corrige para fuso local, evitando acréscimo de um dia
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        patch.nascimento = `${yyyy}-${mm}-${dd}`;
-      }
-      this.form.patchValue(patch);
-    }
+    // Patch será feito no ngOnInit para garantir que o input já foi recebido
   }
 
   ngOnInit() {
@@ -107,6 +94,19 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     this.authService.user$.subscribe(user => {
       this.currentUser = user;
     });
+
+    // Patch do pacienteEditando se existir
+    if (this.pacienteEditando) {
+      const patch = { ...this.pacienteEditando };
+      if (patch.nascimento) {
+        const date = new Date(patch.nascimento);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        patch.nascimento = `${yyyy}-${mm}-${dd}`;
+      }
+      this.form.patchValue(patch);
+    }
 
     // Configura o Subject para validação com debounce
     this.validationSubject.pipe(
@@ -394,6 +394,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
   }
 
   cancelar() {
+    console.log('Fechar modal emitido');
     this.fechar.emit();
   }
 

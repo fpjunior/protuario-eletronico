@@ -115,4 +115,4 @@
       <p class="text-lg">Nenhum paciente encontrado</p>
     </div>
         <!-- ...existing code... -->
-<app-pacientes-form *ngIf="exibirFormulario" (fechar)="exibirFormulario = false"></app-pacientes-form>
+<app-pacientes-form *ngIf="exibirFormulario" [pacienteEditando]="pacienteEditando" (fechar)="cancelarEdicao()"></app-pacientes-form>

@@ -1,6 +1,6 @@
 // Removed duplicate misplaced methods outside the class
 // Removed all misplaced pagination methods from the top of the file
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -86,7 +86,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   // Removido MatPaginator e MatTableDataSource
   currentUser: any = null;
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService, private dialog: MatDialog) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService, private dialog: MatDialog, private cdr: ChangeDetectorRef) {}
 
   abrirRelatorios() {
     this.router.navigate(['/relatorios']);
@@ -161,7 +161,8 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   }
 
   editarPaciente(paciente: Paciente) {
-    this.router.navigate(['/pacientes/novo'], { state: { paciente } });
+    this.pacienteEditando = paciente;
+    this.exibirFormulario = true;
   }
 
   removerPaciente(id: number) {
@@ -187,6 +188,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
     this.pacienteEditando = null;
     this.novoPaciente = { nome: '', mae: '', nascimento: '', sexo: '', estadoCivil: '', profissao: '', escolaridade: '', raca: '', endereco: '', bairro: '', municipio: '', uf: '', cep: '', acompanhante: '', procedencia: '' };
     this.exibirFormulario = false;
+    this.cdr.detectChanges();
   }
 
   get pacientesFiltrados(): Paciente[] {
