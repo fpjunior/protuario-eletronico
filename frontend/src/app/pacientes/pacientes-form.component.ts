@@ -73,7 +73,7 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       nome: ['', [Validators.required]],
       mae: ['', [Validators.required]],
-      nascimento: ['', [Validators.required,this.yearDigitsValidator]],
+      nascimento: ['', [Validators.required,this.yearDigitsValidator, this.birthDateYearValidator]],
       sexo: ['', [Validators.required]],
       estadoCivil: [''],
       profissao: [''],
@@ -474,6 +474,25 @@ export class PacientesFormComponent implements OnInit, OnDestroy {
 
   const year = dateParts[0];
   if (year.length > 4) return { invalidYearLength: true };
+
+  return null;
+}
+/* Permite que o admin não coloque uma data maior de que o ano atual */
+birthDateYearValidator(control: AbstractControl): ValidationErrors | null {
+   const value = control.value;
+  if (!value) return null;
+
+  
+  if (value.length !== 10) return null; 
+
+  const dateParts = value.split('-');
+  if (dateParts.length !== 3) return null; 
+
+  const year = dateParts[0];
+  const currentYear = new Date().getFullYear();
+
+  if (year.length > 4) return { invalidYearLength: true };
+  if (Number(year) > currentYear) return { futureYear: true };
 
   return null;
 }
