@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      <div class="user-menu user-menu-fixo">
+      <div class="user-menu user-menu-fixo" style="top: 63%; opacity: 0.9; gap: 0px; position: static">
         <span class="user-info" *ngIf="authService.user">
           {{ authService.user.nome }}
         </span>
@@ -96,7 +96,7 @@
   }
   .user-menu-fixo {
     position: absolute;
-    top: 50%;
+    top: 63%;
     right: 24px;
     height: auto;
     display: flex;
