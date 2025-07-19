@@ -133,39 +133,52 @@ export class PacientesFormComponent
     });
 
     // Verifica se o CEP é válido de acordo com o UF informado
-    this.form
-      .get('cep')
-      ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((cep) => {
-        this.erroCepUf = false;
-        const cepSemMascara = cep?.replace(/\D/g, '');
+    this.form.get('cep')?.valueChanges
+  .pipe(debounceTime(300), distinctUntilChanged())
+  .subscribe((valor: string) => {
+    this.erroCepUf = false;
 
-        if (cepSemMascara?.length === 8) {
-          this.cepService.buscarCep(cepSemMascara).subscribe((dados) => {
-            if (dados?.erro) {
-              this.form.patchValue({ municipio: '', uf: '' });
-              this.erroCepUf = true;
-              return;
-            }
+    
+    const cepLimpo = valor?.replace(/\D/g, '') || '';
 
-            const estadoCompleto = this.estadosBrasileiros.find(
-              (e) => e.sigla === dados.uf
-            );
-            const ufFormatado = estadoCompleto
-              ? `${estadoCompleto.sigla} - ${estadoCompleto.nome}`
-              : dados.uf;
+    
+    let cepFormatado = cepLimpo;
+    if (cepLimpo.length > 5) {
+      cepFormatado = `${cepLimpo.substring(0, 5)}-${cepLimpo.substring(5, 8)}`;
+    }
 
-            this.form.patchValue({
-              municipio: dados.localidade,
-              uf: ufFormatado,
-            });
+    
+    this.form.get('cep')?.setValue(cepFormatado, { emitEvent: false });
 
-            this.erroCepUf = false;
-          });
-        } else {
+    
+    if (cepLimpo.length === 8) {
+      this.cepService.buscarCep(cepLimpo).subscribe((dados) => {
+        if (dados?.erro) {
           this.form.patchValue({ municipio: '', uf: '' });
+          this.erroCepUf = true;
+          return;
         }
+
+        
+        const estadoCompleto = this.estadosBrasileiros.find(
+          (e) => e.sigla === dados.uf
+        );
+        const ufFormatado = estadoCompleto
+          ? `${estadoCompleto.sigla} - ${estadoCompleto.nome}`
+          : dados.uf;
+
+        
+        this.form.patchValue({
+          municipio: dados.localidade,
+          uf: ufFormatado,
+        });
+
+        this.erroCepUf = false;
       });
+    } else {
+      this.form.patchValue({ municipio: '', uf: '' });
+    }
+  });
 
     // Patch do pacienteEditando se existir
     if (this.pacienteEditando) {
