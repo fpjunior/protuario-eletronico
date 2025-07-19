@@ -22,11 +22,17 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  takeUntil,
+} from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import * as jsPDF from 'jspdf';
+import { CepService } from '../services/cep.service';
 
 @Component({
   selector: 'app-pacientes-form',
@@ -86,18 +92,23 @@ export class PacientesFormComponent
     { sigla: 'TO', nome: 'Tocantins' },
   ];
   pacienteService: any;
+  erroCepUf = false;
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private fb: FormBuilder,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cepService: CepService
   ) {
     this.form = this.fb.group({
       nome: ['', [Validators.required]],
       mae: ['', [Validators.required]],
-      nascimento: ['', [Validators.required, this.nascimentoValidator]],
+      nascimento: [
+        '',
+        [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)],
+      ],
       sexo: ['', [Validators.required]],
       estadoCivil: [''],
       profissao: [''],
@@ -105,7 +116,7 @@ export class PacientesFormComponent
       raca: [''],
       endereco: [''],
       bairro: [''],
-      municipio: [''],
+      municipio: [{ value: '', disable: true }, Validators.required],
       uf: ['', [Validators.required]],
       cep: ['', [Validators.pattern(/^[0-9]{5}-?[0-9]{3}$/)]],
       acompanhante: [''],
@@ -120,6 +131,41 @@ export class PacientesFormComponent
     this.authService.user$.subscribe((user) => {
       this.currentUser = user;
     });
+
+    // Verifica se o CEP é válido de acordo com o UF informado
+    this.form
+      .get('cep')
+      ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((cep) => {
+        this.erroCepUf = false;
+        const cepSemMascara = cep?.replace(/\D/g, '');
+
+        if (cepSemMascara?.length === 8) {
+          this.cepService.buscarCep(cepSemMascara).subscribe((dados) => {
+            if (dados?.erro) {
+              this.form.patchValue({ municipio: '', uf: '' });
+              this.erroCepUf = true;
+              return;
+            }
+
+            const estadoCompleto = this.estadosBrasileiros.find(
+              (e) => e.sigla === dados.uf
+            );
+            const ufFormatado = estadoCompleto
+              ? `${estadoCompleto.sigla} - ${estadoCompleto.nome}`
+              : dados.uf;
+
+            this.form.patchValue({
+              municipio: dados.localidade,
+              uf: ufFormatado,
+            });
+
+            this.erroCepUf = false;
+          });
+        } else {
+          this.form.patchValue({ municipio: '', uf: '' });
+        }
+      });
 
     // Patch do pacienteEditando se existir
     if (this.pacienteEditando) {
@@ -566,19 +612,19 @@ export class PacientesFormComponent
   nascimentoValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
 
-  if (!value) return null;
+    if (!value) return null;
 
-  // Verifica se o valor segue o formato yyyy-mm-dd
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(value)) return { invalidDateFormat: true };
+    // Verifica se o valor segue o formato yyyy-mm-dd
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regex.test(value)) return { invalidDateFormat: true };
 
-  const year = Number(value.split('-')[0]);
-  const currentYear = new Date().getFullYear();
+    const year = Number(value.split('-')[0]);
+    const currentYear = new Date().getFullYear();
 
-  if (year > currentYear) {
-    return { futureYear: true };
-  }
+    if (year > currentYear) {
+      return { futureYear: true };
+    }
 
-  return null;
+    return null;
   }
 }
